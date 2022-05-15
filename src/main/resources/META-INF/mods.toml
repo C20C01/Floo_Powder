@@ -1,0 +1,11 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All rights reserved"
+[[mods]]
+modId="cc2001_floo_powder"
+version="1.0"
+displayName="测试"
+authors="CC2001"
+description='''
+这是描述。
+'''

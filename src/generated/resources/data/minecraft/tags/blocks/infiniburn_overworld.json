@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "cc2001_floo_powder:portal_point_block",
+    "minecraft:netherrack",
+    "minecraft:magma_block"
+  ]
+}
