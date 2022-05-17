@@ -46,7 +46,7 @@ public class CCLanguageProvider extends LanguageProvider {
         });
         this.add(CCItems.PortalBook, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "Teleportation Point Block";
+            case EN_US -> "Teleportation Point Book";
             case ZH_CN -> "传送点大全";
         });
         this.add(CCMain.TEXT_NEEDS_ACTIVATION, switch (this.locale) {
