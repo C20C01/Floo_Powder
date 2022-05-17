@@ -2,6 +2,7 @@ package io.github.c20c01.block;
 
 import io.github.c20c01.item.CCItems;
 import io.github.c20c01.tp.TpTool;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,10 +20,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
     private HashSet<BlockPos> allPortal;
     private String removeName;
@@ -33,23 +36,23 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
     }
 
     @Override
-    protected boolean canBurn(@NotNull BlockState p_49284_) {
+    protected boolean canBurn(BlockState p_49284_) {
         return true;
     }
 
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PortalFireBlockEntity(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public @NotNull BlockState updateShape(@NotNull BlockState blockState, @NotNull Direction direction, @NotNull BlockState blockState1, @NotNull LevelAccessor levelAccessor, @NotNull BlockPos blockPos, @NotNull BlockPos blockPos1) {
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState1, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos1) {
         return this.canSurvive(blockState, levelAccessor, blockPos) ? this.defaultBlockState() : Blocks.AIR.defaultBlockState();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canSurvive(@NotNull BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return canSurviveOnBlock(levelReader.getBlockState(blockPos.below()));
     }
 
@@ -59,12 +62,12 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canBeReplaced(@NotNull BlockState p_53012_, @NotNull Fluid p_53013_) {
+    public boolean canBeReplaced(BlockState p_53012_, Fluid p_53013_) {
         return false;
     }
 
     @Override
-    public void entityInside(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Entity entity) {
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCItems.FlooPowder))
             entity.hurt(DamageSource.IN_FIRE, 1F);
         if (entity instanceof LivingEntity livingEntity) {
@@ -78,7 +81,7 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState1, boolean p_60519_) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockState(blockPos).isAir()) {
             remove(blockPos, level);
             allPortal.clear();

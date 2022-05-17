@@ -3,6 +3,7 @@ package io.github.c20c01.item;
 import io.github.c20c01.block.PortalPointBlock;
 import io.github.c20c01.block.PortalPointBlockEntity;
 import io.github.c20c01.pos.PosMap;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,8 +19,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class PortalFlintAndSteel extends FlintAndSteelItem {
     public String name;
 
@@ -29,7 +33,7 @@ public class PortalFlintAndSteel extends FlintAndSteelItem {
     }
 
     @Override
-    public @NotNull InteractionResult useOn(UseOnContext useOnContext) {
+    public InteractionResult useOn(UseOnContext useOnContext) {
         name = useOnContext.getItemInHand().getDisplayName().getString();
         Player player = useOnContext.getPlayer();
         Level level = useOnContext.getLevel();
@@ -40,9 +44,7 @@ public class PortalFlintAndSteel extends FlintAndSteelItem {
             ItemStack itemstack = useOnContext.getItemInHand();
             if (player instanceof ServerPlayer) {
                 CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, blockPos1, itemstack);
-                itemstack.hurtAndBreak(1, player, (p_41300_) -> {
-                    p_41300_.broadcastBreakEvent(useOnContext.getHand());
-                });
+                itemstack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
             }
             if (level instanceof ServerLevel serverLevel) {
                 serverLevel.setBlock(blockPos1, Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);

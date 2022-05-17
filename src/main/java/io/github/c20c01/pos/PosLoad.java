@@ -3,19 +3,20 @@ package io.github.c20c01.pos;
 import io.github.c20c01.CCMain;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = CCMain.ID)
-public class PosServerLoad {
+public class PosLoad {
 
     @SubscribeEvent
     public static void serverStarted(ServerStartedEvent event) {
-        System.out.println("""
-                *************************
-                | Loading all positions |
-                *************************
-                """);
         PosMap.load(event.getServer().getLevel(Level.OVERWORLD));
+    }
+
+    @SubscribeEvent
+    public static void end(ServerStoppingEvent event) {
+        PosMap.clear();
     }
 }

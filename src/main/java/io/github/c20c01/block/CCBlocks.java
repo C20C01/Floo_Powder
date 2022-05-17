@@ -22,7 +22,7 @@ public class CCBlocks {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(makeBlock(CCMain.PORTAL_FIRE_BLOCK_ID, new PortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F)));
-        event.getRegistry().register(makeBlock(CCMain.PORTAL_POINT_BLOCK_ID, new PortalPointBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(50.0F, 1200.0F).lightLevel((x) -> 15))));
+        event.getRegistry().register(makeBlock(CCMain.PORTAL_POINT_BLOCK_ID, new PortalPointBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(30.0F, 1200.0F))));
     }
 
     @SubscribeEvent

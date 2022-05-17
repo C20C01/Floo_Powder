@@ -1,11 +1,14 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.item.CCItems;
 import io.github.c20c01.pos.PosMap;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -21,25 +24,33 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class PortalPointBlock extends Block implements EntityBlock {
     public PortalPointBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PortalPointBlockEntity(pos, state);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            var text = Component.nullToEmpty("Test: " + ((PortalPointBlockEntity) Objects.requireNonNull(level.getBlockEntity(blockPos))).name);
-            serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+        if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
+            if (blockEntity.name.equals("")) {
+                if (hitResult.getDirection().equals(Direction.UP) && !player.getItemInHand(hand).is(CCItems.PortalFlintAndSteel)) {
+                    var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
+                    serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+                }
+            } else {
+                var text = new TextComponent(blockEntity.name);
+                serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+            }
         }
 
 
@@ -48,7 +59,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Block block, @NotNull BlockPos blockPos1, boolean p_60514_) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean p_60514_) {
         if (blockPos.above().equals(blockPos1) && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             BlockState blockState1 = level.getBlockState(blockPos1);
             if (blockEntity.name.equals("")) {
@@ -72,7 +83,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState1, boolean p_60519_) {
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             PosMap.remove(blockEntity.name);
             if (!blockEntity.name.equals(""))

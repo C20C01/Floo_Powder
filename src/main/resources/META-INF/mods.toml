@@ -1,11 +1,13 @@
 modLoader="javafml"
 loaderVersion="[36,)"
-license="All rights reserved"
+license="BSD-3-Clause"
 [[mods]]
 modId="cc2001_floo_powder"
-version="1.0"
-displayName="测试"
+version="1.1"
+displayName="Floo Powder"
 authors="CC2001"
 description='''
-这是描述。
+Floo Powder - The Easier Way to Teleport
+
+Found more: https://github.com/C20C01/Floo_Powder
 '''

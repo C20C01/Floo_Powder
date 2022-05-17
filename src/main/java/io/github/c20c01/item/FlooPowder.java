@@ -16,11 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashSet;
-
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 
 public class FlooPowder extends Item {
     private Level level;
@@ -32,21 +29,12 @@ public class FlooPowder extends Item {
         CCItems.FlooPowder = this;
     }
 
-    /*
-        @Override
-        public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, @NotNull Player player, @NotNull InteractionHand hand) {
-            if (world instanceof ServerLevel serverWorld) {
-            }
-            return super.use(world, player, hand);
-        }
-    */
-
     @Override
     public void onDestroyed(ItemEntity itemEntity, DamageSource damageSource) {
         if (damageSource.isFire()) {
             level = itemEntity.level;
 
-            System.out.println("Fire: " + level.hashCode());
+            //System.out.println("Fire: " + level.hashCode());
 
             name = itemEntity.getItem().getDisplayName().getString();
             try {

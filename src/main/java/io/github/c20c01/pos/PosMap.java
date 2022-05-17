@@ -1,5 +1,6 @@
 package io.github.c20c01.pos;
 
+import io.github.c20c01.block.PortalPointBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
@@ -30,7 +31,9 @@ public class PosMap {
 
     public static PosInfo get(String name) {
         if (MAP.get(name) == null)
-            return MAP.get("UNKNOWN");
+            return MAP.get("[UNKNOWN]");
+            //Where to try to teleport when there is no corresponding teleportation point
+            //Names are enclosed in square brackets
         else
             return MAP.get(name);
     }
@@ -44,18 +47,24 @@ public class PosMap {
                 for (String key : PosMap.MAP.keySet()) {
                     PosInfo info = MAP.get(key);
                     //System.out.println(info);
-                    world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
+                    if (world.getBlockEntity(info.blockPos) instanceof PortalPointBlockEntity)
+                        world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
                 }
             }
             //checkAll();
         }
     }
 
+    public static void clear() {
+        MAP.clear();
+    }
+
     public static void checkAll() {
+        //used when debugging
         System.out.println("**************************************");
         for (var key : MAP.keySet()) {
             PosInfo i = MAP.get(key);
-            System.out.println("Name: " + key + " ,Pos: " + i.blockPos + " ,Level: " + (i.level == null ? "null" : i.level.hashCode()));
+            System.out.println("Name: " + key + i);
         }
         System.out.println("**************************************");
     }

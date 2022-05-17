@@ -29,7 +29,7 @@ public class PosInfo {
 
     @Override
     public String toString() {
-        return "Pos: " + (blockPos == null ? "Null" : blockPos.toString()) +
-                " ,Level: " + (level == null ? "Null" : level.hashCode());
+        return "{" + (blockPos == null ? "Null" : blockPos.toShortString()) +
+                "} world: " + (level == null ? "Null" : level.hashCode());
     }
 }
