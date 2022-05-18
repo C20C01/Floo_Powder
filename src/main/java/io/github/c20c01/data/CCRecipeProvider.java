@@ -38,7 +38,7 @@ public class CCRecipeProvider extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         BlockFamilies.getAllFamilies().filter(BlockFamily::shouldGenerateRecipe).forEach((x) -> generateRecipes(consumer, x));
         ShapedRecipeBuilder.shaped(CCItems.FlooPowder, 8).define('G', Items.GUNPOWDER).define('E', Items.EMERALD).pattern("GGG").pattern("GEG").pattern("GGG").unlockedBy("in_air", insideOf(Blocks.AIR)).save(consumer);
-        ShapelessRecipeBuilder.shapeless(CCItems.PortalFlintAndSteel, 1).requires(Items.AMETHYST_SHARD).requires(Items.LAPIS_LAZULI).unlockedBy("has_floo", has(CCItems.PortalPointBlock)).save(consumer);
+        ShapelessRecipeBuilder.shapeless(CCItems.PortalFlintAndSteel, 1).requires(Items.AMETHYST_SHARD).requires(Items.LAPIS_LAZULI).unlockedBy("has_floo", has(CCItems.FlooPowder)).save(consumer);
         ShapedRecipeBuilder.shaped(CCMain.PORTAL_POINT_BLOCK.get(), 1).define('#', Items.GOLD_INGOT).define('G', CCItems.FlooPowder).define('O', Blocks.OBSIDIAN).define('S', CCItems.PortalFlintAndSteel).define('N', Items.NETHERITE_INGOT).pattern("#G#").pattern("OSO").pattern("NON").unlockedBy("has_floo", has(CCItems.FlooPowder)).save(consumer);
     }
 }

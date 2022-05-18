@@ -33,9 +33,6 @@ public class FlooPowder extends Item {
     public void onDestroyed(ItemEntity itemEntity, DamageSource damageSource) {
         if (damageSource.isFire()) {
             level = itemEntity.level;
-
-            //System.out.println("Fire: " + level.hashCode());
-
             name = itemEntity.getItem().getDisplayName().getString();
             try {
                 changeFireBlock(itemEntity.position());
