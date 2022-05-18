@@ -26,6 +26,8 @@ public class CCMain {
     public static final String TEXT_NEEDS_ACTIVATION = "chat." + ID + ".use_portal_flint_and_steel";
     public static final String TEXT_NOT_LOADED = "chat." + ID + ".point_has_not_been_loaded";
     public static final String TEXT_NOT_FOUND = "chat." + ID + ".no_point_find";
+    public static final String TEXT_NOT_FOUND_BOOK = "chat." + ID + ".no_point_find_book";
+    public static final String TEXT_FOUND_BOOK = "chat." + ID + ".point_find_book";
 
     public static final ResourceLocation GET_FLOO_ADVANCEMENT_ID = new ResourceLocation(ID, "get_floo");
     public static final ResourceLocation INTO_FIRE_ADVANCEMENT_ID = new ResourceLocation(ID, "into_fire");

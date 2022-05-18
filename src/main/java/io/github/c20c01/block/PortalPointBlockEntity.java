@@ -40,7 +40,6 @@ public class PortalPointBlockEntity extends BlockEntity {
     public void setLevel(Level level) {
         if (level instanceof ServerLevel serverLevel) {
             PosMap.set(name, serverLevel, null);
-            //System.out.println("Loaded level: " + serverLevel.hashCode());
             super.setLevel(serverLevel);
         }
     }

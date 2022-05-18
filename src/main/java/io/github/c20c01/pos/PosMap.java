@@ -47,7 +47,7 @@ public class PosMap {
                 for (String key : PosMap.MAP.keySet()) {
                     PosInfo info = MAP.get(key);
                     //System.out.println(info);
-                    if (world.getBlockEntity(info.blockPos) instanceof PortalPointBlockEntity)
+                    if (info.blockPos != null && world.getBlockEntity(info.blockPos) instanceof PortalPointBlockEntity)
                         world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
                 }
             }

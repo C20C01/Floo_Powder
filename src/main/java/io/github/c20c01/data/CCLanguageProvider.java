@@ -46,8 +46,8 @@ public class CCLanguageProvider extends LanguageProvider {
         });
         this.add(CCItems.PortalBook, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "Teleportation Point Book";
-            case ZH_CN -> "传送点大全";
+            case EN_US -> "Book of Teleportation cores";
+            case ZH_CN -> "传送核心大全";
         });
         this.add(CCMain.TEXT_NEEDS_ACTIVATION, switch (this.locale) {
             default -> throw new IllegalStateException();
@@ -63,6 +63,16 @@ public class CCLanguageProvider extends LanguageProvider {
             default -> throw new IllegalStateException();
             case EN_US -> "No corresponding Teleportation core found";
             case ZH_CN -> "未找到对应的传送核心";
+        });
+        this.add(CCMain.TEXT_NOT_FOUND_BOOK, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "No available Teleportation core found.";
+            case ZH_CN -> "未发现任何可用的传送核心。";
+        });
+        this.add(CCMain.TEXT_FOUND_BOOK, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Found available Teleportation core:";
+            case ZH_CN -> "已找到可用的传送核心:";
         });
 
         this.add(CCMain.TEXT_GET_FLOO_DESC, switch (this.locale) {

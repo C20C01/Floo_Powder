@@ -31,7 +31,6 @@ public class PosWorldSavedData extends SavedData {
         for (String name : map.keySet()) {
             if (map.get(name).blockPos != null) {
                 compound.putString(name, map.get(name).blockPos.toShortString());
-                //System.out.println(name + "," + map.get(name).blockPos.toShortString());
             }
         }
         return compound;
