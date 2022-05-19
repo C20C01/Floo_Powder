@@ -2,4 +2,6 @@
 
 B站上的介绍：https://www.bilibili.com/video/BV1Lr4y1b7UQ
 
-感觉算是比较完善了，就先收工了。2022/5/17
+博客上的介绍：https://c20c01.github.io/2022/05/18/Floo-Powder/
+
+2022/5/19
