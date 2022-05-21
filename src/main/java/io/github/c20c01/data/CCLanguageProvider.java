@@ -1,7 +1,6 @@
 package io.github.c20c01.data;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.item.CCItems;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,17 +33,17 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Teleportation core";
             case ZH_CN -> "传送核心";
         });
-        this.add(CCItems.FlooPowder, switch (this.locale) {
+        this.add(CCMain.FLOO_POWDER_ITEM.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Floo powder";
             case ZH_CN -> "飞路粉";
         });
-        this.add(CCItems.PortalFlintAndSteel, switch (this.locale) {
+        this.add(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Teleport Flint and Steel";
             case ZH_CN -> "传送火石";
         });
-        this.add(CCItems.PortalBook, switch (this.locale) {
+        this.add(CCMain.PORTAL_BOOK_ITEM.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Book of Teleportation cores";
             case ZH_CN -> "传送核心大全";

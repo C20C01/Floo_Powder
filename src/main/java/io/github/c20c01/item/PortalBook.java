@@ -24,7 +24,6 @@ public class PortalBook extends Item {
 
     public PortalBook(Properties properties) {
         super(properties);
-        CCItems.PortalBook = this;
     }
 
     @Override

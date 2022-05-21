@@ -1,7 +1,6 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.item.CCItems;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
@@ -43,7 +42,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             if (blockEntity.name.equals("")) {
-                if (hitResult.getDirection().equals(Direction.UP) && !player.getItemInHand(hand).is(CCItems.PortalFlintAndSteel)) {
+                if (hitResult.getDirection().equals(Direction.UP) && !player.getItemInHand(hand).is(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get())) {
                     var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
                     serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
                 }

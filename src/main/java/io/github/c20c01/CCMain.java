@@ -4,7 +4,10 @@ import io.github.c20c01.block.PortalFireBlock;
 import io.github.c20c01.block.PortalFireBlockEntity;
 import io.github.c20c01.block.PortalPointBlock;
 import io.github.c20c01.block.PortalPointBlockEntity;
+import io.github.c20c01.item.FlooPowder;
+import io.github.c20c01.item.PortalFlintAndSteel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -34,9 +37,16 @@ public class CCMain {
     public static final ResourceLocation GET_POINT_BLOCK_ADVANCEMENT_ID = new ResourceLocation(ID, "get_portal_point_block");
 
     public static final ResourceLocation FLOO_POWDER_ID = new ResourceLocation(ID, "floo_powder");
+    public static final RegistryObject<FlooPowder> FLOO_POWDER_ITEM = RegistryObject.create(CCMain.FLOO_POWDER_ID, ForgeRegistries.ITEMS);
+
     public static final ResourceLocation PORTAL_FLINT_AND_STEEL_ID = new ResourceLocation(ID, "portal_flint_and_steel");
+    public static final RegistryObject<PortalFlintAndSteel> PORTAL_FLINT_AND_STEEL_ITEM = RegistryObject.create(CCMain.PORTAL_FLINT_AND_STEEL_ID, ForgeRegistries.ITEMS);
+
     public static final ResourceLocation PORTAL_POINT_BLOCK_ITEM_ID = new ResourceLocation(ID, "portal_point_block_item");
+    public static final RegistryObject<BlockItem> PORTAL_POINT_BLOCK_ITEM = RegistryObject.create(CCMain.PORTAL_POINT_BLOCK_ITEM_ID, ForgeRegistries.ITEMS);
+
     public static final ResourceLocation PORTAL_BOOK_ID = new ResourceLocation(ID, "portal_book");
+    public static final RegistryObject<FlooPowder> PORTAL_BOOK_ITEM = RegistryObject.create(CCMain.PORTAL_BOOK_ID, ForgeRegistries.ITEMS);
 
     public static final ResourceLocation PORTAL_FIRE_BLOCK_ID = new ResourceLocation(ID, "portal_fire_block");
     public static final RegistryObject<PortalFireBlock> PORTAL_FIRE_BLOCK = RegistryObject.create(CCMain.PORTAL_FIRE_BLOCK_ID, ForgeRegistries.BLOCKS);
