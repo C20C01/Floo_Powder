@@ -26,7 +26,6 @@ public class FlooPowder extends Item {
 
     public FlooPowder(Item.Properties properties) {
         super(properties);
-        CCItems.FlooPowder = this;
     }
 
     @Override

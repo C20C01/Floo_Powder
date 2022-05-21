@@ -29,7 +29,6 @@ public class PortalFlintAndSteel extends FlintAndSteelItem {
 
     public PortalFlintAndSteel(Properties properties) {
         super(properties);
-        CCItems.PortalFlintAndSteel = this;
     }
 
     @Override

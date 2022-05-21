@@ -1,6 +1,6 @@
 package io.github.c20c01.block;
 
-import io.github.c20c01.item.CCItems;
+import io.github.c20c01.CCMain;
 import io.github.c20c01.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -68,7 +68,7 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCItems.FlooPowder))
+        if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCMain.FLOO_POWDER_ITEM.get()))
             entity.hurt(DamageSource.IN_FIRE, 1F);
         if (entity instanceof LivingEntity livingEntity) {
             if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {

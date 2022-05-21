@@ -41,32 +41,18 @@ public class PosMap {
     public static void load(Level level) {
         if (level instanceof ServerLevel serverLevel) {
             PosWorldSavedData.get(serverLevel.getServer());
-            //System.out.println("All name:" + PosMap.MAP.keySet());
             for (ServerLevel world : serverLevel.getServer().getAllLevels()) {
-                //System.out.println("\nWorld: " + world + " ,hash: " + world.hashCode());
                 for (String key : PosMap.MAP.keySet()) {
                     PosInfo info = MAP.get(key);
-                    //System.out.println(info);
                     if (info.blockPos != null && world.getBlockEntity(info.blockPos) instanceof PortalPointBlockEntity)
                         world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
                 }
             }
-            //checkAll();
         }
     }
 
     public static void clear() {
         MAP.clear();
-    }
-
-    public static void checkAll() {
-        //used when debugging
-        System.out.println("**************************************");
-        for (var key : MAP.keySet()) {
-            PosInfo i = MAP.get(key);
-            System.out.println("Name: " + key + i);
-        }
-        System.out.println("**************************************");
     }
 
     public static void remove(String key) {
