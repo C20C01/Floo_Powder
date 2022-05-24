@@ -1,6 +1,6 @@
 package io.github.c20c01.pos;
 
-import io.github.c20c01.block.PortalPointBlockEntity;
+import io.github.c20c01.saveData.PosWorldSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
@@ -23,30 +23,22 @@ public class PosMap {
         if (info != null) {
             info.setLevel(level);
             info.setPos(blockPos);
-        } else
-            MAP.put(name, new PosInfo(level, blockPos));
-        if (level != null)
-            PosWorldSavedData.get(level.getServer()).changed();
+        } else MAP.put(name, new PosInfo(level, blockPos));
+        if (level != null) PosWorldSavedData.get(level.getServer()).changed();
     }
 
     public static PosInfo get(String name) {
-        if (MAP.get(name) == null)
-            return MAP.get("[UNKNOWN]");
+        if (MAP.get(name) == null) return MAP.get("[UNKNOWN]");
             //Where to try to teleport when there is no corresponding teleportation point
             //Names are enclosed in square brackets
-        else
-            return MAP.get(name);
+        else return MAP.get(name);
     }
 
-    public static void load(Level level) {
-        if (level instanceof ServerLevel serverLevel) {
-            PosWorldSavedData.get(serverLevel.getServer());
-            for (ServerLevel world : serverLevel.getServer().getAllLevels()) {
-                for (String key : PosMap.MAP.keySet()) {
-                    PosInfo info = MAP.get(key);
-                    if (info.blockPos != null && world.getBlockEntity(info.blockPos) instanceof PortalPointBlockEntity)
-                        world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
-                }
+    public static void load(ServerLevel level) {
+        PosWorldSavedData.get(level.getServer());
+        for (ServerLevel world : level.getServer().getAllLevels()) {
+            for (PosInfo info : MAP.values()) {
+                world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
             }
         }
     }
@@ -55,7 +47,8 @@ public class PosMap {
         MAP.clear();
     }
 
-    public static void remove(String key) {
+    public static void remove(String key, ServerLevel level) {
         MAP.remove(key);
+        PosWorldSavedData.get(level.getServer()).changed();
     }
 }

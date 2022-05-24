@@ -18,18 +18,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PortalFireBlockEntity extends BlockEntity {
-    public static BlockEntity blockEntity;
     public String name;
 
     @SubscribeEvent
     public static void onRegisterBlockEntityType(RegistryEvent.Register<BlockEntityType<?>> event) {
-        event.getRegistry().register(BlockEntityType.Builder.of(PortalFireBlockEntity::new, CCMain.PORTAL_FIRE_BLOCK.get())
-                .build(DSL.remainderType()).setRegistryName(CCMain.PORTAL_FIRE_BLOCK_ID));
+        event.getRegistry().register(BlockEntityType.Builder.of(PortalFireBlockEntity::new, CCMain.PORTAL_FIRE_BLOCK.get()).build(DSL.remainderType()).setRegistryName(CCMain.PORTAL_FIRE_BLOCK_ID));
     }
 
     public PortalFireBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CCMain.PORTAL_FIRE_BLOCK_ENTITY.get(), blockPos, blockState);
-        blockEntity = this;
     }
 
     @Override
