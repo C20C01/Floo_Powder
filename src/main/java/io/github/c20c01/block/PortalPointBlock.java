@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -51,8 +52,6 @@ public class PortalPointBlock extends Block implements EntityBlock {
                 serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
         }
-
-
         return super.use(blockState, level, blockPos, player, hand, hitResult);
     }
 
@@ -71,7 +70,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
                     level.setBlock(blockPos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
                     level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 } else if (blockState1.canOcclude()) {
-                    PosMap.remove(blockEntity.name);
+                    if (level instanceof ServerLevel serverLevel) PosMap.remove(blockEntity.name, serverLevel);
                     blockEntity.name = "";
                     level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
                 }
@@ -84,7 +83,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
-            PosMap.remove(blockEntity.name);
+            if (level instanceof ServerLevel serverLevel) PosMap.remove(blockEntity.name, serverLevel);
             if (!blockEntity.name.equals(""))
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
         }
