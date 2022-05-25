@@ -2,6 +2,7 @@ package io.github.c20c01.item;
 
 import io.github.c20c01.block.PortalPointBlock;
 import io.github.c20c01.block.PortalPointBlockEntity;
+import io.github.c20c01.gui.GuiData;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;

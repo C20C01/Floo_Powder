@@ -1,7 +1,6 @@
 package io.github.c20c01.data;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.block.CCBlocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;

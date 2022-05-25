@@ -25,7 +25,6 @@ public class TpTool {
         if (!entity.level.isClientSide) new Thread(() -> {
             try {
                 Thread.sleep(20);
-                //PosMap.checkAll();
                 PosInfo posInfo = PosMap.get(name);
                 if (posInfo == null) {
                     if (entity instanceof ServerPlayer serverPlayer) {

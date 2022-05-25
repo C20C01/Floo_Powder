@@ -1,6 +1,7 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.gui.GuiData;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
@@ -21,16 +22,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PortalPointBlock extends Block implements EntityBlock {
-    public PortalPointBlock(BlockBehaviour.Properties properties) {
+    public PortalPointBlock(Properties properties) {
         super(properties);
     }
 
@@ -70,7 +72,9 @@ public class PortalPointBlock extends Block implements EntityBlock {
                     level.setBlock(blockPos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
                     level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 } else if (blockState1.canOcclude()) {
-                    if (level instanceof ServerLevel serverLevel) PosMap.remove(blockEntity.name, serverLevel);
+                    if (level instanceof ServerLevel serverLevel){
+                        PosMap.remove(blockEntity.name, serverLevel);
+                    }
                     blockEntity.name = "";
                     level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
                 }
@@ -83,7 +87,9 @@ public class PortalPointBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
-            if (level instanceof ServerLevel serverLevel) PosMap.remove(blockEntity.name, serverLevel);
+            if (level instanceof ServerLevel serverLevel){
+                PosMap.remove(blockEntity.name, serverLevel);
+            }
             if (!blockEntity.name.equals(""))
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
         }

@@ -3,8 +3,8 @@ package io.github.c20c01.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.c20c01.CCMain;
-import io.github.c20c01.pos.PosInfo;
-import io.github.c20c01.saveData.PointDescWorldSavedData;
+import io.github.c20c01.block.FlooPowderGiverBlock;
+import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -12,8 +12,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
@@ -21,10 +23,11 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
+
+@OnlyIn(Dist.CLIENT)
 public class FlooPowderGiverGui extends Screen {
+    private static HashMap<String, String> descMap;
     private static List<String> nameList;
-    public static HashMap<String, String> descMap = new HashMap<>();
-    private static PointDescWorldSavedData savedData;
     private static int page = 0;
     private static int set = -1;
     private static final Button[] buttons = new Button[6];
@@ -34,8 +37,9 @@ public class FlooPowderGiverGui extends Screen {
     private static Button backButton;
     private static Button editButton;
     private static EditBox editBox;
-    public static boolean op = false;
-    private static boolean edit = false;
+    public static boolean editMode = false;
+    private static boolean editing = false;
+    public static int playerCode;
 
     public FlooPowderGiverGui(Component component) {
         super(component);
@@ -44,8 +48,9 @@ public class FlooPowderGiverGui extends Screen {
     @Override
     public void onClose() {
         editBox = null;
-        edit = false;
-        op = false;
+        editing = false;
+        editMode = false;
+        FlooPowderGiverBlock.handle_C("", playerCode);
         super.onClose();
     }
 
@@ -53,7 +58,7 @@ public class FlooPowderGiverGui extends Screen {
     protected void init() {
         makeSelectButtons();
         makeCancelButton();
-        if (op) makeEditButton();
+        makeEditButton(editMode);
         makeOkButton();
         makeNextButton();
         makeBackButton();
@@ -65,42 +70,46 @@ public class FlooPowderGiverGui extends Screen {
         this.renderBackground(poseStack);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, CCMain.FLOO_POWDER_GIVER_GUI_BACKGROUND);
-        blit(poseStack, this.width / 2 - 150, 20, 0, 0, 300, 216, 300, 216);
+        blit(poseStack, this.width / 2 - 150, 5, 0, 0, 300, 216, 300, 216);
         String[] name = getPage(page);
         for (int i = 0; i < 6; i++) {
             if (name[i] != null) {
-                this.font.draw(poseStack, FormattedCharSequence.forward(name[i], Style.EMPTY), w, 32 + i * 30, 0);
-                String desc = descMap.get(name[i]);
-                if (desc != null)
-                    this.font.draw(poseStack, FormattedCharSequence.forward(desc, Style.EMPTY), w, 44 + i * 30, 0);
+                this.font.draw(poseStack, FormattedCharSequence.forward(formatText(name[i]), Style.EMPTY), w, 17 + i * 30, 0);
+                if (descMap != null)
+                    this.font.draw(poseStack, FormattedCharSequence.forward(formatText(descMap.get(name[i])), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)), w, 29 + i * 30, 0);
             }
         }
         super.render(poseStack, p_96563_, p_96564_, p_96565_);
     }
 
-    private void makeEditButton() {
-        editButton = new Button(this.width / 2 + 126, 212, 20, 20, new TextComponent("#"), (b) -> editTool(true));
+    private String formatText(String s) {
+        return s.length() > 26 ? s.substring(0, 26) + "..." : s;
+    }
+
+    private void makeEditButton(boolean visible) {
+        editButton = new Button(this.width / 2 + 126, 197, 20, 20, new TextComponent("#"), (b) -> editTool(true));
+        editButton.visible = visible;
         this.addRenderableWidget(editButton);
     }
 
     private void editTool(boolean save) {
         String name = getPage(page)[set];
         String desc = descMap.get(name);
-        if (edit) {
-            edit = false;
+        if (editing) {
+            editing = false;
             editBox.visible = false;
             cancelButton.active = true;
             if (save) {
                 descMap.put(name, editBox.getValue());
-                savedData.changed();
+                GuiData.sendToServer(descMap);
             }
             updateOkButton();
             updateBackButton();
             updateNextButton();
         } else {
-            edit = true;
+            editing = true;
             if (editBox == null) {
-                editBox = new EditBox(this.font, this.width / 2 - 144, 212, 264, 20, new TextComponent("Edit"));
+                editBox = new EditBox(this.font, this.width / 2 - 144, 197, 264, 20, TextComponent.EMPTY);
                 this.addRenderableWidget(editBox);
             } else editBox.visible = true;
             editBox.setValue(desc == null ? name : desc);
@@ -112,14 +121,18 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeCancelButton() {
-        cancelButton = new Button(this.width / 2 - 81, 212, 58, 20, new TextComponent("取消"), (b) -> close());
+        cancelButton = new Button(this.width / 2 - 81, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_CANCEL), (b) -> close());
         this.addRenderableWidget(cancelButton);
     }
 
     public static void reset() {
-        page = 0;
+        if (set != -1) buttons[set].active = true;
         set = -1;
-        op = false;
+        page = 0;
+        updateBackButton();
+        updateNextButton();
+        updateOkButton();
+        editMode = false;
     }
 
     public void close() {
@@ -128,8 +141,11 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeOkButton() {
-        okButton = new Button(this.width / 2 - 144, 212, 58, 20, new TextComponent("确定"), (b) -> {
-            System.out.println(nameList.get(page * 6 + set));
+        okButton = new Button(this.width / 2 - 144, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_DONE), (b) -> {
+            String name = nameList.get(page * 6 + set);
+            String result = name.substring(1, name.length() - 1);
+            System.out.println(result);
+            FlooPowderGiverBlock.handle_C(result, playerCode);
             close();
         });
         this.addRenderableWidget(okButton);
@@ -137,13 +153,13 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private static void updateOkButton() {
-        boolean b = (set != -1) && (nextButton.active || (nameList != null && set < nameList.size() % 6));
+        boolean b = (set != -1) && (nextButton.active || ((nameList != null && nameList.size() > 0) && set < (nameList.size() % 6 == 0 ? 6 : nameList.size() % 6)));
         okButton.active = b;
-        if (op) editButton.active = b;
+        if (editMode) editButton.active = b;
     }
 
     private void makeNextButton() {
-        nextButton = new Button(this.width / 2 + 63, 212, 58, 20, new TextComponent("下一页"), (b) -> {
+        nextButton = new Button(this.width / 2 + 63, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_NEXT_PAGE), (b) -> {
             page++;
             if (set != -1) buttons[set].active = true;
             set = -1;
@@ -160,7 +176,7 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeBackButton() {
-        backButton = new Button(this.width / 2, 212, 58, 20, new TextComponent("上一页"), (b) -> {
+        backButton = new Button(this.width / 2, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_PREVIOUS_PAGE), (b) -> {
             page--;
             if (set != -1) buttons[set].active = true;
             set = -1;
@@ -178,13 +194,13 @@ public class FlooPowderGiverGui extends Screen {
 
     private void newSelectButtons() {
         int w = this.width / 2 + 126;
-        var t = new TextComponent("");
-        buttons[0] = new Button(w, 30, 20, 20, t, (button) -> selectButton(0));
-        buttons[1] = new Button(w, 60, 20, 20, t, (button) -> selectButton(1));
-        buttons[2] = new Button(w, 90, 20, 20, t, (button) -> selectButton(2));
-        buttons[3] = new Button(w, 120, 20, 20, t, (button) -> selectButton(3));
-        buttons[4] = new Button(w, 150, 20, 20, t, (button) -> selectButton(4));
-        buttons[5] = new Button(w, 180, 20, 20, t, (button) -> selectButton(5));
+        var t = TextComponent.EMPTY;
+        buttons[0] = new Button(w, 15, 20, 20, t, (button) -> selectButton(0));
+        buttons[1] = new Button(w, 45, 20, 20, t, (button) -> selectButton(1));
+        buttons[2] = new Button(w, 75, 20, 20, t, (button) -> selectButton(2));
+        buttons[3] = new Button(w, 105, 20, 20, t, (button) -> selectButton(3));
+        buttons[4] = new Button(w, 135, 20, 20, t, (button) -> selectButton(4));
+        buttons[5] = new Button(w, 165, 20, 20, t, (button) -> selectButton(5));
     }
 
     private void makeSelectButtons() {
@@ -200,7 +216,7 @@ public class FlooPowderGiverGui extends Screen {
         buttons[i].active = false;
         set = i;
         updateOkButton();
-        if (edit) editTool(false);
+        if (editing) editTool(false);
     }
 
     private static String[] getPage(int page) {
@@ -215,16 +231,10 @@ public class FlooPowderGiverGui extends Screen {
         return name;
     }
 
-    public static void setMap(HashMap<String, PosInfo> map) {
-        nameList = map.keySet().stream().toList();
-        for (String key : nameList) {
-            descMap.putIfAbsent(key, key.substring(1, key.length() - 1));
-        }
+    public static void setUp(HashMap<String, String> map) {
+        reset();
+        descMap = map;
+        nameList = descMap.keySet().stream().toList();
         updateNextButton();
-        updateBackButton();
-    }
-
-    public static void loadDesc(ServerLevel level) {
-        savedData = PointDescWorldSavedData.get(level.getServer());
     }
 }

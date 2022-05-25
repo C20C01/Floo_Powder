@@ -23,7 +23,6 @@ public class PosWorldSavedData extends SavedData {
     }
 
     public void changed() {
-        FlooPowderGiverGui.reset();
         this.setDirty();
     }
 

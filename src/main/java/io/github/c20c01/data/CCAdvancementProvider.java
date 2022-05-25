@@ -1,7 +1,6 @@
 package io.github.c20c01.data;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.item.CCItems;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;

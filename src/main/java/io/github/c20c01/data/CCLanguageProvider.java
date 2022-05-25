@@ -1,7 +1,6 @@
 package io.github.c20c01.data;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.block.CCBlocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,6 +48,12 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Book of Teleportation cores";
             case ZH_CN -> "传送核心大全";
         });
+        this.add(CCMain.FLOO_POWDER_GIVER_BLOCK.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Powder giver";
+            case ZH_CN -> "飞路粉分发器";
+        });
+
         this.add(CCMain.TEXT_NEEDS_ACTIVATION, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Use Teleport Flint and Steel to light up the core";
@@ -73,6 +78,27 @@ public class CCLanguageProvider extends LanguageProvider {
             default -> throw new IllegalStateException();
             case EN_US -> "Found available Teleportation core:";
             case ZH_CN -> "已找到可用的传送核心:";
+        });
+
+        this.add(CCMain.TEXT_DONE, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Select";
+            case ZH_CN -> "确定";
+        });
+        this.add(CCMain.TEXT_CANCEL, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Cancel";
+            case ZH_CN -> "取消";
+        });
+        this.add(CCMain.TEXT_PREVIOUS_PAGE, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Previous";
+            case ZH_CN -> "上一页";
+        });
+        this.add(CCMain.TEXT_NEXT_PAGE, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Next";
+            case ZH_CN -> "下一页";
         });
 
         this.add(CCMain.TEXT_GET_FLOO_DESC, switch (this.locale) {
@@ -104,7 +130,7 @@ public class CCLanguageProvider extends LanguageProvider {
         });
         this.add(CCMain.TEXT_GET_POINT_BLOCK_TITLE, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "Teleportation core！";
+            case EN_US -> "Teleportation core!";
             case ZH_CN -> "传送核心！";
         });
     }
