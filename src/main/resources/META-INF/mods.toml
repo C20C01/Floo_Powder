@@ -1,12 +1,12 @@
-modLoader="javafml"
-loaderVersion="[36,)"
-license="BSD-3-Clause"
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "BSD-3-Clause"
 [[mods]]
-modId="cc2001_floo_powder"
-version="1.1"
-displayName="Floo Powder"
-authors="CC2001"
-description='''
+modId = "cc2001_floo_powder"
+version = "${file.jarVersion}"
+displayName = "Floo Powder"
+authors = "CC2001"
+description = '''
 Floo Powder - The Easier Way to Teleport
 
 Found more: https://github.com/C20C01/Floo_Powder

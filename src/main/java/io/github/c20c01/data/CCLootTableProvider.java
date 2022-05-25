@@ -2,7 +2,6 @@ package io.github.c20c01.data;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.c20c01.CCMain;
-import io.github.c20c01.block.CCBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
