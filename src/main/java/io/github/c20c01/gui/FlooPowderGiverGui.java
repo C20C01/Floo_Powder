@@ -144,7 +144,6 @@ public class FlooPowderGiverGui extends Screen {
         okButton = new Button(this.width / 2 - 144, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_DONE), (b) -> {
             String name = nameList.get(page * 6 + set);
             String result = name.substring(1, name.length() - 1);
-            System.out.println(result);
             FlooPowderGiverBlock.handle_C(result, playerCode);
             close();
         });
