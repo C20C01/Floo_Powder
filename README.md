@@ -4,7 +4,7 @@ B站上的介绍：https://www.bilibili.com/video/BV1Lr4y1b7UQ
 
 博客上的介绍：https://c20c01.github.io/2022/05/18/Floo-Powder/
 
-MC百科上的介绍：
+MC百科上的介绍：https://www.mcmod.cn/class/6502.html
 
 2022/5/19
 
