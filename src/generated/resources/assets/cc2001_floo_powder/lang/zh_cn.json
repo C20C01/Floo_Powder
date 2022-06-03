@@ -5,6 +5,7 @@
   "advancement.cc2001_floo_powder.get_portal_point_block.title": "\u4F20\u9001\u6838\u5FC3\uFF01",
   "advancement.cc2001_floo_powder.into_fire.description": "\u8FDB\u5165\u4F20\u9001\u706B\u7130\u5E76\u5C1D\u8BD5\u4F20\u9001",
   "advancement.cc2001_floo_powder.into_fire.title": "\u8FDB\u53BB\u4E86~",
+  "block.cc2001_floo_powder.portal_fire_block": "\u4F20\u9001\u706B\u7130",
   "block.cc2001_floo_powder.portal_point_block": "\u4F20\u9001\u6838\u5FC3",
   "block.cc2001_floo_powder.powder_giver_block": "\u98DE\u8DEF\u7C89\u5206\u53D1\u5668",
   "chat.cc2001_floo_powder.no_point_find": "\u672A\u627E\u5230\u5BF9\u5E94\u7684\u4F20\u9001\u6838\u5FC3",
