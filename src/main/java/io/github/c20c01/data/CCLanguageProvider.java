@@ -43,6 +43,11 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Teleport Flint and Steel";
             case ZH_CN -> "传送火石";
         });
+        this.add(CCMain.PORTAL_FIRE_BLOCK.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Teleportation fire";
+            case ZH_CN -> "传送火焰";
+        });
         this.add(CCMain.PORTAL_BOOK_ITEM.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Book of Teleportation cores";
