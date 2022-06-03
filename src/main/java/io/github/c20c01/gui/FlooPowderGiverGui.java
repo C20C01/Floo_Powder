@@ -103,7 +103,7 @@ public class FlooPowderGiverGui extends Screen {
                 descMap.put(name, editBox.getValue());
                 GuiData.sendToServer(descMap);
             }
-            updateOkButton();
+            updateOkAndEditButton();
             updateBackButton();
             updateNextButton();
         } else {
@@ -131,7 +131,7 @@ public class FlooPowderGiverGui extends Screen {
         page = 0;
         updateBackButton();
         updateNextButton();
-        updateOkButton();
+        updateOkAndEditButton();
         editMode = false;
     }
 
@@ -148,13 +148,13 @@ public class FlooPowderGiverGui extends Screen {
             close();
         });
         this.addRenderableWidget(okButton);
-        updateOkButton();
+        updateOkAndEditButton();
     }
 
-    private static void updateOkButton() {
+    private static void updateOkAndEditButton() {
         boolean b = (set != -1) && (nextButton.active || ((nameList != null && nameList.size() > 0) && set < (nameList.size() % 6 == 0 ? 6 : nameList.size() % 6)));
         okButton.active = b;
-        if (editMode) editButton.active = b;
+        editButton.active = b;
     }
 
     private void makeNextButton() {
@@ -164,7 +164,7 @@ public class FlooPowderGiverGui extends Screen {
             set = -1;
             updateNextButton();
             updateBackButton();
-            updateOkButton();
+            updateOkAndEditButton();
         });
         this.addRenderableWidget(nextButton);
         updateNextButton();
@@ -181,7 +181,7 @@ public class FlooPowderGiverGui extends Screen {
             set = -1;
             updateNextButton();
             updateBackButton();
-            updateOkButton();
+            updateOkAndEditButton();
         });
         this.addRenderableWidget(backButton);
         updateBackButton();
@@ -214,7 +214,7 @@ public class FlooPowderGiverGui extends Screen {
         if (set != -1) buttons[set].active = true;
         buttons[i].active = false;
         set = i;
-        updateOkButton();
+        updateOkAndEditButton();
         if (editing) editTool(false);
     }
 

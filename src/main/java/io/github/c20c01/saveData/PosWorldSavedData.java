@@ -1,7 +1,6 @@
 package io.github.c20c01.saveData;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.gui.FlooPowderGiverGui;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

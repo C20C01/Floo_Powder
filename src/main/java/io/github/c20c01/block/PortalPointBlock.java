@@ -1,12 +1,10 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.gui.GuiData;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,8 +22,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -45,16 +41,16 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             if (blockEntity.name.equals("")) {
-                if (hitResult.getDirection().equals(Direction.UP) && !player.getItemInHand(hand).is(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get())) {
+                if (!player.getItemInHand(hand).is(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get())) {
                     var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
                     serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
-                }
+                } else return super.use(blockState, level, blockPos, player, hand, hitResult);
             } else {
                 var text = new TextComponent(blockEntity.name);
                 serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
         }
-        return super.use(blockState, level, blockPos, player, hand, hitResult);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
@@ -72,7 +68,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
                     level.setBlock(blockPos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
                     level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 } else if (blockState1.canOcclude()) {
-                    if (level instanceof ServerLevel serverLevel){
+                    if (level instanceof ServerLevel serverLevel) {
                         PosMap.remove(blockEntity.name, serverLevel);
                     }
                     blockEntity.name = "";
@@ -87,7 +83,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
-            if (level instanceof ServerLevel serverLevel){
+            if (level instanceof ServerLevel serverLevel) {
                 PosMap.remove(blockEntity.name, serverLevel);
             }
             if (!blockEntity.name.equals(""))

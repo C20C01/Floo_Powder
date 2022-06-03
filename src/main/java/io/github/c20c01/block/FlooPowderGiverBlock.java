@@ -57,6 +57,7 @@ public class FlooPowderGiverBlock extends Block {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide) {
             openGui(player.getItemInHand(hand).is(CCMain.PORTAL_BOOK_ITEM.get()));
+            player.playSound(SoundEvents.NOTE_BLOCK_BIT,0.6F,10F);
             return InteractionResult.SUCCESS;
         } else {
             ServerPlayer serverPlayer = (ServerPlayer) player;
