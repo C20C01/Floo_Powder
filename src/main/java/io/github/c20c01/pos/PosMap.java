@@ -37,7 +37,10 @@ public class PosMap {
         PosWorldSavedData.get(level.getServer());
         for (ServerLevel world : level.getServer().getAllLevels()) {
             for (PosInfo info : MAP.values()) {
-                world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(info.blockPos), 1, info.blockPos);
+                BlockPos blockPos = info.blockPos;
+                if (info.level == null && blockPos != null){
+                    world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(blockPos), 1, blockPos);
+                }
             }
         }
     }
