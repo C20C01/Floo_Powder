@@ -40,9 +40,11 @@ public class FlooPowderGiverGui extends Screen {
     public static boolean editMode = false;
     private static boolean editing = false;
     public static int playerCode;
+    private final int InventoryKeyID;
 
-    public FlooPowderGiverGui(Component component) {
+    public FlooPowderGiverGui(Component component, int inventoryKeyID) {
         super(component);
+        this.InventoryKeyID = inventoryKeyID;
     }
 
     @Override
@@ -80,6 +82,15 @@ public class FlooPowderGiverGui extends Screen {
             }
         }
         super.render(poseStack, p_96563_, p_96564_, p_96565_);
+    }
+
+    @Override
+    public boolean keyPressed(int key, int p_96553_, int p_96554_) {
+        if (key == InventoryKeyID && !editing) {
+            close();
+            return true;
+        }
+        return super.keyPressed(key, p_96553_, p_96554_);
     }
 
     private String formatText(String s) {
