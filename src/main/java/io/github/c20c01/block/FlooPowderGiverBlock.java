@@ -57,7 +57,7 @@ public class FlooPowderGiverBlock extends Block {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide) {
             openGui(player.getItemInHand(hand).is(CCMain.PORTAL_BOOK_ITEM.get()));
-            player.playSound(SoundEvents.NOTE_BLOCK_BIT,0.6F,10F);
+            player.playSound(SoundEvents.NOTE_BLOCK_BIT, 1F, 10F);
             return InteractionResult.SUCCESS;
         } else {
             ServerPlayer serverPlayer = (ServerPlayer) player;
@@ -75,7 +75,8 @@ public class FlooPowderGiverBlock extends Block {
     @OnlyIn(Dist.CLIENT)
     public static void openGui(boolean editMode) {
         FlooPowderGiverGui.editMode = editMode;
-        Minecraft.getInstance().setScreen(new FlooPowderGiverGui(TextComponent.EMPTY));
+        int inventoryKeyID = Minecraft.getInstance().options.keyInventory.getKey().getValue();
+        Minecraft.getInstance().setScreen(new FlooPowderGiverGui(TextComponent.EMPTY, inventoryKeyID));
     }
 
     public static void handle_C(String name, int code) {
