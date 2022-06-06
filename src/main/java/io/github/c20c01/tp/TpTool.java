@@ -9,6 +9,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,8 +17,11 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Objects;
 
 public class TpTool {
 
@@ -53,6 +57,9 @@ public class TpTool {
         double x = pos.x;
         double y = pos.y;
         double z = pos.z;
+
+        ChunkPos chunkpos = new ChunkPos(new BlockPos(pos));
+        targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
 
         if (targetLevel == entity.level) {
             entity.teleportTo(x, y, z);
