@@ -71,11 +71,8 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
         if (level instanceof ServerLevel serverLevel) {
             if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCMain.FLOO_POWDER_ITEM.get()))
                 entity.hurt(DamageSource.IN_FIRE, 1F);
-            else if (entity instanceof LivingEntity livingEntity) {
-                if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
-                    TpTool.gogo(livingEntity, blockEntity.name, level, blockPos);
-                    remove(blockPos, serverLevel);
-                }
+            else if (entity instanceof LivingEntity) {
+                remove(blockPos, serverLevel);
             }
         }
     }

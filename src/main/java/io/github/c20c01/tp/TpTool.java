@@ -20,38 +20,28 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.ITeleporter;
-
-import java.util.function.Function;
 
 public class TpTool {
 
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
-        new Thread(() -> {
-            PosInfo posInfo = PosMap.get(name);
-            if (posInfo == null) {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND);
-                    serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
-                }
-                level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
-            } else if (posInfo.noNull()) {
-                try {
-                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-                    Thread.sleep(100);
-                    teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos));
-                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-                    level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
-                } catch (Exception ignore) {
-                }
-            } else {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    var text = new TranslatableComponent(CCMain.TEXT_NOT_LOADED);
-                    serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
-                }
-                level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
+        PosInfo posInfo = PosMap.get(name);
+        if (posInfo == null) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND);
+                serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
-        }).start();
+            level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
+        } else if (posInfo.noNull()) {
+            teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos));
+            entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
+            level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
+        } else {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                var text = new TranslatableComponent(CCMain.TEXT_NOT_LOADED);
+                serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+            }
+            level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
+        }
     }
 
     private static void teleportTo(LivingEntity entity, ServerLevel targetLevel, Vec3 pos) {
@@ -65,15 +55,7 @@ public class TpTool {
         if (targetLevel == entity.level) {
             entity.teleportTo(x, y, z);
         } else if (entity instanceof ServerPlayer serverPlayer) {
-            serverPlayer.changeDimension(targetLevel, new ITeleporter() {
-                public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
-                    entity = repositionEntity.apply(false);
-                    entity.teleportTo(pos.x, pos.y, pos.z);
-                    entity.setYHeadRot(entity.getDirection().toYRot());
-                    return entity;
-                }
-            });
-            //serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
+            serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
         } else {
             Entity oldEntity = entity;
             entity = (LivingEntity) entity.getType().create(targetLevel);
