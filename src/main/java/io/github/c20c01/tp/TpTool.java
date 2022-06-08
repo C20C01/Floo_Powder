@@ -20,13 +20,14 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.ITeleporter;
 
-import java.util.Objects;
+import java.util.function.Function;
 
 public class TpTool {
 
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
-        if (!entity.level.isClientSide) new Thread(() -> {
+        new Thread(() -> {
             PosInfo posInfo = PosMap.get(name);
             if (posInfo == null) {
                 if (entity instanceof ServerPlayer serverPlayer) {
@@ -64,7 +65,15 @@ public class TpTool {
         if (targetLevel == entity.level) {
             entity.teleportTo(x, y, z);
         } else if (entity instanceof ServerPlayer serverPlayer) {
-            serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
+            serverPlayer.changeDimension(targetLevel, new ITeleporter() {
+                public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+                    entity = repositionEntity.apply(false);
+                    entity.teleportTo(pos.x, pos.y, pos.z);
+                    entity.setYHeadRot(entity.getDirection().toYRot());
+                    return entity;
+                }
+            });
+            //serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
         } else {
             Entity oldEntity = entity;
             entity = (LivingEntity) entity.getType().create(targetLevel);
