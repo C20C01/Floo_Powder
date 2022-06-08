@@ -20,6 +20,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.ITeleporter;
+
+import java.util.function.Function;
 
 public class TpTool {
 
@@ -62,7 +65,15 @@ public class TpTool {
         if (targetLevel == entity.level) {
             entity.teleportTo(x, y, z);
         } else if (entity instanceof ServerPlayer serverPlayer) {
-            serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
+            //serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
+            entity.changeDimension(targetLevel, new ITeleporter() {
+                @Override
+                public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+                    entity = repositionEntity.apply(false);
+                    entity.teleportTo(x, y, z);
+                    return entity;
+                }
+            });
         } else {
             Entity oldEntity = entity;
             entity = (LivingEntity) entity.getType().create(targetLevel);

@@ -138,14 +138,4 @@ public class FlooPowder extends Item {
         Block block = level.getBlockState(pos).getBlock();
         return (block instanceof BaseFireBlock && !(block instanceof PortalFireBlock));
     }
-
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            var text1 = new TextComponent("try");
-            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
-            TpTool.gogo(serverPlayer, player.getItemInHand(hand).getDisplayName().getString(), level, player.getOnPos());
-        }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
-    }
 }
