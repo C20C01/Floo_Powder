@@ -1,6 +1,7 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,8 +72,8 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
             if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCMain.FLOO_POWDER_ITEM.get()))
                 entity.hurt(DamageSource.IN_FIRE, 1F);
             else if (entity instanceof LivingEntity livingEntity) {
-                if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity){
-
+                if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
+                    TpTool.gogo(livingEntity, blockEntity.name, level, blockPos);
                 }
                 remove(blockPos, serverLevel);
             }
