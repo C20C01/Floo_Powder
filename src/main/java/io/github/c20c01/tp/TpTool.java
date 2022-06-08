@@ -24,24 +24,31 @@ import net.minecraft.world.phys.Vec3;
 public class TpTool {
 
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
-        PosInfo posInfo = PosMap.get(name);
-        if (posInfo == null) {
-            if (entity instanceof ServerPlayer serverPlayer) {
-                var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND);
-                serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+        if (!entity.level.isClientSide) new Thread(() -> {
+            PosInfo posInfo = PosMap.get(name);
+            if (posInfo == null) {
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND);
+                    serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+                }
+                level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
+            } else if (posInfo.noNull()) {
+                try {
+                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
+                    Thread.sleep(100);
+                    teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos));
+                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
+                    level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
+                } catch (Exception ignore) {
+                }
+            } else {
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    var text = new TranslatableComponent(CCMain.TEXT_NOT_LOADED);
+                    serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+                }
+                level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
             }
-            level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
-        } else if (posInfo.noNull()) {
-            teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos));
-            entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-            level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
-        } else {
-            if (entity instanceof ServerPlayer serverPlayer) {
-                var text = new TranslatableComponent(CCMain.TEXT_NOT_LOADED);
-                serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
-            }
-            level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
-        }
+        }).start();
     }
 
     private static void teleportTo(LivingEntity entity, ServerLevel targetLevel, Vec3 pos) {
