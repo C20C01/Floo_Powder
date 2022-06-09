@@ -20,6 +20,9 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.ITeleporter;
+
+import java.util.function.Function;
 
 public class TpTool {
 
@@ -56,22 +59,42 @@ public class TpTool {
         double y = pos.y;
         double z = pos.z;
 
-        ChunkPos chunkpos = new ChunkPos(new BlockPos(pos));
-        targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
+        if (entity instanceof ServerPlayer serverPlayer) {
+            float yRot = entity.getDirection().toYRot();
+            float xRot = entity.getXRot();
+            ChunkPos chunkpos = new ChunkPos(new BlockPos(pos));
+            targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
+            entity.stopRiding();
+            if (serverPlayer.isSleeping()) {
+                serverPlayer.stopSleepInBed(true, true);
+            }
 
-        if (targetLevel == entity.level) {
-            entity.teleportTo(x, y, z);
-        } else if (entity instanceof ServerPlayer serverPlayer) {
-            serverPlayer.teleportTo(targetLevel, x, y, z, entity.getDirection().toYRot(), entity.getXRot());
+            if (targetLevel == entity.level) {
+                serverPlayer.connection.teleport(x, y, z, yRot, xRot);
+            } else {
+                //serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
+                serverPlayer.changeDimension(targetLevel, new ITeleporter() {
+                    @Override
+                    public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+                        entity = repositionEntity.apply(false);
+                        entity.teleportTo(x, y, z);
+                        return entity;
+                    }
+                });
+            }
         } else {
-            Entity oldEntity = entity;
-            entity = (LivingEntity) entity.getType().create(targetLevel);
-            if (entity == null) return;
-            entity.teleportTo(x, y, z);
-            entity.restoreFrom(oldEntity);
-            entity.moveTo(x, y, z);
-            oldEntity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-            targetLevel.addDuringTeleport(entity);
+            if (targetLevel == entity.level) {
+                entity.moveTo(x, y, z);
+            } else {
+                entity.unRide();
+                Entity oldEntity = entity;
+                entity = (LivingEntity) entity.getType().create(targetLevel);
+                if (entity == null) return;
+                entity.restoreFrom(oldEntity);
+                entity.moveTo(x, y, z);
+                oldEntity.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
+                targetLevel.addDuringTeleport(entity);
+            }
         }
 
         if (!entity.isFallFlying()) {
