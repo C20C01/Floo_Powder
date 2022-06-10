@@ -6,6 +6,7 @@ import io.github.c20c01.pos.PosMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,15 +73,9 @@ public class TpTool {
             if (targetLevel == entity.level) {
                 serverPlayer.connection.teleport(x, y, z, yRot, xRot);
             } else {
-                //serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
-                serverPlayer.changeDimension(targetLevel, new ITeleporter() {
-                    @Override
-                    public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
-                        entity = repositionEntity.apply(false);
-                        entity.teleportTo(x, y, z);
-                        return entity;
-                    }
-                });
+                var text = new TextComponent("onTravelToDimension: " + net.minecraftforge.common.ForgeHooks.onTravelToDimension(serverPlayer, targetLevel.dimension()));
+                serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
+                serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
             }
         } else {
             if (targetLevel == entity.level) {
