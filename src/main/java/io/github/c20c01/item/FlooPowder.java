@@ -6,7 +6,6 @@ import io.github.c20c01.block.PortalFireBlockEntity;
 import io.github.c20c01.pos.PosInfo;
 import io.github.c20c01.pos.PosMap;
 import io.github.c20c01.tp.TpTool;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,14 +16,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -32,7 +29,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 
 public class FlooPowder extends Item {
@@ -137,5 +133,29 @@ public class FlooPowder extends Item {
     private boolean isFireBlock(BlockPos pos) {
         Block block = level.getBlockState(pos).getBlock();
         return (block instanceof BaseFireBlock && !(block instanceof PortalFireBlock));
+    }
+
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            var text1 = new TextComponent("try");
+            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
+            PosInfo posInfo = PosMap.get(player.getItemInHand(hand).getDisplayName().getString());
+            if (posInfo.noNull()) {
+                Vec3 pos = Vec3.atBottomCenterOf(posInfo.blockPos);
+                double x = pos.x;
+                double y = pos.y;
+                double z = pos.z;
+                float yRot = serverPlayer.getDirection().toYRot();
+                float xRot = serverPlayer.getXRot();
+
+                if (posInfo.level == serverPlayer.level) {
+                    serverPlayer.connection.teleport(x, y, z, yRot, xRot);
+                } else {
+                    TpTool.tpToAnotherDimension(serverPlayer, posInfo.level, x, y, z, yRot, xRot);
+                }
+            }
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 }
