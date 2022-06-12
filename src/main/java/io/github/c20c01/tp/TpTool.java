@@ -6,6 +6,7 @@ import io.github.c20c01.pos.PosMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -97,18 +98,37 @@ public class TpTool {
     }
 
     private static void tpToAnotherDimension(ServerPlayer serverPlayer, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
+        test(serverPlayer,"1");
         ServerLevel serverlevel = serverPlayer.getLevel();
+        test(serverPlayer,"2");
         serverPlayer.connection.send(new ClientboundRespawnPacket(targetLevel.dimensionTypeRegistration(), targetLevel.dimension(), BiomeManager.obfuscateSeed(targetLevel.getSeed()), serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer.gameMode.getPreviousGameModeForPlayer(), targetLevel.isDebug(), targetLevel.isFlat(), true));
+        test(serverPlayer,"3");
         serverPlayer.server.getPlayerList().sendPlayerPermissionLevel(serverPlayer);
+        test(serverPlayer,"4");
         serverlevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+        test(serverPlayer,"5");
         serverPlayer.revive();
+        test(serverPlayer,"6");
         serverPlayer.moveTo(x, y, z, yRot, xRot);
+        test(serverPlayer,"7");
         serverPlayer.setLevel(targetLevel);
+        test(serverPlayer,"8");
         targetLevel.addDuringCommandTeleport(serverPlayer);
+        test(serverPlayer,"9");
         serverPlayer.connection.teleport(x, y, z, yRot, xRot);
+        test(serverPlayer,"10");
         serverPlayer.gameMode.setLevel(targetLevel);
+        test(serverPlayer,"11");
         serverPlayer.server.getPlayerList().sendLevelInfo(serverPlayer, targetLevel);
+        test(serverPlayer,"12");
         serverPlayer.server.getPlayerList().sendAllPlayerInfo(serverPlayer);
+        test(serverPlayer,"13");
         net.minecraftforge.event.ForgeEventFactory.firePlayerChangedDimensionEvent(serverPlayer, serverlevel.dimension(), targetLevel.dimension());
+        test(serverPlayer,"14");
+    }
+
+    private static void test(ServerPlayer serverPlayer, String str) {
+        var text = new TextComponent(str);
+        serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
     }
 }
