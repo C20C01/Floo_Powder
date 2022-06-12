@@ -27,7 +27,6 @@ import net.minecraft.world.phys.Vec3;
 public class TpTool {
 
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
-        new Thread(() -> {
             PosInfo posInfo = PosMap.get(name);
             if (posInfo == null) {
                 if (entity instanceof ServerPlayer serverPlayer) {
@@ -38,9 +37,7 @@ public class TpTool {
             } else if (posInfo.noNull()) {
                 try {
                     entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-                    Thread.sleep(100);
                     teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos));
-                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
                     level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 } catch (Exception ignore) {
                 }
@@ -51,7 +48,6 @@ public class TpTool {
                 }
                 level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
             }
-        }).start();
     }
 
     private static void teleportTo(LivingEntity entity, ServerLevel targetLevel, Vec3 pos) {
@@ -70,7 +66,7 @@ public class TpTool {
             }
 
             if (targetLevel == entity.level) {
-                serverPlayer.connection.teleport(x, y, z, yRot, xRot);
+                serverPlayer.moveTo(x, y, z);
             } else {
                 tpToAnotherDimension(serverPlayer, targetLevel, x, y, z, yRot, xRot);
             }
@@ -97,7 +93,7 @@ public class TpTool {
         if (entity instanceof PathfinderMob) ((PathfinderMob) entity).getNavigation().stop();
     }
 
-    private static void tpToAnotherDimension(ServerPlayer serverPlayer, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
+    public static void tpToAnotherDimension(ServerPlayer serverPlayer, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
         test(serverPlayer,"1");
         ServerLevel serverlevel = serverPlayer.getLevel();
         test(serverPlayer,"2");
