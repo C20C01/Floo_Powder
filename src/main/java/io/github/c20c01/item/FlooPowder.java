@@ -3,8 +3,6 @@ package io.github.c20c01.item;
 import io.github.c20c01.CCMain;
 import io.github.c20c01.block.PortalFireBlock;
 import io.github.c20c01.block.PortalFireBlockEntity;
-import io.github.c20c01.pos.PosInfo;
-import io.github.c20c01.pos.PosMap;
 import io.github.c20c01.tp.TpTool;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -140,21 +138,7 @@ public class FlooPowder extends Item {
         if (player instanceof ServerPlayer serverPlayer) {
             var text1 = new TextComponent("try");
             serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
-            PosInfo posInfo = PosMap.get(player.getItemInHand(hand).getDisplayName().getString());
-            if (posInfo.noNull()) {
-                Vec3 pos = Vec3.atBottomCenterOf(posInfo.blockPos);
-                double x = pos.x;
-                double y = pos.y;
-                double z = pos.z;
-                float yRot = serverPlayer.getDirection().toYRot();
-                float xRot = serverPlayer.getXRot();
-
-                if (posInfo.level == serverPlayer.level) {
-                    serverPlayer.connection.teleport(x, y, z, yRot, xRot);
-                } else {
-                    TpTool.tpToAnotherDimension(serverPlayer, posInfo.level, x, y, z, yRot, xRot);
-                }
-            }
+            TpTool.gogo(serverPlayer,player.getItemInHand(hand).getDisplayName().getString(),level,player.getOnPos());
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
