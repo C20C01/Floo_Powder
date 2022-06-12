@@ -6,8 +6,8 @@ import io.github.c20c01.pos.PosMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -20,10 +20,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.ITeleporter;
-
-import java.util.function.Function;
 
 public class TpTool {
 
@@ -73,9 +71,7 @@ public class TpTool {
             if (targetLevel == entity.level) {
                 serverPlayer.connection.teleport(x, y, z, yRot, xRot);
             } else {
-                var text = new TextComponent("onTravelToDimension: " + net.minecraftforge.common.ForgeHooks.onTravelToDimension(serverPlayer, targetLevel.dimension()));
-                serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
-                serverPlayer.teleportTo(targetLevel, x, y, z, yRot, xRot);
+                tpToAnotherDimension(serverPlayer, targetLevel, x, y, z, yRot, xRot);
             }
         } else {
             if (targetLevel == entity.level) {
@@ -98,5 +94,21 @@ public class TpTool {
         }
 
         if (entity instanceof PathfinderMob) ((PathfinderMob) entity).getNavigation().stop();
+    }
+
+    private static void tpToAnotherDimension(ServerPlayer serverPlayer, ServerLevel targetLevel, double x, double y, double z, float yRot, float xRot) {
+        ServerLevel serverlevel = serverPlayer.getLevel();
+        serverPlayer.connection.send(new ClientboundRespawnPacket(targetLevel.dimensionTypeRegistration(), targetLevel.dimension(), BiomeManager.obfuscateSeed(targetLevel.getSeed()), serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer.gameMode.getPreviousGameModeForPlayer(), targetLevel.isDebug(), targetLevel.isFlat(), true));
+        serverPlayer.server.getPlayerList().sendPlayerPermissionLevel(serverPlayer);
+        serverlevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+        serverPlayer.revive();
+        serverPlayer.moveTo(x, y, z, yRot, xRot);
+        serverPlayer.setLevel(targetLevel);
+        targetLevel.addDuringCommandTeleport(serverPlayer);
+        serverPlayer.connection.teleport(x, y, z, yRot, xRot);
+        serverPlayer.gameMode.setLevel(targetLevel);
+        serverPlayer.server.getPlayerList().sendLevelInfo(serverPlayer, targetLevel);
+        serverPlayer.server.getPlayerList().sendAllPlayerInfo(serverPlayer);
+        net.minecraftforge.event.ForgeEventFactory.firePlayerChangedDimensionEvent(serverPlayer, serverlevel.dimension(), targetLevel.dimension());
     }
 }

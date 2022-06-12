@@ -27,9 +27,10 @@ import java.util.HashSet;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
-    private HashSet<BlockPos> allPortal;
+    private final HashSet<BlockPos> allPortal = new HashSet<>();
     private String removeName;
     private Level removeSLevel;
+    private boolean lock = false;
 
     public PortalFireBlock(BlockBehaviour.Properties properties, float damage) {
         super(properties, damage);
@@ -85,23 +86,26 @@ public class PortalFireBlock extends BaseFireBlock implements EntityBlock {
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockState(blockPos).isAir()) {
             remove(blockPos, level);
-            allPortal.clear();
         }
         super.onRemove(blockState, level, blockPos, blockState1, p_60519_);
     }
 
     private void remove(BlockPos blockPos, Level level) {
-        removeSLevel = level;
-        if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
-            removeName = blockEntity.name;
+        if (!lock) {
+            lock = true;
+            removeSLevel = level;
+            if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
+                removeName = blockEntity.name;
+            }
+            getAllPortalBlock(blockPos);
+            for (BlockPos p : allPortal) level.removeBlock(p, false);
+            allPortal.clear();
+            lock = false;
         }
-        getAllPortalBlock(blockPos);
-        for (BlockPos p : allPortal) level.removeBlock(p, false);
-        allPortal.clear();
     }
 
     private void getAllPortalBlock(BlockPos inPos) {
-        allPortal = new HashSet<>();
+        allPortal.clear();
         allPortal.add(inPos);
         loop(inPos);
     }
