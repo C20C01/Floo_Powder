@@ -1,6 +1,7 @@
 package io.github.c20c01.saveData;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.command.ModSettings;
 import io.github.c20c01.gui.GuiData;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.server.level.ServerLevel;
@@ -22,13 +23,15 @@ public class LoadSaveData {
             //Loading points
             GuiData.load(level);
             //Loading desc
+            ModSettings.load(level);
+            //Loading settings
         }).start();
     }
 
     @SubscribeEvent
     public static void serverStopped(ServerStoppedEvent event) {
         PosMap.clear();
-        //Clearing points
         GuiData.clear();
+        ModSettings.clear();
     }
 }

@@ -3,12 +3,10 @@ package io.github.c20c01.item;
 import io.github.c20c01.CCMain;
 import io.github.c20c01.block.PortalFireBlock;
 import io.github.c20c01.block.PortalFireBlockEntity;
+import io.github.c20c01.command.ModSettings;
 import io.github.c20c01.tp.TpTool;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -136,9 +134,9 @@ public class FlooPowder extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer) {
-            var text1 = new TextComponent("try");
-            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
-            TpTool.gogo(serverPlayer,player.getItemInHand(hand).getDisplayName().getString(),level,player.getOnPos());
+            if (serverPlayer.gameMode.isCreative() || ModSettings.get(ModSettings.HAND_USE_FP)) {
+                TpTool.gogo(serverPlayer, player.getItemInHand(hand).getDisplayName().getString(), level, player.getOnPos());
+            }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
