@@ -135,7 +135,9 @@ public class FlooPowder extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.gameMode.isCreative() || ModSettings.get(ModSettings.HAND_USE_FP)) {
-                TpTool.gogo(serverPlayer, player.getItemInHand(hand).getDisplayName().getString(), level, player.getOnPos());
+                ItemStack stack = player.getItemInHand(hand);
+                player.getCooldowns().addCooldown(stack.getItem(), 60);
+                TpTool.gogo(serverPlayer, stack.getDisplayName().getString(), level, player.getOnPos());
             }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
