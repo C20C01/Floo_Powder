@@ -34,6 +34,7 @@ public class TpTool {
             level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
         } else if (posInfo.noNull()) {
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
+            entity.fallDistance = -Float.MAX_VALUE;  // Hope this can save you from falling.
             try {
                 new DelayTool(5, () -> teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos)));
             } catch (Exception e) {
