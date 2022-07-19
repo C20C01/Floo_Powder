@@ -1,6 +1,7 @@
 package io.github.c20c01.tp;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.delay.DelayTool;
 import io.github.c20c01.pos.PosInfo;
 import io.github.c20c01.pos.PosMap;
@@ -21,9 +22,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.Vec3;
 
 public class TpTool {
+    private static final int DURATION = 100; // 绿色火焰持续的tick
+
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
         PosInfo posInfo = PosMap.get(name);
         if (posInfo == null) {
@@ -34,9 +38,13 @@ public class TpTool {
             level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
         } else if (posInfo.noNull()) {
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-            entity.fallDistance = -Float.MAX_VALUE;  // Hope this can save you from falling.
+            entity.fallDistance = -Float.MAX_VALUE;  // 尝试去除掉落伤害
             try {
-                new DelayTool(5, () -> teleportTo(entity, posInfo.level, Vec3.atBottomCenterOf(posInfo.blockPos)));
+                var targetLevel = posInfo.level;
+                var targetBlockPos = posInfo.blockPos;
+                loadArea(targetBlockPos, targetLevel, entity);
+                changeEndFire(targetBlockPos, targetLevel);
+                new DelayTool(5, () -> teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos)));
             } catch (Exception e) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     var text = new TextComponent(e.getMessage());
@@ -53,6 +61,23 @@ public class TpTool {
         }
     }
 
+    private static void loadArea(BlockPos blockPos, ServerLevel targetLevel, LivingEntity entity) {
+        ChunkPos chunkpos = new ChunkPos(blockPos);
+        targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
+    }
+
+    private static void changeEndFire(BlockPos blockPos, ServerLevel targetLevel) {
+        // 实现让终点的火焰变为绿色火焰（仅装饰的传送火焰，并无传送逻辑），一段时间后会被熄灭
+        if (targetLevel.getBlockState(blockPos).getBlock() instanceof BaseFireBlock) {
+            BasePortalFireBlock.changeAllFireBlock(blockPos, targetLevel, null);
+            new DelayTool(DURATION, () -> {
+                if (targetLevel.getBlockState(blockPos).is(CCMain.BASE_PORTAL_FIRE_BLOCK.get())) {
+                    targetLevel.removeBlock(blockPos, false);
+                }
+            });
+        }
+    }
+
     private static void teleportTo(LivingEntity entity, ServerLevel targetLevel, Vec3 pos) {
         double x = pos.x;
         double y = pos.y;
@@ -61,8 +86,6 @@ public class TpTool {
         if (entity instanceof ServerPlayer serverPlayer) {
             float yRot = entity.getDirection().toYRot();
             float xRot = entity.getXRot();
-            ChunkPos chunkpos = new ChunkPos(new BlockPos(pos));
-            targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
             entity.stopRiding();
             if (serverPlayer.isSleeping()) {
                 serverPlayer.stopSleepInBed(true, true);

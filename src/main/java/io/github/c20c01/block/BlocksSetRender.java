@@ -15,6 +15,7 @@ public class BlocksSetRender {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void clientSetRender(final FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(CCMain.BASE_PORTAL_FIRE_BLOCK.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(CCMain.PORTAL_FIRE_BLOCK.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(CCMain.PORTAL_POINT_BLOCK.get(), RenderType.solid());
         ItemBlockRenderTypes.setRenderLayer(CCMain.FLOO_POWDER_GIVER_BLOCK.get(), RenderType.solid());

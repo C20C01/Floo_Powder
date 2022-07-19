@@ -1,4 +1,4 @@
-package io.github.c20c01.block;
+package io.github.c20c01.block.portalPoint;
 
 import io.github.c20c01.CCMain;
 import io.github.c20c01.pos.PosMap;
