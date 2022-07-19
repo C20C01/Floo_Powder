@@ -2,6 +2,11 @@ package io.github.c20c01;
 
 import com.mojang.datafixers.DSL;
 import io.github.c20c01.block.*;
+import io.github.c20c01.block.portalFire.BasePortalFireBlock;
+import io.github.c20c01.block.portalFire.PortalFireBlock;
+import io.github.c20c01.block.portalFire.PortalFireBlockEntity;
+import io.github.c20c01.block.portalPoint.PortalPointBlock;
+import io.github.c20c01.block.portalPoint.PortalPointBlockEntity;
 import io.github.c20c01.item.FlooPowder;
 import io.github.c20c01.item.PortalBook;
 import io.github.c20c01.item.PortalFlintAndSteel;
@@ -69,6 +74,9 @@ public class CCMain {
     public static final String PORTAL_BOOK_ID = "portal_book";
     public static final RegistryObject<PortalBook> PORTAL_BOOK_ITEM;
 
+    public static final String BASE_PORTAL_FIRE_BLOCK_ID = "base_portal_fire_block";
+    public static final RegistryObject<BasePortalFireBlock> BASE_PORTAL_FIRE_BLOCK;
+
     public static final String PORTAL_FIRE_BLOCK_ID = "portal_fire_block";
     public static final RegistryObject<PortalFireBlock> PORTAL_FIRE_BLOCK;
     public static final RegistryObject<BlockEntityType<PortalFireBlockEntity>> PORTAL_FIRE_BLOCK_ENTITY;
@@ -92,6 +100,8 @@ public class CCMain {
                 () -> new PortalFlintAndSteel(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).durability(1)));
         PORTAL_BOOK_ITEM = ITEMS.register(PORTAL_BOOK_ID,
                 () -> new PortalBook(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1)));
+        BASE_PORTAL_FIRE_BLOCK = BLOCKS.register(BASE_PORTAL_FIRE_BLOCK_ID,
+                () -> new BasePortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F));
         PORTAL_FIRE_BLOCK = BLOCKS.register(PORTAL_FIRE_BLOCK_ID,
                 () -> new PortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F));
         PORTAL_FIRE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(PORTAL_FIRE_BLOCK_ID,
