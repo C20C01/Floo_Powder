@@ -51,7 +51,7 @@ public class PosMap {
 
     public static void remove(String key, ServerLevel level, BlockPos pos) {
         // 如果是被覆盖掉的核心则不删除传送点
-        if (PosMap.get(key).blockPos.equals(pos.above())) {
+        if (PosMap.get(key) != null && PosMap.get(key).blockPos.equals(pos.above())) {
             MAP.remove(key);
             PosWorldSavedData.get(level.getServer()).changed();
         }
