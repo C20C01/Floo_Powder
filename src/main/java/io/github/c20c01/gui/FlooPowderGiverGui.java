@@ -98,7 +98,7 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeEditButton(boolean visible) {
-        editButton = new Button(this.width / 2 + 126, 197, 20, 20, new TextComponent("#"), (b) -> editTool(true));
+        editButton = new Button(this.width / 2 + 126, 197, 20, 20, new TextComponent("✐"), (b) -> editTool(true));
         editButton.visible = visible;
         this.addRenderableWidget(editButton);
     }

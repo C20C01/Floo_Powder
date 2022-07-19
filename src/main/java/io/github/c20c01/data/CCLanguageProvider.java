@@ -88,7 +88,7 @@ public class CCLanguageProvider extends LanguageProvider {
         this.add(CCMain.TEXT_DONE, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Select";
-            case ZH_CN -> "确定";
+            case ZH_CN -> "领取所选";
         });
         this.add(CCMain.TEXT_CANCEL, switch (this.locale) {
             default -> throw new IllegalStateException();
