@@ -24,10 +24,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.ticks.LevelChunkTicks;
 
 public class TpTool {
-    private static final int DURATION = 100; // 绿色火焰持续的tick
-
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
         PosInfo posInfo = PosMap.get(name);
         if (posInfo == null) {
@@ -67,14 +66,15 @@ public class TpTool {
     }
 
     private static void changeEndFire(BlockPos blockPos, ServerLevel targetLevel) {
-        // 实现让终点的火焰变为绿色火焰（仅装饰的传送火焰，并无传送逻辑），一段时间后会被熄灭
+        // 实现让终点的火焰变为绿色火焰“FakePortalFireBlock”（仅装饰的传送火焰，并无传送逻辑），一段时间后会被熄灭
+        // 下面的代码具体原理不大清楚，但可以实现等待时再等待可以重置等待进度，而且退出再进去后也会继续等待时间
         if (targetLevel.getBlockState(blockPos).getBlock() instanceof BaseFireBlock) {
             BasePortalFireBlock.changeAllFireBlock(blockPos, targetLevel, null);
-            new DelayTool(DURATION, () -> {
-                if (targetLevel.getBlockState(blockPos).is(CCMain.BASE_PORTAL_FIRE_BLOCK.get())) {
-                    targetLevel.removeBlock(blockPos, false);
-                }
-            });
+            if (targetLevel.getBlockTicks().hasScheduledTick(blockPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get())) {
+                var chunkPos = new ChunkPos(blockPos);
+                targetLevel.getBlockTicks().addContainer(chunkPos, new LevelChunkTicks<>());
+            }
+            targetLevel.scheduleTick(blockPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get(), 60);
         }
     }
 

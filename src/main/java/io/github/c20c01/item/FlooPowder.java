@@ -31,7 +31,7 @@ public class FlooPowder extends Item {
             var pos = itemEntity.position();
             var blockPos = new BlockPos(pos);
             var level = itemEntity.level;
-            if (BasePortalFireBlock.canChangeToPortal(blockPos, level)) {
+            if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
                 changeFireBlock(blockPos, level, itemEntity.getItem().getDisplayName().getString());
             } else {
                 explode(pos, level);

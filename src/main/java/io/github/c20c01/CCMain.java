@@ -1,8 +1,8 @@
 package io.github.c20c01;
 
 import com.mojang.datafixers.DSL;
-import io.github.c20c01.block.*;
-import io.github.c20c01.block.portalFire.BasePortalFireBlock;
+import io.github.c20c01.block.FlooPowderGiverBlock;
+import io.github.c20c01.block.portalFire.FakePortalFireBlock;
 import io.github.c20c01.block.portalFire.PortalFireBlock;
 import io.github.c20c01.block.portalFire.PortalFireBlockEntity;
 import io.github.c20c01.block.portalPoint.PortalPointBlock;
@@ -50,10 +50,10 @@ public class CCMain {
     public static final String TEXT_NEXT_PAGE = "gui." + ID + ".next_page";
 
     public static final String NETWORK_VERSION = "1";
-    public static final ResourceLocation NETWORK_ID_DESC_TO_S = new ResourceLocation(ID,"network_desc_to_s");
-    public static final ResourceLocation NETWORK_ID_DESC_TO_C = new ResourceLocation(ID,"network_desc_to_c");
-    public static final ResourceLocation NETWORK_ID_NAME_TO_S = new ResourceLocation(ID,"network_name_to_s");
-    public static final ResourceLocation NETWORK_ID_PLAYER_CODE_TO_C = new ResourceLocation(ID,"network_player_code_to_c");
+    public static final ResourceLocation NETWORK_ID_DESC_TO_S = new ResourceLocation(ID, "network_desc_to_s");
+    public static final ResourceLocation NETWORK_ID_DESC_TO_C = new ResourceLocation(ID, "network_desc_to_c");
+    public static final ResourceLocation NETWORK_ID_NAME_TO_S = new ResourceLocation(ID, "network_name_to_s");
+    public static final ResourceLocation NETWORK_ID_PLAYER_CODE_TO_C = new ResourceLocation(ID, "network_player_code_to_c");
 
     public static final ResourceLocation FLOO_POWDER_GIVER_GUI_BACKGROUND = new ResourceLocation(ID, "textures/gui/floo_powder_giver_gui_background.png");
 
@@ -74,8 +74,8 @@ public class CCMain {
     public static final String PORTAL_BOOK_ID = "portal_book";
     public static final RegistryObject<PortalBook> PORTAL_BOOK_ITEM;
 
-    public static final String BASE_PORTAL_FIRE_BLOCK_ID = "base_portal_fire_block";
-    public static final RegistryObject<BasePortalFireBlock> BASE_PORTAL_FIRE_BLOCK;
+    public static final String FAKE_PORTAL_FIRE_BLOCK_ID = "fake_portal_fire_block";
+    public static final RegistryObject<FakePortalFireBlock> FAKE_PORTAL_FIRE_BLOCK;
 
     public static final String PORTAL_FIRE_BLOCK_ID = "portal_fire_block";
     public static final RegistryObject<PortalFireBlock> PORTAL_FIRE_BLOCK;
@@ -100,8 +100,8 @@ public class CCMain {
                 () -> new PortalFlintAndSteel(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).durability(1)));
         PORTAL_BOOK_ITEM = ITEMS.register(PORTAL_BOOK_ID,
                 () -> new PortalBook(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1)));
-        BASE_PORTAL_FIRE_BLOCK = BLOCKS.register(BASE_PORTAL_FIRE_BLOCK_ID,
-                () -> new BasePortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F));
+        FAKE_PORTAL_FIRE_BLOCK = BLOCKS.register(FAKE_PORTAL_FIRE_BLOCK_ID,
+                () -> new FakePortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F));
         PORTAL_FIRE_BLOCK = BLOCKS.register(PORTAL_FIRE_BLOCK_ID,
                 () -> new PortalFireBlock(BlockBehaviour.Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F));
         PORTAL_FIRE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(PORTAL_FIRE_BLOCK_ID,

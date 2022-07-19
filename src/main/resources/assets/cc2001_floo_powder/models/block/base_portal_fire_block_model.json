@@ -1,6 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "cc2001_floo_powder:block/base_portal_fire_block"
-	}
-}

@@ -38,7 +38,7 @@ public class PosMap {
         for (ServerLevel world : level.getServer().getAllLevels()) {
             for (PosInfo info : MAP.values()) {
                 BlockPos blockPos = info.blockPos;
-                if (info.level == null && blockPos != null){
+                if (info.level == null && blockPos != null) {
                     world.getChunkSource().addRegionTicket(TicketType.PORTAL, new ChunkPos(blockPos), 1, blockPos);
                 }
             }
@@ -49,8 +49,11 @@ public class PosMap {
         MAP.clear();
     }
 
-    public static void remove(String key, ServerLevel level) {
-        MAP.remove(key);
-        PosWorldSavedData.get(level.getServer()).changed();
+    public static void remove(String key, ServerLevel level, BlockPos pos) {
+        // 如果是被覆盖掉的核心则不删除传送点
+        if (PosMap.get(key).blockPos.equals(pos.above())) {
+            MAP.remove(key);
+            PosWorldSavedData.get(level.getServer()).changed();
+        }
     }
 }
