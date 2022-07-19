@@ -69,7 +69,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
                     level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 } else if (blockState1.canOcclude()) {
                     if (level instanceof ServerLevel serverLevel) {
-                        PosMap.remove(blockEntity.name, serverLevel);
+                        PosMap.remove(blockEntity.name, serverLevel, blockPos.above());
                     }
                     blockEntity.name = "";
                     level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
@@ -84,7 +84,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
         if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             if (level instanceof ServerLevel serverLevel) {
-                PosMap.remove(blockEntity.name, serverLevel);
+                PosMap.remove(blockEntity.name, serverLevel, blockPos.above());
             }
             if (!blockEntity.name.equals(""))
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);

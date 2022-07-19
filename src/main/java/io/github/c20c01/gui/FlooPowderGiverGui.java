@@ -132,7 +132,8 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeCancelButton() {
-        cancelButton = new Button(this.width / 2 - 81, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_CANCEL), (b) -> close());
+        // “取消”按钮
+        cancelButton = new Button(this.width / 2 + 63, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_CANCEL), (b) -> close());
         this.addRenderableWidget(cancelButton);
     }
 
@@ -152,7 +153,8 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeOkButton() {
-        okButton = new Button(this.width / 2 - 144, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_DONE), (b) -> {
+        // “领取”按钮
+        okButton = new Button(this.width / 2, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_DONE), (b) -> {
             String name = nameList.get(page * 6 + set);
             String result = name.substring(1, name.length() - 1);
             FlooPowderGiverBlock.handle_C(result, playerCode);
@@ -169,7 +171,8 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeNextButton() {
-        nextButton = new Button(this.width / 2 + 63, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_NEXT_PAGE), (b) -> {
+        // “下一页”按钮
+        nextButton = new Button(this.width / 2 - 81, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_NEXT_PAGE), (b) -> {
             page++;
             if (set != -1) buttons[set].active = true;
             set = -1;
@@ -186,7 +189,8 @@ public class FlooPowderGiverGui extends Screen {
     }
 
     private void makeBackButton() {
-        backButton = new Button(this.width / 2, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_PREVIOUS_PAGE), (b) -> {
+        // “上一页”按钮
+        backButton = new Button(this.width / 2 - 144, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_PREVIOUS_PAGE), (b) -> {
             page--;
             if (set != -1) buttons[set].active = true;
             set = -1;

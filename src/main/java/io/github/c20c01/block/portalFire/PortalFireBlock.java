@@ -37,7 +37,9 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
                 if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
                     TpTool.gogo(livingEntity, blockEntity.name, level, blockPos);
                 }
-                serverLevel.removeBlock(blockPos, false);
+                if (serverLevel.getBlockState(blockPos).is(CCMain.PORTAL_FIRE_BLOCK.get())){
+                    serverLevel.removeBlock(blockPos, false);
+                }
             }
         }
     }

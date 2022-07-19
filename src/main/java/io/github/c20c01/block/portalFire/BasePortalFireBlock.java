@@ -82,21 +82,26 @@ public class BasePortalFireBlock extends BaseFireBlock {
         }
     }
 
-    public static boolean canChangeToPortal(BlockPos pos, Level level) {
+    public static boolean canChangeToPortalFire(BlockPos pos, Level level) {
         return level.getBlockState(pos).getBlock() instanceof BaseFireBlock && level.getBlockState(pos.below()).isFaceSturdy(level, pos, Direction.UP);
     }
 
+    public static boolean canChangeToFakeFire(BlockPos pos, Level level) {
+        return level.getBlockState(pos.below()).is(CCMain.PORTAL_POINT_BLOCK.get()) && level.getBlockState(pos).getBlock() instanceof BaseFireBlock;
+    }
+
     public static void changeAllFireBlock(BlockPos inPos, Level level, @Nullable String name) {
-        boolean isPortal = name != null;
         if (level instanceof ServerLevel serverLevel) {
-            Predicate<BlockPos> check = pos -> canChangeToPortal(pos, serverLevel);
+            boolean isPortal = name != null;
             if (isPortal) {
+                Predicate<BlockPos> check = pos -> canChangeToPortalFire(pos, serverLevel);
                 for (BlockPos pos : getAllFireBlock(inPos, check, MAXSIZE)) {
                     changeToPortalFire(pos, serverLevel, name);
                 }
             } else {
+                Predicate<BlockPos> check = pos -> canChangeToFakeFire(pos, serverLevel);
                 for (BlockPos pos : getAllFireBlock(inPos, check, MAXSIZE)) {
-                    changeToBaseFire(pos, serverLevel);
+                    changeToFakeFire(pos, serverLevel);
                 }
             }
         }
@@ -110,8 +115,8 @@ public class BasePortalFireBlock extends BaseFireBlock {
         }
     }
 
-    private static void changeToBaseFire(BlockPos inPos, ServerLevel level) {
-        level.setBlock(inPos, CCMain.BASE_PORTAL_FIRE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+    private static void changeToFakeFire(BlockPos inPos, ServerLevel level) {
+        level.setBlock(inPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
     }
 
     /**

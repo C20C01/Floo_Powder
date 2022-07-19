@@ -5,6 +5,7 @@
   "advancement.cc2001_floo_powder.get_portal_point_block.title": "Teleportation core!",
   "advancement.cc2001_floo_powder.into_fire.description": "Enter the teleport flame and try to teleport",
   "advancement.cc2001_floo_powder.into_fire.title": "Going in~",
+  "block.cc2001_floo_powder.fake_portal_fire_block": "Teleportation fire*",
   "block.cc2001_floo_powder.portal_fire_block": "Teleportation fire",
   "block.cc2001_floo_powder.portal_point_block": "Teleportation core",
   "block.cc2001_floo_powder.powder_giver_block": "Powder giver",
