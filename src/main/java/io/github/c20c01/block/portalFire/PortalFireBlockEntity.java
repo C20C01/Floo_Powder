@@ -13,6 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class PortalFireBlockEntity extends BlockEntity {
     public String name;
+    public boolean lasting = false; // 传送后不熄灭
 
     public PortalFireBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CCMain.PORTAL_FIRE_BLOCK_ENTITY.get(), blockPos, blockState);
@@ -22,11 +23,13 @@ public class PortalFireBlockEntity extends BlockEntity {
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putString("Name", name);
+        tag.putBoolean("Lasting", lasting);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         name = tag.getString("Name");
+        lasting = tag.getBoolean("Lasting");
     }
 }
