@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,14 +68,14 @@ public class BasePortalFireBlock extends BaseFireBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean p_60519_) {
-        if (blockState1.isAir()) removeAllFireBlock(blockPos, level);
+        if (blockState1.isAir()) removeAllPortalFire(blockPos, level);
         super.onRemove(blockState, level, blockPos, blockState1, p_60519_);
     }
 
-    public static void removeAllFireBlock(BlockPos inPos, Level level) {
+    public static void removeAllPortalFire(BlockPos inPos, Level level) {
         if (!lock && level instanceof ServerLevel serverLevel) {
             lock = true;
-            Predicate<BlockPos> check = pos -> serverLevel.getBlockState(pos).getBlock() instanceof BasePortalFireBlock;
+            Predicate<BlockPos> check = pos -> serverLevel.getBlockState(pos).getBlock() instanceof PortalFireBlock;
             for (BlockPos pos : getAllFireBlock(inPos, check, MAXSIZE)) {
                 serverLevel.removeBlock(pos, false);
             }
@@ -116,7 +117,13 @@ public class BasePortalFireBlock extends BaseFireBlock {
     }
 
     private static void changeToFakeFire(BlockPos inPos, ServerLevel level) {
+        // 实现让终点的火焰变为绿色火焰“FakePortalFireBlock”（仅装饰的传送火焰，并无传送逻辑），一段时间后会被熄灭
+        // 下面的代码具体原理不大清楚，但可以实现等待时再等待可以重置等待进度，而且退出再进去后也会继续等待时间
         level.setBlock(inPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+        if (level.getBlockTicks().hasScheduledTick(inPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get())) {
+            level.getBlockTicks().clearArea(new BoundingBox(inPos));
+        }
+        level.scheduleTick(inPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get(), 60);
     }
 
     /**
