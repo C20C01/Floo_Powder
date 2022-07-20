@@ -24,7 +24,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.ticks.LevelChunkTicks;
 
 public class TpTool {
     public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
@@ -43,7 +42,7 @@ public class TpTool {
                 var targetBlockPos = posInfo.blockPos;
                 loadArea(targetBlockPos, targetLevel, entity);
                 changeEndFire(targetBlockPos, targetLevel);
-                new DelayTool(5, () -> teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos)));
+                new DelayTool(1, () -> teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos)));
             } catch (Exception e) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     var text = new TextComponent(e.getMessage());
@@ -66,15 +65,8 @@ public class TpTool {
     }
 
     private static void changeEndFire(BlockPos blockPos, ServerLevel targetLevel) {
-        // 实现让终点的火焰变为绿色火焰“FakePortalFireBlock”（仅装饰的传送火焰，并无传送逻辑），一段时间后会被熄灭
-        // 下面的代码具体原理不大清楚，但可以实现等待时再等待可以重置等待进度，而且退出再进去后也会继续等待时间
         if (targetLevel.getBlockState(blockPos).getBlock() instanceof BaseFireBlock) {
             BasePortalFireBlock.changeAllFireBlock(blockPos, targetLevel, null);
-            if (targetLevel.getBlockTicks().hasScheduledTick(blockPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get())) {
-                var chunkPos = new ChunkPos(blockPos);
-                targetLevel.getBlockTicks().addContainer(chunkPos, new LevelChunkTicks<>());
-            }
-            targetLevel.scheduleTick(blockPos, CCMain.FAKE_PORTAL_FIRE_BLOCK.get(), 60);
         }
     }
 
