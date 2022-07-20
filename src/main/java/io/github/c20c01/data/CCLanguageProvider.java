@@ -84,6 +84,11 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "No available Teleportation core found.";
             case ZH_CN -> "未发现任何可用的传送核心。";
         });
+        this.add(CCMain.TEXT_SET_PORTAL_FIRE_BOOK, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Exists after transmission";
+            case ZH_CN -> "传送后不熄灭";
+        });
         this.add(CCMain.TEXT_FOUND_BOOK, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Found available Teleportation core:";

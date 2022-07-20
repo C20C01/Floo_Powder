@@ -43,6 +43,7 @@ public class CCMain {
     public static final String TEXT_NOT_FOUND = "chat." + ID + ".no_point_find";
     public static final String TEXT_NOT_FOUND_BOOK = "chat." + ID + ".no_point_find_book";
     public static final String TEXT_FOUND_BOOK = "chat." + ID + ".point_find_book";
+    public static final String TEXT_SET_PORTAL_FIRE_BOOK = "chat." + ID + ".set_portal_fire_book";
 
     public static final String TEXT_DONE = "gui." + ID + ".done";
     public static final String TEXT_CANCEL = "gui." + ID + ".cancel";
