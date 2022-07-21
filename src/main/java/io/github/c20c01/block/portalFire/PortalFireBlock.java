@@ -30,16 +30,16 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel)
             if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().is(CCMain.FLOO_POWDER_ITEM.get()))
                 entity.hurt(DamageSource.IN_FIRE, 1F);
-            else if (entity instanceof LivingEntity livingEntity) {
-                if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
-                    TpTool.gogo(livingEntity, blockEntity.name, level, blockPos);
-                    if (level.getBlockState(blockPos).is(CCMain.PORTAL_FIRE_BLOCK.get()) && !blockEntity.lasting)
-                        serverLevel.removeBlock(blockPos, false);
+            else if (entity instanceof LivingEntity livingEntity && level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
+                boolean success = TpTool.gogo(livingEntity, blockEntity.name, level, blockPos);
+                if (level.getBlockState(blockPos).is(CCMain.PORTAL_FIRE_BLOCK.get())) {
+                    if (success) {
+                        if (!blockEntity.lasting) serverLevel.removeBlock(blockPos, false);
+                    } else serverLevel.removeBlock(blockPos, false);
                 }
             }
-        }
     }
 }

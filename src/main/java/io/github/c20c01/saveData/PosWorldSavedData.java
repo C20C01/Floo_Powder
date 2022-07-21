@@ -2,7 +2,6 @@ package io.github.c20c01.saveData;
 
 import io.github.c20c01.CCMain;
 import io.github.c20c01.pos.PosMap;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PosWorldSavedData extends SavedData {
     private static final String DATA_NAME = CCMain.ID + "_pos";
+    private static final String REGEX = ", ";
 
     public PosWorldSavedData(CompoundTag nbt) {
         this.read(nbt);
@@ -39,9 +39,8 @@ public class PosWorldSavedData extends SavedData {
 
     public void read(CompoundTag compound) {
         for (String name : compound.getAllKeys()) {
-            String[] pos = compound.getString(name).split(", ");
-            if (pos.length == 3)
-                PosMap.set(name, null, new BlockPos(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]), Integer.parseInt(pos[2])));
+            String[] pos = compound.getString(name).split(REGEX);
+            PosMap.set(name, pos);
         }
     }
 

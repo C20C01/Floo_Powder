@@ -84,7 +84,8 @@ public class BasePortalFireBlock extends BaseFireBlock {
     }
 
     public static boolean canChangeToPortalFire(BlockPos pos, Level level) {
-        return level.getBlockState(pos).getBlock() instanceof BaseFireBlock && level.getBlockState(pos.below()).isFaceSturdy(level, pos, Direction.UP);
+        var block = level.getBlockState(pos).getBlock();
+        return !(block instanceof BasePortalFireBlock) && block instanceof BaseFireBlock && level.getBlockState(pos.below()).isFaceSturdy(level, pos, Direction.UP);
     }
 
     public static boolean canChangeToFakeFire(BlockPos pos, Level level) {
@@ -110,10 +111,7 @@ public class BasePortalFireBlock extends BaseFireBlock {
 
     private static void changeToPortalFire(BlockPos inPos, ServerLevel level, String name) {
         level.setBlock(inPos, CCMain.PORTAL_FIRE_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
-        if (level.getBlockEntity(inPos) instanceof PortalFireBlockEntity blockEntity) {
-            blockEntity.name = name;
-            blockEntity.setLevel(level);
-        }
+        if (level.getBlockEntity(inPos) instanceof PortalFireBlockEntity blockEntity) blockEntity.name = name;
     }
 
     private static void changeToFakeFire(BlockPos inPos, ServerLevel level) {

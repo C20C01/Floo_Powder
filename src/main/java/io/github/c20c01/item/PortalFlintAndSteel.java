@@ -42,7 +42,6 @@ public class PortalFlintAndSteel extends FlintAndSteelItem {
             if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
                 name = useOnContext.getItemInHand().getDisplayName().getString();
                 blockEntity.name = name;
-                blockEntity.setLevel(serverLevel);
                 PosMap.set(name, serverLevel, blockPos1);
             }
             Player player = useOnContext.getPlayer();

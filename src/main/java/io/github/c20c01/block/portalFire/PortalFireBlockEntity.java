@@ -8,11 +8,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PortalFireBlockEntity extends BlockEntity {
-    public String name;
+    public String name = "";
     public boolean lasting = false; // 传送后不熄灭
 
     public PortalFireBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -22,7 +23,7 @@ public class PortalFireBlockEntity extends BlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putString("Name", name);
+        if (!Objects.equals(name, "")) tag.putString("Name", name);
         tag.putBoolean("Lasting", lasting);
     }
 

@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.phys.Vec3;
 
 public class TpTool {
-    public static void gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
+    public static boolean gogo(LivingEntity entity, String name, Level level, BlockPos blockPos) {
         PosInfo posInfo = PosMap.get(name);
         if (posInfo == null) {
             if (entity instanceof ServerPlayer serverPlayer) {
@@ -35,33 +35,39 @@ public class TpTool {
             }
             level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F);
         } else if (posInfo.noNull()) {
-            entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-            entity.fallDistance = -Float.MAX_VALUE;  // 尝试去除掉落伤害
             try {
                 var targetLevel = posInfo.level;
                 var targetBlockPos = posInfo.blockPos;
-                loadArea(targetBlockPos, targetLevel, entity);
-                changeEndFire(targetBlockPos, targetLevel);
-                new DelayTool(1, () -> teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos)));
+                new DelayTool(1, () -> {
+                    entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
+                    entity.fallDistance = -Float.MAX_VALUE;  // 尝试去除掉落伤害
+                    loadArea(targetBlockPos, targetLevel, entity);
+                    changeEndFire(targetBlockPos, targetLevel);
+                    teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos));
+                    level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
+                });
+                return true;
             } catch (Exception e) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     var text = new TextComponent(e.getMessage());
                     serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
                 }
             }
-            level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
         } else {
             if (entity instanceof ServerPlayer serverPlayer) {
-                var text = new TranslatableComponent(CCMain.TEXT_NOT_LOADED);
+                var text = new TranslatableComponent(CCMain.TEXT_LOADED_WRONG);
                 serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
             level.playSound(null, blockPos, SoundEvents.WOLF_WHINE, SoundSource.BLOCKS, 8.0F, 0.9F);
         }
+        return false;
     }
 
     private static void loadArea(BlockPos blockPos, ServerLevel targetLevel, LivingEntity entity) {
-        ChunkPos chunkpos = new ChunkPos(blockPos);
-        targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
+        if (entity instanceof ServerPlayer) {
+            ChunkPos chunkpos = new ChunkPos(blockPos);
+            targetLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, entity.getId());
+        }
     }
 
     private static void changeEndFire(BlockPos blockPos, ServerLevel targetLevel) {

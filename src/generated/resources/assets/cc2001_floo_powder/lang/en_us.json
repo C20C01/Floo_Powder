@@ -12,7 +12,7 @@
   "chat.cc2001_floo_powder.no_point_find": "No corresponding Teleportation core found",
   "chat.cc2001_floo_powder.no_point_find_book": "No available Teleportation core found.",
   "chat.cc2001_floo_powder.point_find_book": "Found available Teleportation core:",
-  "chat.cc2001_floo_powder.point_has_not_been_loaded": "The teleportation point has not been loaded yet",
+  "chat.cc2001_floo_powder.point_has_been_loaded_wrong": "The teleportation point loading error",
   "chat.cc2001_floo_powder.set_portal_fire_book": "Exists after transmission",
   "chat.cc2001_floo_powder.use_portal_flint_and_steel": "Use Teleport Flint and Steel to light up the core",
   "gui.cc2001_floo_powder.cancel": "Cancel",
