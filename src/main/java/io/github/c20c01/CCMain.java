@@ -39,7 +39,7 @@ public class CCMain {
     public static final String TEXT_GET_POINT_BLOCK_DESC = "advancement." + ID + ".get_portal_point_block.description";
 
     public static final String TEXT_NEEDS_ACTIVATION = "chat." + ID + ".use_portal_flint_and_steel";
-    public static final String TEXT_NOT_LOADED = "chat." + ID + ".point_has_not_been_loaded";
+    public static final String TEXT_LOADED_WRONG = "chat." + ID + ".point_has_been_loaded_wrong";
     public static final String TEXT_NOT_FOUND = "chat." + ID + ".no_point_find";
     public static final String TEXT_NOT_FOUND_BOOK = "chat." + ID + ".no_point_find_book";
     public static final String TEXT_FOUND_BOOK = "chat." + ID + ".point_find_book";

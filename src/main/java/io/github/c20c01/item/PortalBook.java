@@ -6,7 +6,6 @@ import io.github.c20c01.pos.PosInfo;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -16,8 +15,8 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -32,12 +31,10 @@ public class PortalBook extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (player instanceof ServerPlayer serverPlayer) {
-            if (Minecraft.getInstance().hitResult instanceof BlockHitResult hitResult) {
-                var blockPos = hitResult.getBlockPos();
-                if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
-                    setPortalFire(serverPlayer, blockEntity);
-                    return InteractionResultHolder.pass(player.getItemInHand(hand));
-                }
+            var blockPos = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
+            if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
+                setPortalFire(serverPlayer, blockEntity);
+                return InteractionResultHolder.pass(player.getItemInHand(hand));
             }
             showPosInfo(serverPlayer);
         }

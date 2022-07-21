@@ -69,10 +69,10 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Use Teleport Flint and Steel to light up the core";
             case ZH_CN -> "使用传送火石以点亮核心";
         });
-        this.add(CCMain.TEXT_NOT_LOADED, switch (this.locale) {
+        this.add(CCMain.TEXT_LOADED_WRONG, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "The teleportation point has not been loaded yet";
-            case ZH_CN -> "传送点尚未加载完毕";
+            case EN_US -> "The teleportation point loading error";
+            case ZH_CN -> "传送点加载错误";
         });
         this.add(CCMain.TEXT_NOT_FOUND, switch (this.locale) {
             default -> throw new IllegalStateException();

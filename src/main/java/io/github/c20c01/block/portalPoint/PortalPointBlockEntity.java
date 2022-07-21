@@ -24,17 +24,16 @@ public class PortalPointBlockEntity extends BlockEntity {
 
     @Override
     public void setLevel(Level level) {
+        super.setLevel(level);
         if (level instanceof ServerLevel serverLevel) {
-            PosMap.set(name, serverLevel, null);
-            super.setLevel(serverLevel);
+            PosMap.set(name, serverLevel);
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if (!Objects.equals(name, ""))
-            tag.putString("Name", name);
+        if (!Objects.equals(name, "")) tag.putString("Name", name);
     }
 
     @Override
