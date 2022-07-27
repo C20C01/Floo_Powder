@@ -69,6 +69,11 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Use Teleport Flint and Steel to light up the core";
             case ZH_CN -> "使用传送火石以点亮核心";
         });
+        this.add(CCMain.TEXT_ACTIVATED_BY_BOOK, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "The core is lit, but not acting as any teleportation point";
+            case ZH_CN -> "核心已点亮，但不作为任何传送点";
+        });
         this.add(CCMain.TEXT_LOADED_WRONG, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "The teleportation point loading error";
@@ -88,6 +93,11 @@ public class CCLanguageProvider extends LanguageProvider {
             default -> throw new IllegalStateException();
             case EN_US -> "Exists after transmission";
             case ZH_CN -> "传送后不熄灭";
+        });
+        this.add(CCMain.TEXT_SET_PORTAL_POINT_BOOK, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Try to make a fire";
+            case ZH_CN -> "核心顶部尝试生火";
         });
         this.add(CCMain.TEXT_FOUND_BOOK, switch (this.locale) {
             default -> throw new IllegalStateException();

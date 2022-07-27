@@ -72,8 +72,10 @@ public class PosMap {
     }
 
     public static void remove(String key, ServerLevel level, BlockPos pos) {
+        var value = MAP.get(key);
+        if (key.equals("") || value == null) return;
         // 如果是被覆盖掉的核心则不删除传送点
-        if (MAP.get(key) != null && MAP.get(key).blockPos.equals(pos.above())) {
+        if (value.blockPos == null || value.blockPos.equals(pos.above())) {
             MAP.remove(key);
             dataChanged(level);
         }

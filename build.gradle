@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '1.4.4'
+version = '1.4.5'
 group = 'io.github.c20c01.cc2001_floo_powder' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'FlooPowder'
 

@@ -41,10 +41,15 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player instanceof ServerPlayer serverPlayer && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             if (blockEntity.name.equals("")) {
-                if (!player.getItemInHand(hand).is(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get())) {
-                    var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
+                if (blockEntity.lit) {
+                    var text = new TranslatableComponent(CCMain.TEXT_ACTIVATED_BY_BOOK);
                     serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
-                } else return super.use(blockState, level, blockPos, player, hand, hitResult);
+                } else {
+                    if (!player.getItemInHand(hand).is(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get())) {
+                        var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
+                        serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+                    } else return super.use(blockState, level, blockPos, player, hand, hitResult);
+                }
             } else {
                 var text = new TextComponent(blockEntity.name);
                 serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
@@ -58,7 +63,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean p_60514_) {
         if (blockPos.above().equals(blockPos1) && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             BlockState blockState1 = level.getBlockState(blockPos1);
-            if (blockEntity.name.equals("")) {
+            if (!blockEntity.lit && blockEntity.name.equals("")) {
                 if (blockState1.is(Blocks.FIRE)) {
                     level.removeBlock(blockPos.above(), false);
                     level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
@@ -72,6 +77,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
                         PosMap.remove(blockEntity.name, serverLevel, blockPos);
                     }
                     blockEntity.name = "";
+                    blockEntity.lit = false;
                     level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
                 }
             }
@@ -86,7 +92,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
             if (level instanceof ServerLevel serverLevel) {
                 PosMap.remove(blockEntity.name, serverLevel, blockPos);
             }
-            if (!blockEntity.name.equals(""))
+            if (blockEntity.lit || !blockEntity.name.equals(""))
                 level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
         }
         super.onRemove(blockState, level, blockPos, blockState1, p_60519_);

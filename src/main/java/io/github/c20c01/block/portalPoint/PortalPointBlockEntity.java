@@ -17,6 +17,7 @@ import java.util.Objects;
 @ParametersAreNonnullByDefault
 public class PortalPointBlockEntity extends BlockEntity {
     public String name = "";
+    public boolean lit = false; // 是否点亮
 
     public PortalPointBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CCMain.PORTAL_POINT_BLOCK_ENTITY.get(), blockPos, blockState);
@@ -34,11 +35,13 @@ public class PortalPointBlockEntity extends BlockEntity {
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (!Objects.equals(name, "")) tag.putString("Name", name);
+        tag.putBoolean("Lit", lit);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         name = tag.getString("Name");
+        lit = tag.getBoolean("Lit");
     }
 }
