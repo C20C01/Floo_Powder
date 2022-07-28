@@ -63,16 +63,19 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean p_60514_) {
         if (blockPos.above().equals(blockPos1) && level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
             BlockState blockState1 = level.getBlockState(blockPos1);
-            if (!blockEntity.lit && blockEntity.name.equals("")) {
-                if (blockState1.is(Blocks.FIRE)) {
-                    level.removeBlock(blockPos.above(), false);
+            var haveName = !blockEntity.name.equals("");
+            if (blockState1.is(Blocks.AIR)) {
+                if (blockEntity.lit) {
+                    level.setBlock(blockPos1, Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
+                    level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
+                }
+            } else if (blockState1.is(Blocks.FIRE)) {
+                if (!haveName && !blockEntity.lit) {
+                    level.removeBlock(blockPos1, false);
                     level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
                 }
-            } else {
-                if (blockState1.is(Blocks.AIR)) {
-                    level.setBlock(blockPos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
-                    level.playSound(null, blockPos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 2.0F, 0.9F + level.random.nextFloat() * 0.2F);
-                } else if (blockState1.canOcclude()) {
+            } else if (blockState1.canOcclude()) {
+                if (haveName || blockEntity.lit) {
                     if (level instanceof ServerLevel serverLevel) {
                         PosMap.remove(blockEntity.name, serverLevel, blockPos);
                     }
