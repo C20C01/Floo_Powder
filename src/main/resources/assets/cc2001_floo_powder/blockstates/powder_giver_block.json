@@ -1,19 +1,19 @@
 {
-	"variants": {
-		"facing=north": {
-			"model": "cc2001_floo_powder:block/powder_giver_block_model"
-		},
-		"facing=east": {
-			"model": "cc2001_floo_powder:block/powder_giver_block_model",
-			"y": 90
-		},
-		"facing=south": {
-			"model": "cc2001_floo_powder:block/powder_giver_block_model",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "cc2001_floo_powder:block/powder_giver_block_model",
-			"y": 270
-		}
-	}
+  "variants": {
+    "facing=north": {
+      "model": "cc2001_floo_powder:block/powder_giver_block_model"
+    },
+    "facing=east": {
+      "model": "cc2001_floo_powder:block/powder_giver_block_model",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "cc2001_floo_powder:block/powder_giver_block_model",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cc2001_floo_powder:block/powder_giver_block_model",
+      "y": 270
+    }
+  }
 }

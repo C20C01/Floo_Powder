@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "cc2001_floo_powder:block/portal_point_block_model" }
+    "": {
+      "model": "cc2001_floo_powder:block/portal_point_block_model"
+    }
   }
 }
