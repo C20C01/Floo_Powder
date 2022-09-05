@@ -57,6 +57,7 @@ public class CCMain {
     public static final ResourceLocation NETWORK_ID_DESC_TO_C = new ResourceLocation(ID, "network_desc_to_c");
     public static final ResourceLocation NETWORK_ID_NAME_TO_S = new ResourceLocation(ID, "network_name_to_s");
     public static final ResourceLocation NETWORK_ID_PLAYER_CODE_TO_C = new ResourceLocation(ID, "network_player_code_to_c");
+    public static final ResourceLocation NETWORK_ID_PARTICLE_TO_C = new ResourceLocation(ID, "network_particle_to_c");
 
     public static final ResourceLocation FLOO_POWDER_GIVER_GUI_BACKGROUND = new ResourceLocation(ID, "textures/gui/floo_powder_giver_gui_background.png");
 

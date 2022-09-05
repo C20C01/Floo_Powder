@@ -4,7 +4,10 @@ import io.github.c20c01.CCMain;
 import io.github.c20c01.block.FlooPowderGiverBlock;
 import io.github.c20c01.gui.FlooPowderGiverGui;
 import io.github.c20c01.gui.GuiData;
+import io.github.c20c01.particle.PlayParticle;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +32,7 @@ public class CCNetwork {
     public static final SimpleChannel CHANNEL_DESC_TO_C = NetworkRegistry.newSimpleChannel(CCMain.NETWORK_ID_DESC_TO_C, () -> CCMain.NETWORK_VERSION, CCMain.NETWORK_VERSION::equals, CCMain.NETWORK_VERSION::equals);
     public static final SimpleChannel CHANNEL_NAME_TO_S = NetworkRegistry.newSimpleChannel(CCMain.NETWORK_ID_NAME_TO_S, () -> CCMain.NETWORK_VERSION, CCMain.NETWORK_VERSION::equals, CCMain.NETWORK_VERSION::equals);
     public static final SimpleChannel CHANNEL_PLAYER_CODE_TO_C = NetworkRegistry.newSimpleChannel(CCMain.NETWORK_ID_PLAYER_CODE_TO_C, () -> CCMain.NETWORK_VERSION, CCMain.NETWORK_VERSION::equals, CCMain.NETWORK_VERSION::equals);
+    public static final SimpleChannel CHANNEL_Particle_TO_C = NetworkRegistry.newSimpleChannel(CCMain.NETWORK_ID_PARTICLE_TO_C, () -> CCMain.NETWORK_VERSION, CCMain.NETWORK_VERSION::equals, CCMain.NETWORK_VERSION::equals);
 
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
@@ -36,7 +40,7 @@ public class CCNetwork {
         CHANNEL_DESC_TO_C.registerMessage(0, PointDescPacket.class, PointDescPacket::encode, PointDescPacket::decode, PointDescPacket::handleToC, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL_NAME_TO_S.registerMessage(0, PowderNamePacket.class, PowderNamePacket::encode, PowderNamePacket::decode, PowderNamePacket::handleToS, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL_PLAYER_CODE_TO_C.registerMessage(0, PowderNamePacket.class, PowderNamePacket::encode, PowderNamePacket::decode, PowderNamePacket::handleToC, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-
+        CHANNEL_Particle_TO_C.registerMessage(0, ParticlePacket.class, ParticlePacket::encode, ParticlePacket::decode, ParticlePacket::handleToC, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public record PointDescPacket(Map<String, String> map) {
@@ -76,6 +80,23 @@ public class CCNetwork {
 
         public void handleToC(Supplier<NetworkEvent.Context> supplier) {
             supplier.get().enqueueWork(() -> FlooPowderGiverGui.playerCode = this.code);
+            supplier.get().setPacketHandled(true);
+        }
+    }
+
+    public record ParticlePacket(BlockPos pos, double r, short particleID) {
+        public static ParticlePacket decode(FriendlyByteBuf buf) {
+            return new ParticlePacket(buf.readBlockPos(), buf.readDouble(), buf.readShort());
+        }
+
+        public void encode(FriendlyByteBuf buf) {
+            buf.writeBlockPos(this.pos);
+            buf.writeDouble(this.r);
+            buf.writeShort(this.particleID);
+        }
+
+        public void handleToC(Supplier<NetworkEvent.Context> supplier) {
+            supplier.get().enqueueWork(() -> PlayParticle.playParticle_C(pos,r,particleID));
             supplier.get().setPacketHandled(true);
         }
     }

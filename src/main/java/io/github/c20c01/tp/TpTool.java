@@ -3,6 +3,7 @@ package io.github.c20c01.tp;
 import io.github.c20c01.CCMain;
 import io.github.c20c01.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.delay.DelayTool;
+import io.github.c20c01.particle.PlayParticle;
 import io.github.c20c01.pos.PosInfo;
 import io.github.c20c01.pos.PosMap;
 import net.minecraft.Util;
@@ -40,11 +41,14 @@ public class TpTool {
                 var targetBlockPos = posInfo.blockPos;
                 new DelayTool(1, () -> {
                     entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
-                    entity.fallDistance = -Float.MAX_VALUE;  // 尝试去除掉落伤害
+                    entity.resetFallDistance();
+                    PlayParticle.playParticle_S((ServerLevel) level, blockPos, 0.8, (short) 1);
                     loadArea(targetBlockPos, targetLevel, entity);
                     changeEndFire(targetBlockPos, targetLevel);
                     teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos));
-                    level.playSound(null, posInfo.blockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
+                    level.playSound(null, targetBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
+                    PlayParticle.playParticle_S(targetLevel, targetBlockPos, 0.8, (short) 1);
+
                 });
                 return true;
             } catch (Exception e) {
