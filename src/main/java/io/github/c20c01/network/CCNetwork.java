@@ -7,7 +7,6 @@ import io.github.c20c01.gui.GuiData;
 import io.github.c20c01.particle.PlayParticle;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -90,13 +89,13 @@ public class CCNetwork {
         }
 
         public void encode(FriendlyByteBuf buf) {
-            buf.writeBlockPos(this.pos);
-            buf.writeDouble(this.r);
-            buf.writeShort(this.particleID);
+            buf.writeBlockPos(pos);
+            buf.writeDouble(r);
+            buf.writeShort(particleID);
         }
 
         public void handleToC(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> PlayParticle.playParticle_C(pos,r,particleID));
+            supplier.get().enqueueWork(() -> PlayParticle.playParticle_C(pos, r, particleID));
             supplier.get().setPacketHandled(true);
         }
     }

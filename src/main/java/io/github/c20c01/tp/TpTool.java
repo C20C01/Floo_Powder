@@ -42,13 +42,12 @@ public class TpTool {
                 new DelayTool(1, () -> {
                     entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, false, false, false));
                     entity.resetFallDistance();
-                    PlayParticle.playParticle_S((ServerLevel) level, blockPos, 0.8, (short) 1);
+                    PlayParticle.playParticle_S((ServerLevel) level, entity, blockPos, 0.8, (short) 1);
                     loadArea(targetBlockPos, targetLevel, entity);
                     changeEndFire(targetBlockPos, targetLevel);
                     teleportTo(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos));
                     level.playSound(null, targetBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 8.0F, 0.9F + level.random.nextFloat() * 0.2F);
-                    PlayParticle.playParticle_S(targetLevel, targetBlockPos, 0.8, (short) 1);
-
+                    PlayParticle.playParticle_S(targetLevel, entity, targetBlockPos, 0.8, (short) 1);
                 });
                 return true;
             } catch (Exception e) {
