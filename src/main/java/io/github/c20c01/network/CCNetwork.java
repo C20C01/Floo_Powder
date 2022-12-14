@@ -48,16 +48,16 @@ public class CCNetwork {
         }
 
         public void encode(FriendlyByteBuf buf) {
-            buf.writeMap(this.map, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeUtf);
+            buf.writeMap(map, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeUtf);
         }
 
         public void handleToS(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> GuiData.setDescMapFromClient((HashMap<String, String>) this.map));
+            supplier.get().enqueueWork(() -> GuiData.setDescMapFromClient((HashMap<String, String>) map));
             supplier.get().setPacketHandled(true);
         }
 
         public void handleToC(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> GuiData.setDescMapFromServer((HashMap<String, String>) this.map));
+            supplier.get().enqueueWork(() -> GuiData.setDescMapFromServer((HashMap<String, String>) map));
             supplier.get().setPacketHandled(true);
         }
     }
@@ -68,17 +68,17 @@ public class CCNetwork {
         }
 
         public void encode(FriendlyByteBuf buf) {
-            buf.writeUtf(this.name);
-            buf.writeInt(this.code);
+            buf.writeUtf(name);
+            buf.writeInt(code);
         }
 
         public void handleToS(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> FlooPowderGiverBlock.handle_S(this.name, this.code));
+            supplier.get().enqueueWork(() -> FlooPowderGiverBlock.handle_S(name, code));
             supplier.get().setPacketHandled(true);
         }
 
         public void handleToC(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> FlooPowderGiverGui.playerCode = this.code);
+            supplier.get().enqueueWork(() -> FlooPowderGiverGui.playerCode = code);
             supplier.get().setPacketHandled(true);
         }
     }

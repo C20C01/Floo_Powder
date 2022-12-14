@@ -15,8 +15,10 @@ public class PlayParticle {
     public static void playParticle_C(BlockPos pos, double r, short particleID) {
         ParticleOptions particle;
         switch (particleID) {
-            case 1 -> particle = ParticleTypes.PORTAL;
-            case 2 -> particle = ParticleTypes.FALLING_LAVA;
+            case 0 -> particle = ParticleTypes.PORTAL;
+            case 1 -> particle = ParticleTypes.FALLING_LAVA;
+            case 2 -> particle = ParticleTypes.FLAME;
+            case 3 -> particle = ParticleTypes.SMOKE;
             default -> particle = ParticleTypes.CLOUD;
         }
         play(pos, r, particle);
