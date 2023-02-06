@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "item": "cc_fp:floo_powder"
+    },
+    "title": {
+      "translate": "advancement.cc_fp.get_floo.title"
+    },
+    "description": {
+      "translate": "advancement.cc_fp.get_floo.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "cc_fp:textures/gui/advancements/backgrounds/floo_powder.png"
+  },
+  "criteria": {
+    "get_floo": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cc_fp:floo_powder"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_floo"
+    ]
+  ]
+}

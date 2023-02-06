@@ -1,0 +1,9 @@
+{
+	"parent": "block/orientable",
+	"textures": {
+		"top": "cc_fp:block/portal_point_block_top_on",
+		"bottom": "cc_fp:block/portal_point_block_bottom",
+		"side": "cc_fp:block/portal_point_block_side",
+		"front": "cc_fp:block/portal_point_block_front_on"
+	}
+}

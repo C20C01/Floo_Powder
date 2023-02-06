@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"top": "cc2001_floo_powder:block/portal_point_block_top",
-		"bottom": "cc2001_floo_powder:block/portal_point_block_bottom",
-		"side": "cc2001_floo_powder:block/portal_point_block_side"
-	}
-}

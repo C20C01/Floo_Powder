@@ -56,7 +56,8 @@ public class CCLootTableProvider extends LootTableProvider {
 
         @Override
         protected void addTables() {
-            this.dropOther(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.PORTAL_POINT_BLOCK.get());
+            this.dropSelf(CCMain.PORTAL_POINT_BLOCK.get());
+            this.dropSelf(CCMain.FIRE_BASE_BLOCK.get());
         }
     }
 }

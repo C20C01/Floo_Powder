@@ -1,0 +1,32 @@
+{
+  "parent": "cc_fp:get_floo",
+  "display": {
+    "icon": {
+      "item": "cc_fp:portal_flint_and_steel",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancement.cc_fp.into_fire.title"
+    },
+    "description": {
+      "translate": "advancement.cc_fp.into_fire.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "into_fire": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "cc_fp:portal_fire_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "into_fire"
+    ]
+  ]
+}

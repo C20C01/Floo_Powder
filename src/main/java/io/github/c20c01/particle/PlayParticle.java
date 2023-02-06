@@ -1,48 +1,56 @@
 package io.github.c20c01.particle;
 
-import io.github.c20c01.network.CCNetwork;
+import io.github.c20c01.client.particles.RayParticle;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * 在客户端生成粒子效果，与服务端无关
+ */
 public class PlayParticle {
-
-    public static void playParticle_C(BlockPos pos, double r, short particleID) {
+    public static void play(SendParticle.Particles particleID, SendParticle.Modes ModeID, Vec3 pos, @Nullable Vec3 speedVec) {
         ParticleOptions particle;
         switch (particleID) {
-            case 0 -> particle = ParticleTypes.PORTAL;
-            case 1 -> particle = ParticleTypes.FALLING_LAVA;
-            case 2 -> particle = ParticleTypes.FLAME;
-            case 3 -> particle = ParticleTypes.SMOKE;
+            case RAY -> particle = new RayParticle.Option();
+            case SMOKE -> particle = ParticleTypes.SMOKE;
             default -> particle = ParticleTypes.CLOUD;
         }
-        play(pos, r, particle);
+        switch (ModeID) {
+            case BALL -> ball(particle, pos);
+            case LINE -> line(particle, pos, speedVec);
+        }
     }
 
-    private static void play(BlockPos pos, double r, ParticleOptions particle) {
+    private static void ball(ParticleOptions particle, Vec3 pos) {
+        final float d = 0.8F;
         var level = Minecraft.getInstance().level;
         assert level != null;
         var random = level.random;
         for (int j = 0; j < 128; ++j) {
-            float f = (random.nextFloat() - 0.5F) * 0.2F;
+            double d1 = pos.x + (random.nextDouble() - 0.5D) * d;
+            double d2 = pos.y + (random.nextDouble() - 0.5D) * d;
+            double d3 = pos.z + (random.nextDouble() - 0.5D) * d;
             float f1 = (random.nextFloat() - 0.5F) * 0.2F;
             float f2 = (random.nextFloat() - 0.5F) * 0.2F;
-            double d1 = pos.getX() + 0.5 + (random.nextDouble() - 0.5D) * r;
-            double d2 = pos.getY() + 0.2 + random.nextDouble();
-            double d3 = pos.getZ() + 0.5 + (random.nextDouble() - 0.5D) * r;
-            level.addParticle(particle, d1, d2, d3, f, f1, f2);
+            float f3 = (random.nextFloat() - 0.5F) * 0.2F;
+            level.addParticle(particle, d1, d2, d3, f1, f2, f3);
         }
     }
 
-    public static void playParticle_S(ServerLevel level, Entity entity, BlockPos blockPos, double r, short particleID) {
-        var list = level.getPlayers(ServerPlayer::isAlive);
-        if (entity instanceof ServerPlayer player) list.add(player);
-        for (ServerPlayer p : list)
-            CCNetwork.CHANNEL_Particle_TO_C.send(PacketDistributor.PLAYER.with(() -> p), new CCNetwork.ParticlePacket(blockPos, r, particleID));
+    public static void line(ParticleOptions particle, Vec3 pos, Vec3 speedVec) {
+        final int count = 256;
+        final int speed = 10;
+        pos = pos.add(speedVec);
+        var level = Minecraft.getInstance().level;
+        assert level != null;
+        for (int i = 0; i < count; i++) {
+            double d1 = speedVec.x * speed * i / count;
+            double d2 = speedVec.y * speed * i / count;
+            double d3 = speedVec.z * speed * i / count;
+            level.addParticle(particle, pos.x, pos.y, pos.z, d1, d2, d3);
+        }
     }
 }

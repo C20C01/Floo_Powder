@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "cc_fp:block/fake_portal_fire_block"
+	}
+}

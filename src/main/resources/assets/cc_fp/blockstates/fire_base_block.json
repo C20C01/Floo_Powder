@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "cc_fp:block/fire_base_block_model"
+    }
+  }
+}

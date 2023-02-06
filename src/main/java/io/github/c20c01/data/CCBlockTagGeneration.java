@@ -30,9 +30,12 @@ public class CCBlockTagGeneration {
 
         @Override
         protected void addTags() {
-            tag(BlockTags.INFINIBURN_OVERWORLD).add(CCMain.PORTAL_POINT_BLOCK.get());
-            tag(BlockTags.DRAGON_IMMUNE).add(CCMain.PORTAL_POINT_BLOCK.get());
-            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(CCMain.PORTAL_POINT_BLOCK.get());
+            tag(BlockTags.DRAGON_IMMUNE).add(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.POWDER_GIVER_BLOCK.get());
+            tag(BlockTags.NEEDS_DIAMOND_TOOL).add(CCMain.PORTAL_POINT_BLOCK.get());
+            tag(BlockTags.INFINIBURN_OVERWORLD).add(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
+            tag(BlockTags.INFINIBURN_NETHER).add(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
+            tag(BlockTags.INFINIBURN_END).add(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
             super.addTags();
         }
     }

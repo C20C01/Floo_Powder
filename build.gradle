@@ -16,8 +16,8 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '1.4.5'
-group = 'io.github.c20c01.cc2001_floo_powder' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = '1.5.0'
+group = 'io.github.c20c01.cc_fp' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'FlooPowder'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
@@ -46,7 +46,7 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            workingDirectory project.file('run')
+            workingDirectory project.file('run_client')
 
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
@@ -61,27 +61,38 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'cc2001_floo_powder'
+            property 'forge.enabledGameTestNamespaces', 'cc_fp'
 
             mods {
-                cc2001_floo_powder {
+                cc_fp {
                     source sourceSets.main
                 }
             }
         }
 
+        client_1 {
+            parent minecraft.runs.client
+            args '--username', 'CC2001'
+        }
+
+        client_2 {
+            parent minecraft.runs.client
+            args '--username', 'Test'
+        }
+
+
         server {
-            workingDirectory project.file('run')
+            workingDirectory project.file('run_server')
 
             property 'forge.logging.markers', 'REGISTRIES'
 
             property 'forge.logging.console.level', 'debug'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'cc2001_floo_powder'
+            property 'forge.enabledGameTestNamespaces', 'cc_fp'
 
             mods {
-                cc2001_floo_powder {
+                cc_fp {
                     source sourceSets.main
                 }
             }
@@ -90,8 +101,9 @@ minecraft {
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
+        /*
         gameTestServer {
-            workingDirectory project.file('run_data')
+            workingDirectory project.file('run_gameTestServer')
 
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
@@ -106,24 +118,25 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'cc2001_floo_powder'
+            property 'forge.enabledGameTestNamespaces', 'cc_fp'
 
             mods {
-                cc2001_floo_powder {
+                cc_fp {
                     source sourceSets.main
                 }
             }
         }
+        */
 
         data {
-            workingDirectory project.file('run')
+            workingDirectory project.file('run_data')
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'info'
-            args '--mod', 'cc2001_floo_powder', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'cc_fp', '--all', '--output', file('src/generated/resources/')
             mods {
-                cc2001_floo_powder {
+                cc_fp {
                     source sourceSets.main
                 }
             }
@@ -167,12 +180,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "cc2001_floo_powder",
-                "Specification-Vendor"    : "cc2001_floo_powdersareus",
+                "Specification-Title"     : "cc_fp",
+                "Specification-Vendor"    : "cc_fp_sareus",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "cc2001_floo_powdersareus",
+                "Implementation-Vendor"   : "cc_fp_sareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

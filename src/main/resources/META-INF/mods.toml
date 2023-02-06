@@ -2,8 +2,8 @@ modLoader = "javafml"
 loaderVersion = "[36,)"
 license = "BSD-3-Clause"
 [[mods]]
-modId = "cc2001_floo_powder"
-version = "${file.jarVersion}"
+modId = "cc_fp"
+version = "1.5.0"
 displayName = "Floo Powder"
 authors = "CC2001"
 description = '''

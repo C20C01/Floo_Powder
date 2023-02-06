@@ -40,15 +40,15 @@ public class CCAdvancementProvider extends AdvancementProvider {
     protected void registerAdvancements(Consumer<Advancement> consumer, ExistingFileHelper fileHelper) {
         Advancement advancement = makeAdvancement(Advancement.Builder.advancement()
                 .display(new DisplayInfo(CCMain.FLOO_POWDER_ITEM.get().getDefaultInstance(), new TranslatableComponent(CCMain.TEXT_GET_FLOO_TITLE), new TranslatableComponent(CCMain.TEXT_GET_FLOO_DESC), new ResourceLocation(CCMain.ID, "textures/gui/advancements/backgrounds/floo_powder.png"), FrameType.TASK, true, true, false))
-                .addCriterion(CCMain.GET_FLOO_ADVANCEMENT_ID.getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(CCMain.FLOO_POWDER_ITEM.get())).build(CCMain.GET_FLOO_ADVANCEMENT_ID));
+                .addCriterion(CCMain.ADVANCEMENT_GET_FLOO.getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(CCMain.FLOO_POWDER_ITEM.get())).build(CCMain.ADVANCEMENT_GET_FLOO));
 
         makeAdvancement(Advancement.Builder.advancement().parent(advancement)
                 .display(new DisplayInfo(CCMain.PORTAL_POINT_BLOCK_ITEM.get().getDefaultInstance(), new TranslatableComponent(CCMain.TEXT_GET_POINT_BLOCK_TITLE), new TranslatableComponent(CCMain.TEXT_GET_POINT_BLOCK_DESC), null, FrameType.GOAL, true, true, false))
-                .addCriterion(CCMain.GET_POINT_BLOCK_ADVANCEMENT_ID.getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(CCMain.PORTAL_POINT_BLOCK_ITEM.get())).build(CCMain.GET_POINT_BLOCK_ADVANCEMENT_ID));
+                .addCriterion(CCMain.ADVANCEMENT_GET_POINT_BLOCK.getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(CCMain.PORTAL_POINT_BLOCK_ITEM.get())).build(CCMain.ADVANCEMENT_GET_POINT_BLOCK));
 
         makeAdvancement(Advancement.Builder.advancement().parent(advancement)
                 .display(new DisplayInfo(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get().getDefaultInstance(), new TranslatableComponent(CCMain.TEXT_INTO_FIRE_TITLE), new TranslatableComponent(CCMain.TEXT_INTO_FIRE_DESC), null, FrameType.CHALLENGE, true, true, false))
-                .addCriterion(CCMain.INTO_FIRE_ADVANCEMENT_ID.getPath(), EnterBlockTrigger.TriggerInstance.entersBlock(CCMain.PORTAL_FIRE_BLOCK.get())).build(CCMain.INTO_FIRE_ADVANCEMENT_ID));
+                .addCriterion(CCMain.ADVANCEMENT_INTO_FIRE.getPath(), EnterBlockTrigger.TriggerInstance.entersBlock(CCMain.PORTAL_FIRE_BLOCK.get())).build(CCMain.ADVANCEMENT_INTO_FIRE));
 
         acceptAll(consumer);
     }

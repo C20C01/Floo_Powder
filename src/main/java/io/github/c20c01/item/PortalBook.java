@@ -1,10 +1,14 @@
 package io.github.c20c01.item;
 
 import io.github.c20c01.CCMain;
+import io.github.c20c01.block.portalFire.PortalFireBlock;
 import io.github.c20c01.block.portalFire.PortalFireBlockEntity;
+import io.github.c20c01.block.portalPoint.PortalPointBlock;
 import io.github.c20c01.block.portalPoint.PortalPointBlockEntity;
-import io.github.c20c01.pos.PosInfo;
-import io.github.c20c01.pos.PosMap;
+import io.github.c20c01.savedData.Permission;
+import io.github.c20c01.savedData.PermissionManager;
+import io.github.c20c01.savedData.PortalPoint;
+import io.github.c20c01.savedData.PortalPointManager;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -38,52 +42,63 @@ public class PortalBook extends Item {
             var blockPos = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY).getBlockPos();
             var blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity instanceof PortalFireBlockEntity e) {
-                setPortalFire(serverPlayer, e);
+                if (player.isShiftKeyDown()) {
+                    getCloneItem(serverPlayer, e);
+                } else {
+                    setLasting(serverPlayer, level, blockPos);
+                }
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
             }
             if (blockEntity instanceof PortalPointBlockEntity e) {
                 setPortalPoint(serverPlayer, e, blockPos, level);
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
             }
-            showPosInfo(serverPlayer);
+            if (player.isShiftKeyDown()) {
+                showPerInfo(serverPlayer);
+            } else {
+                showPosInfo(serverPlayer);
+            }
+
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
-    private static void setPortalFire(ServerPlayer player, PortalFireBlockEntity blockEntity) {
-        blockEntity.lasting = !blockEntity.lasting;
-        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_FIRE_BOOK).append(": " + blockEntity.lasting);
+    private static void getCloneItem(ServerPlayer player, PortalFireBlockEntity blockEntity) {
+        ItemStack itemStack = new ItemStack(CCMain.FLOO_POWDER_ITEM.get()).setHoverName(new TextComponent(blockEntity.getName()));
+        player.getInventory().add(itemStack);
+    }
+
+    private static void setLasting(ServerPlayer player, Level level, BlockPos blockPos) {
+        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_FIRE_BOOK).append(": " + PortalFireBlock.changeLasting(level, blockPos));
         player.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
     }
 
     private static void setPortalPoint(ServerPlayer player, PortalPointBlockEntity blockEntity, BlockPos pos, Level level) {
-        blockEntity.lit = !blockEntity.lit;
-        var blockState = level.getBlockState(pos.above());
-        if (blockEntity.lit) {
-            if (blockState.isAir())
+        var blockState = blockEntity.getBlockState();
+        blockState.setValue(PortalPointBlock.FIRE, !blockState.getValue(PortalPointBlock.FIRE));
+        var blockStateAbove = level.getBlockState(pos.above());
+        if (blockState.getValue(PortalPointBlock.FIRE)) {
+            if (blockStateAbove.isAir())
                 level.setBlock(pos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
         } else {
-            if (blockState.is(Blocks.FIRE))
-                level.removeBlock(pos.above(), false);
+            if (blockStateAbove.is(Blocks.FIRE))
+                level.removeBlock(pos.above(), Boolean.FALSE);
         }
-        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_POINT_BOOK).append(": " + blockEntity.lit);
+        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_POINT_BOOK).append(": " + blockState.getValue(PortalPointBlock.FIRE));
         player.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
     }
 
     private static void showPosInfo(ServerPlayer serverPlayer) {
-        var map = PosMap.getMap();
-        var keySet = map.keySet();
-        if (!keySet.isEmpty()) {
-            var text = new TranslatableComponent(CCMain.TEXT_FOUND_BOOK);
-            serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
-            for (var key : keySet) {
-                PosInfo i = map.get(key);
-                var text1 = new TextComponent(key + ": " + i);
-                serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
-            }
-        } else {
-            var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND_BOOK);
-            serverPlayer.sendMessage(text, ChatType.CHAT, Util.NIL_UUID);
+        for (PortalPoint p : PortalPointManager.get(serverPlayer.getServer()).getAll()) {
+            var text1 = new TextComponent(p.toString());
+            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
+        }
+    }
+
+    private static void showPerInfo(ServerPlayer serverPlayer) {
+        for (Permission p : PermissionManager.get(serverPlayer.getServer()).getAll()) {
+            var text1 = new TextComponent(p.toString());
+            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
         }
     }
 }

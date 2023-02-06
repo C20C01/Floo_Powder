@@ -1,0 +1,6 @@
+{
+  "parent": "cc_fp:item/floo_reel",
+  "textures": {
+    "layer1": "cc_fp:item/expansion_reel_everyone"
+  }
+}

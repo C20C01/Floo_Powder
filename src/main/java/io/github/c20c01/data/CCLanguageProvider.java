@@ -28,6 +28,11 @@ public class CCLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        this.add(CCMain.TAB_ID, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Floo powder";
+            case ZH_CN -> "飞路粉";
+        });
         this.add(CCMain.PORTAL_POINT_BLOCK.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Teleportation core";
@@ -37,6 +42,11 @@ public class CCLanguageProvider extends LanguageProvider {
             default -> throw new IllegalStateException();
             case EN_US -> "Floo powder";
             case ZH_CN -> "飞路粉";
+        });
+        this.add(CCMain.LASTING_POWDER_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Lasting powder";
+            case ZH_CN -> "不灭粉";
         });
         this.add(CCMain.PORTAL_FLINT_AND_STEEL_ITEM.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
@@ -58,10 +68,83 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Book of Teleportation cores";
             case ZH_CN -> "传送核心大全";
         });
-        this.add(CCMain.FLOO_POWDER_GIVER_BLOCK.get(), switch (this.locale) {
+        this.add(CCMain.POWDER_GIVER_BLOCK.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Powder giver";
             case ZH_CN -> "飞路粉分发器";
+        });
+        this.add(CCMain.PORTAL_WAND_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Teleportation wand";
+            case ZH_CN -> "传送法杖";
+        });
+        this.add(CCMain.PORTAL_CHEST_BLOCK.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Teleportation trap chest";
+            case ZH_CN -> "传送陷阱箱";
+        });
+        this.add(CCMain.FIRE_BASE_BLOCK.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Bounce fire base";
+            case ZH_CN -> "弹性火焰底座";
+        });
+
+        this.add(CCMain.FLOO_REEL_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Floo reel";
+            case ZH_CN -> "传送卷轴";
+        });
+        final String EXP_REEL_US = "Expansion reel——";
+        final String EXP_REEL_CN = "拓展卷轴——";
+        this.add(CCMain.EXP_REEL_EVERYONE_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Everyone";
+            case ZH_CN -> EXP_REEL_CN + "任何玩家";
+        });
+        this.add(CCMain.EXP_REEL_FRIENDS_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Friend";
+            case ZH_CN -> EXP_REEL_CN + "仅限好友";
+        });
+        this.add(CCMain.EXP_REEL_ITEM_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Item";
+            case ZH_CN -> EXP_REEL_CN + "物品";
+        });
+        this.add(CCMain.EXP_REEL_MINECART_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Minecart";
+            case ZH_CN -> EXP_REEL_CN + "矿车";
+        });
+        this.add(CCMain.EXP_REEL_FALLING_BLOCK_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Falling block";
+            case ZH_CN -> EXP_REEL_CN + "下落的方块";
+        });
+        this.add(CCMain.EXP_REEL_TNT_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "TNT";
+            case ZH_CN -> EXP_REEL_CN + "点燃的TNT";
+        });
+        this.add(CCMain.EXP_REEL_PROJECTILE_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Projectile";
+            case ZH_CN -> EXP_REEL_CN + "弹射物";
+        });
+        this.add(CCMain.EXP_REEL_MONSTER_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Monster";
+            case ZH_CN -> EXP_REEL_CN + "怪物";
+        });
+        this.add(CCMain.EXP_REEL_AGEABLE_MOB_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Ageable mob";
+            case ZH_CN -> EXP_REEL_CN + "被动生物";
+        });
+        this.add(CCMain.EXP_REEL_SAVE_DIRECTION_ITEM.get(), switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> EXP_REEL_US + "Save direction";
+            case ZH_CN -> EXP_REEL_CN + "保留朝向";
         });
 
         this.add(CCMain.TEXT_NEEDS_ACTIVATION, switch (this.locale) {
