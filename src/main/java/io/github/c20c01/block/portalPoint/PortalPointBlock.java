@@ -11,7 +11,7 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -97,8 +97,8 @@ public class PortalPointBlock extends Block implements EntityBlock {
             if (point == null || point.ownerUid().equals(player.getUUID())) {
                 NetworkHooks.openGui((ServerPlayer) player, blockEntity, blockPos);
             } else {
-                //TODO:添加翻译
-                ((ServerPlayer) player).sendMessage(new TextComponent("不是你的"), ChatType.GAME_INFO, Util.NIL_UUID);
+                var text = new TranslatableComponent(CCMain.TEXT_NOT_OWNER);
+                ((ServerPlayer) player).sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
         }
         return InteractionResult.CONSUME;
@@ -136,8 +136,8 @@ public class PortalPointBlock extends Block implements EntityBlock {
     }
 
     private static void refuseToLit(Level level, BlockPos blockPos, ServerPlayer player) {
-        //TODO:添加翻译
-        player.sendMessage(new TextComponent("有同名的传送点了"), ChatType.GAME_INFO, Util.NIL_UUID);
+        var text = new TranslatableComponent(CCMain.TEXT_ALREADY_EXISTS);
+        player.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
         level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 5.0F, 1.0F);
     }
 
@@ -175,7 +175,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
             if (blockEntity.isPointNamed()) {
                 boolean flag = PortalPointManager.get(level.getServer()).remove(blockEntity.getPointName(), blockPos.above()) != null;
                 blockEntity.setPointName("");
-                if (flag){
+                if (flag) {
                     level.playSound(null, blockPos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 5.0F, 1.0F);
                 }
             }

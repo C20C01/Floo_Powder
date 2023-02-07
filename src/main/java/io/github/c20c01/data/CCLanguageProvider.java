@@ -188,6 +188,18 @@ public class CCLanguageProvider extends LanguageProvider {
             case ZH_CN -> "已找到可用的传送核心:";
         });
 
+        this.add(CCMain.TEXT_NOT_OWNER, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "You are not the owner";
+            case ZH_CN -> "你不是它的拥有者";
+        });
+        this.add(CCMain.TEXT_ALREADY_EXISTS, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "A same named point already exists";
+            case ZH_CN -> "已经存在同名的传送点了";
+        });
+
+
         this.add(CCMain.TEXT_DONE, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Select";

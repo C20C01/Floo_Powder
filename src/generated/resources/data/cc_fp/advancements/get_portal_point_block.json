@@ -2,7 +2,7 @@
   "parent": "cc_fp:get_floo",
   "display": {
     "icon": {
-      "item": "cc_fp:portal_point_block_item"
+      "item": "cc_fp:portal_point_block"
     },
     "title": {
       "translate": "advancement.cc_fp.get_portal_point_block.title"
@@ -22,7 +22,7 @@
         "items": [
           {
             "items": [
-              "cc_fp:portal_point_block_item"
+              "cc_fp:portal_point_block"
             ]
           }
         ]

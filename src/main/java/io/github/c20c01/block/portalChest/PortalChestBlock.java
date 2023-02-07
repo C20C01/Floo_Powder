@@ -68,7 +68,7 @@ public class PortalChestBlock extends ChestBlock {
             teleportTrap(blockState, level, blockPos, player, name);
             return InteractionResult.CONSUME;
         }
-        return InteractionResult.FAIL;
+        return InteractionResult.PASS;
     }
 
     @Mod.EventBusSubscriber(modid = CCMain.ID)
@@ -109,7 +109,6 @@ public class PortalChestBlock extends ChestBlock {
         playOpenSound(level, blockPos);
         TpTool.addEffect(player, MobEffects.BLINDNESS, 50, 0);
         TpTool.addEffect(player, MobEffects.MOVEMENT_SLOWDOWN, 20, 255);
-        TpTool.addEffect(player, MobEffects.LEVITATION, 20, 0);
         Delayer.add(40, () -> TpTool.forceTeleportEntity(player, name));
     }
 }

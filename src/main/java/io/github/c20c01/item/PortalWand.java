@@ -58,7 +58,7 @@ public class PortalWand extends Item {
         var stack = player.getItemInHand(hand);
         if (!checkUUID(player, stack)) {
             if (player instanceof ServerPlayer serverPlayer) {
-                var text = new TranslatableComponent(CCMain.TEXT_NEEDS_ACTIVATION);
+                var text = new TranslatableComponent(CCMain.TEXT_NOT_OWNER);
                 serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
             }
             return InteractionResultHolder.fail(stack);

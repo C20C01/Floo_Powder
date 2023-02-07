@@ -57,6 +57,9 @@ public class CCMain {
     public static final String TEXT_SET_PORTAL_FIRE_BOOK = "chat." + ID + ".set_portal_fire_book";
     public static final String TEXT_SET_PORTAL_POINT_BOOK = "chat." + ID + ".set_portal_point_book";
 
+    public static final String TEXT_NOT_OWNER = "chat." + ID + ".not_owner";
+    public static final String TEXT_ALREADY_EXISTS = "chat." + ID + ".already_existed";
+
     // GUI文本
     public static final String TEXT_DONE = "gui." + ID + ".done";
     public static final String TEXT_CANCEL = "gui." + ID + ".cancel";
@@ -182,24 +185,20 @@ public class CCMain {
         PORTAL_FIRE_BLOCK = BLOCKS.register(PORTAL_FIRE_BLOCK_ID, PortalFireBlock::new);
         PORTAL_FIRE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(PORTAL_FIRE_BLOCK_ID, () -> BlockEntityType.Builder.of(PortalFireBlockEntity::new, PORTAL_FIRE_BLOCK.get()).build(DSL.remainderType()));
         PORTAL_POINT_BLOCK = BLOCKS.register(PORTAL_POINT_BLOCK_ID, PortalPointBlock::new);
-        PORTAL_POINT_BLOCK_ITEM = ITEMS.register(getBlockItemID(PORTAL_POINT_BLOCK_ID), () -> new BlockItem(PORTAL_POINT_BLOCK.get(), new Item.Properties().tab(TAB)));
+        PORTAL_POINT_BLOCK_ITEM = ITEMS.register(PORTAL_POINT_BLOCK_ID, () -> new BlockItem(PORTAL_POINT_BLOCK.get(), new Item.Properties().tab(TAB)));
         PORTAL_POINT_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(PORTAL_POINT_BLOCK_ID, () -> BlockEntityType.Builder.of(PortalPointBlockEntity::new, PORTAL_POINT_BLOCK.get()).build(DSL.remainderType()));
         POWDER_GIVER_BLOCK = BLOCKS.register(POWDER_GIVER_BLOCK_ID, PowderGiverBlock::new);
-        POWDER_GIVER_BLOCK_ITEM = ITEMS.register(getBlockItemID(POWDER_GIVER_BLOCK_ID), () -> new BlockItem(POWDER_GIVER_BLOCK.get(), new Item.Properties().tab(TAB).rarity(Rarity.EPIC)));
+        POWDER_GIVER_BLOCK_ITEM = ITEMS.register(POWDER_GIVER_BLOCK_ID, () -> new BlockItem(POWDER_GIVER_BLOCK.get(), new Item.Properties().tab(TAB).rarity(Rarity.EPIC)));
         FIRE_BASE_BLOCK = BLOCKS.register(FIRE_BASE_BLOCK_ID, FireBaseBlock::new);
-        FIRE_BASE_BLOCK_ITEM = ITEMS.register(getBlockItemID(FIRE_BASE_BLOCK_ID), () -> new BlockItem(FIRE_BASE_BLOCK.get(), new Item.Properties().tab(TAB)));
+        FIRE_BASE_BLOCK_ITEM = ITEMS.register(FIRE_BASE_BLOCK_ID, () -> new BlockItem(FIRE_BASE_BLOCK.get(), new Item.Properties().tab(TAB)));
         PORTAL_CHEST_BLOCK = BLOCKS.register(PORTAL_CHEST_BLOCK_ID, PortalChestBlock::new);
-        PORTAL_CHEST_BLOCK_ITEM = ITEMS.register(getBlockItemID(PORTAL_CHEST_BLOCK_ID), () -> new BlockItem(PORTAL_CHEST_BLOCK.get(), new Item.Properties().tab(TAB).rarity(Rarity.EPIC)));
+        PORTAL_CHEST_BLOCK_ITEM = ITEMS.register(PORTAL_CHEST_BLOCK_ID, () -> new BlockItem(PORTAL_CHEST_BLOCK.get(), new Item.Properties().tab(TAB).rarity(Rarity.EPIC)));
         PORTAL_CHEST_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(PORTAL_CHEST_BLOCK_ID, () -> BlockEntityType.Builder.of(PortalChestBlockEntity::new, PORTAL_CHEST_BLOCK.get()).build(DSL.remainderType()));
 
         RAY_PARTICLE = PARTICLE_TYPES.register(RAY_PARTICLE_ID, RayParticle.Option::new);
         PORTAL_FIRE_PARTICLE = PARTICLE_TYPES.register(PORTAL_FIRE_PARTICLE_ID, PortalFireParticle.Option::new);
 
         PORTAL_POINT_MENU = MENU_TYPES.register(PORTAL_POINT_MENU_ID, () -> new MenuType<>(PortalPointMenu::new));
-    }
-
-    private static String getBlockItemID(String blockID) {
-        return blockID + "_item";
     }
 
     private static RegistryObject<ExpansionReel> registerExpansionReel(String typeID, ExpansionReel.Type type) {

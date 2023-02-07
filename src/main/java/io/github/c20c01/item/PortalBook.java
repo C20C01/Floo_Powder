@@ -89,9 +89,15 @@ public class PortalBook extends Item {
     }
 
     private static void showPosInfo(ServerPlayer serverPlayer) {
-        for (PortalPoint p : PortalPointManager.get(serverPlayer.getServer()).getAll()) {
-            var text1 = new TextComponent(p.toString());
-            serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
+        var list = PortalPointManager.get(serverPlayer.getServer()).getAll();
+        if (list == null) {
+            var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND_BOOK);
+            serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
+        } else {
+            for (PortalPoint p : list) {
+                var text1 = new TextComponent(p.toString());
+                serverPlayer.sendMessage(text1, ChatType.CHAT, Util.NIL_UUID);
+            }
         }
     }
 
