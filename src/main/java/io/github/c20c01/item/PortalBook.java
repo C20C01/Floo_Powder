@@ -75,22 +75,21 @@ public class PortalBook extends Item {
 
     private static void setPortalPoint(ServerPlayer player, PortalPointBlockEntity blockEntity, BlockPos pos, Level level) {
         var blockState = blockEntity.getBlockState();
-        blockState.setValue(PortalPointBlock.FIRE, !blockState.getValue(PortalPointBlock.FIRE));
+        var flag = !blockState.getValue(PortalPointBlock.FIRE);
         var blockStateAbove = level.getBlockState(pos.above());
-        if (blockState.getValue(PortalPointBlock.FIRE)) {
-            if (blockStateAbove.isAir())
-                level.setBlock(pos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
+        level.setBlock(pos, blockState.setValue(PortalPointBlock.FIRE, flag), Block.UPDATE_ALL_IMMEDIATE);
+        if (flag) {
+            if (blockStateAbove.isAir()) level.setBlock(pos.above(), Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
         } else {
-            if (blockStateAbove.is(Blocks.FIRE))
-                level.removeBlock(pos.above(), Boolean.FALSE);
+            if (blockStateAbove.is(Blocks.FIRE)) level.removeBlock(pos.above(), Boolean.FALSE);
         }
-        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_POINT_BOOK).append(": " + blockState.getValue(PortalPointBlock.FIRE));
+        var text = new TranslatableComponent(CCMain.TEXT_SET_PORTAL_POINT_BOOK).append(": " + flag);
         player.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
     }
 
     private static void showPosInfo(ServerPlayer serverPlayer) {
         var list = PortalPointManager.get(serverPlayer.getServer()).getAll();
-        if (list == null) {
+        if (list.length == 0) {
             var text = new TranslatableComponent(CCMain.TEXT_NOT_FOUND_BOOK);
             serverPlayer.sendMessage(text, ChatType.GAME_INFO, Util.NIL_UUID);
         } else {

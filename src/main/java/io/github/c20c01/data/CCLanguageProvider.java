@@ -147,30 +147,10 @@ public class CCLanguageProvider extends LanguageProvider {
             case ZH_CN -> EXP_REEL_CN + "保留朝向";
         });
 
-        this.add(CCMain.TEXT_NEEDS_ACTIVATION, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "Use Teleport Flint and Steel to light up the core";
-            case ZH_CN -> "使用传送火石以点亮核心";
-        });
-        this.add(CCMain.TEXT_ACTIVATED_BY_BOOK, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "The core is lit, but not acting as any teleportation point";
-            case ZH_CN -> "核心已点亮，但不作为任何传送点";
-        });
-        this.add(CCMain.TEXT_LOADED_WRONG, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "The teleportation point loading error";
-            case ZH_CN -> "传送点加载错误";
-        });
-        this.add(CCMain.TEXT_NOT_FOUND, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "No corresponding Teleportation core found";
-            case ZH_CN -> "未找到对应的传送核心";
-        });
         this.add(CCMain.TEXT_NOT_FOUND_BOOK, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "No available Teleportation core found.";
-            case ZH_CN -> "未发现任何可用的传送核心。";
+            case EN_US -> "No available Teleportation core found";
+            case ZH_CN -> "未发现任何可用的传送核心";
         });
         this.add(CCMain.TEXT_SET_PORTAL_FIRE_BOOK, switch (this.locale) {
             default -> throw new IllegalStateException();
@@ -182,12 +162,6 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Try to make a fire";
             case ZH_CN -> "核心顶部尝试生火";
         });
-        this.add(CCMain.TEXT_FOUND_BOOK, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "Found available Teleportation core:";
-            case ZH_CN -> "已找到可用的传送核心:";
-        });
-
         this.add(CCMain.TEXT_NOT_OWNER, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "You are not the owner";
@@ -198,7 +172,6 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "A same named point already exists";
             case ZH_CN -> "已经存在同名的传送点了";
         });
-
 
         this.add(CCMain.TEXT_DONE, switch (this.locale) {
             default -> throw new IllegalStateException();

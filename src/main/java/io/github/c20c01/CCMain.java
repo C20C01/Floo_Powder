@@ -48,15 +48,9 @@ public class CCMain {
     public static final String TEXT_GET_POINT_BLOCK_DESC = "advancement." + ID + ".get_portal_point_block.description";
 
     // 提示文本
-    public static final String TEXT_NEEDS_ACTIVATION = "chat." + ID + ".use_portal_flint_and_steel";
-    public static final String TEXT_ACTIVATED_BY_BOOK = "chat." + ID + ".only_fire_not_point";
-    public static final String TEXT_LOADED_WRONG = "chat." + ID + ".point_has_been_loaded_wrong";
-    public static final String TEXT_NOT_FOUND = "chat." + ID + ".no_point_find";
     public static final String TEXT_NOT_FOUND_BOOK = "chat." + ID + ".no_point_find_book";
-    public static final String TEXT_FOUND_BOOK = "chat." + ID + ".point_find_book";
     public static final String TEXT_SET_PORTAL_FIRE_BOOK = "chat." + ID + ".set_portal_fire_book";
     public static final String TEXT_SET_PORTAL_POINT_BOOK = "chat." + ID + ".set_portal_point_book";
-
     public static final String TEXT_NOT_OWNER = "chat." + ID + ".not_owner";
     public static final String TEXT_ALREADY_EXISTS = "chat." + ID + ".already_existed";
 
@@ -165,7 +159,7 @@ public class CCMain {
         FLOO_POWDER_ITEM = ITEMS.register(FLOO_POWDER_ID, () -> new FlooPowder(new Item.Properties().tab(TAB)));
         LASTING_POWDER_ITEM = ITEMS.register(LASTING_POWDER_ID, () -> new LastingPowder(new Item.Properties().tab(TAB)));
         PORTAL_FLINT_AND_STEEL_ITEM = ITEMS.register(PORTAL_FLINT_AND_STEEL_ID, () -> new PortalFlintAndSteel(new Item.Properties().tab(TAB).durability(1)));
-        PORTAL_BOOK_ITEM = ITEMS.register(PORTAL_BOOK_ID, () -> new PortalBook(new Item.Properties().tab(TAB).stacksTo(1)));
+        PORTAL_BOOK_ITEM = ITEMS.register(PORTAL_BOOK_ID, () -> new PortalBook(new Item.Properties().tab(TAB).stacksTo(1).rarity(Rarity.EPIC)));
         PORTAL_WAND_ITEM = ITEMS.register(PORTAL_WAND_ID, () -> new PortalWand(new Item.Properties().tab(TAB).stacksTo(1).rarity(Rarity.EPIC)));
         FLOO_REEL_ITEM = ITEMS.register(FLOO_REEL_ID, () -> new FlooReel(new Item.Properties().tab(TAB)));
 
