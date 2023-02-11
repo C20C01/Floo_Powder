@@ -1,7 +1,7 @@
 package io.github.c20c01.block;
 
 import io.github.c20c01.client.gui.screen.PowderGiverScreen;
-import io.github.c20c01.item.destroyByFireToUse.FlooPowder;
+import io.github.c20c01.item.FlooPowder;
 import io.github.c20c01.savedData.shareData.PortalPointInfo;
 import io.github.c20c01.savedData.shareData.SharePointInfos;
 import net.minecraft.MethodsReturnNonnullByDefault;

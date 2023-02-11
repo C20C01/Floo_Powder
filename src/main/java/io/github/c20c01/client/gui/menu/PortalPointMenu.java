@@ -1,7 +1,7 @@
 package io.github.c20c01.client.gui.menu;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.item.destroyByFireToUse.FlooPowder;
+import io.github.c20c01.item.FlooPowder;
 import io.github.c20c01.item.flooReel.ExpansionReel;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.Container;

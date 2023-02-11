@@ -1,4 +1,4 @@
-package io.github.c20c01.item.destroyByFireToUse;
+package io.github.c20c01.item;
 
 import io.github.c20c01.block.portalFire.BasePortalFireBlock;
 import net.minecraft.core.BlockPos;
@@ -22,10 +22,7 @@ public class LastingPowder extends Item implements DestroyByFireToUse {
 
             if (BasePortalFireBlock.canChangeToLastingFire(blockPos, level)) {
                 changeFireLasting(blockPos, level);
-                return;
             }
-
-            DestroyByFireToUse.explode(itemEntity.position(), level);
         }
     }
 

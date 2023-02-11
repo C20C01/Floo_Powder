@@ -1,4 +1,4 @@
-package io.github.c20c01.item.destroyByFireToUse;
+package io.github.c20c01.item;
 
 import io.github.c20c01.CCMain;
 import io.github.c20c01.block.portalFire.BasePortalFireBlock;
@@ -31,10 +31,7 @@ public class FlooPowder extends Item implements DestroyByFireToUse {
 
             if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
                 changeFireBlock(blockPos, level, TpTool.getItemName(itemEntity.getItem()));
-                return;
             }
-
-            DestroyByFireToUse.explode(itemEntity.position(), level);
         }
     }
 

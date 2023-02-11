@@ -1,7 +1,7 @@
 package io.github.c20c01.block.portalFire;
 
 import io.github.c20c01.client.particles.PortalFireParticle;
-import io.github.c20c01.item.destroyByFireToUse.DestroyByFireToUse;
+import io.github.c20c01.item.DestroyByFireToUse;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
