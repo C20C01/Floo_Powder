@@ -51,7 +51,7 @@ public class CCLootTableProvider extends LootTableProvider {
     private static class PortalPointBlockLoot extends BlockLoot {
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return List.of(CCMain.PORTAL_POINT_BLOCK.get());
+            return List.of(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
         }
 
         @Override

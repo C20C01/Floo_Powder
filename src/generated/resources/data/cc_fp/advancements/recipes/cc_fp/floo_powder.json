@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "cc_fp:floo_powder"
+    ]
+  },
+  "criteria": {
+    "in_air": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "minecraft:air"
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "cc_fp:floo_powder"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "in_air",
+      "has_the_recipe"
+    ]
+  ]
+}
