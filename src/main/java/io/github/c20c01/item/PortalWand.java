@@ -3,9 +3,9 @@ package io.github.c20c01.item;
 import io.github.c20c01.CCMain;
 import io.github.c20c01.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.block.portalFire.PortalFireBlockEntity;
+import io.github.c20c01.client.particles.RayParticle;
 import io.github.c20c01.particle.PlayParticle;
 import io.github.c20c01.particle.SendParticle;
-import io.github.c20c01.client.particles.RayParticle;
 import io.github.c20c01.savedData.PortalPoint;
 import io.github.c20c01.savedData.PortalPointManager;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -32,12 +32,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @MethodsReturnNonnullByDefault
@@ -47,6 +50,7 @@ public class PortalWand extends Item {
     private static final String OWNER = "Owner";
     private static final String IN = "In";
     private static final String OUT = "Out";
+    private static final Set<Player> usedWandPlayers = new HashSet<>();
 
     public PortalWand(Properties properties) {
         super(properties);
@@ -65,6 +69,7 @@ public class PortalWand extends Item {
         }
 
         if (level instanceof ServerLevel serverLevel) {
+            usedWandPlayers.add(player);
             player.getCooldowns().addCooldown(stack.getItem(), 10);
             SendParticle.line(serverLevel, (ServerPlayer) player, SendParticle.Particles.RAY, player.getEyePosition(), player.getViewVector(1F));
             BlockHitResult hitResult = rayTrace(player);
@@ -190,11 +195,20 @@ public class PortalWand extends Item {
     }
 
     @Mod.EventBusSubscriber(modid = CCMain.ID)
-    public static class PlayerLoggedOut {
+    // 当玩家退出游戏或死亡时删除其由法杖生成的传送点
+    public static class RemovePoints {
         @SubscribeEvent
-        public static void loggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
+        public static void playerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+            var player = event.getPlayer();
+            if (usedWandPlayers.remove(player) && player instanceof ServerPlayer serverPlayer) {
                 removePoints(serverPlayer.getUUID(), serverPlayer.getServer());
+            }
+        }
+
+        @SubscribeEvent
+        public static void LivingDeathEvent(LivingDeathEvent event) {
+            if (event.getEntity() instanceof ServerPlayer player && usedWandPlayers.remove(player)) {
+                removePoints(player.getUUID(), player.getServer());
             }
         }
     }

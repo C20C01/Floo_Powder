@@ -21,7 +21,7 @@ import java.util.UUID;
  * @param dimension   维度
  * @param ownerUid    拥有者uuid
  * @param isPublic    是否公开（暴露给其他玩家）
- * @param isTemporary 是否为临时的（传送法杖建立、没用权限限制、玩家退出会消失）
+ * @param isTemporary 是否为临时的（传送法杖建立、没有权限限制、玩家退出或死亡会消失）
  */
 
 public record PortalPoint(String name, String describe, BlockPos pos,
@@ -44,7 +44,7 @@ public record PortalPoint(String name, String describe, BlockPos pos,
                 "name='" + name + '\'' +
                 ", describe='" + describe + '\'' +
                 ", pos=" + pos +
-                ", dimension=" + dimension +
+                ", dimension=" + dimension.location() +
                 ", ownerUid=" + ownerUid +
                 ", isPublic=" + isPublic +
                 ", isTemporary=" + isTemporary +

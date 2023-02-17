@@ -11,12 +11,16 @@ import java.util.UUID;
 
 public record Permission(UUID uuid, String name, Set<UUID> friends) {
 
-    public boolean hasRight(UUID others) {
-        return uuid.equals(others) || isFriend(others);
-    }
-
     public boolean isFriend(UUID others) {
         return friends.contains(others);
+    }
+
+    public boolean addFriend(UUID uuid) {
+        return !this.uuid.equals(uuid) && friends.add(uuid);
+    }
+
+    public boolean removeFriend(UUID uuid) {
+        return friends.remove(uuid);
     }
 
     public static Permission read(CompoundTag compoundTag) {

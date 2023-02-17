@@ -6,12 +6,14 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -56,6 +58,11 @@ public class PermissionManager extends SavedData {
         setDirty();
     }
 
+    public void addNew(Player player) {
+        permissions.putIfAbsent(player.getUUID(), new Permission(player.getUUID(), player.getDisplayName().getString(), new HashSet<>()));
+        setDirty();
+    }
+
     public void remove(UUID ownerUuid) {
         permissions.remove(ownerUuid);
         setDirty();
@@ -64,6 +71,14 @@ public class PermissionManager extends SavedData {
     @Nullable
     public Permission get(UUID uuid) {
         return permissions.get(uuid);
+    }
+
+    public Permission get(Player player) {
+        UUID uuid = player.getUUID();
+        Permission permission = permissions.get(uuid);
+        if (permission == null)
+            permission = new Permission(uuid, player.getDisplayName().getString(), new HashSet<>());
+        return permission;
     }
 
     public Permission[] getAll() {

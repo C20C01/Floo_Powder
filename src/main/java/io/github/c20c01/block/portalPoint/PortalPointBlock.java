@@ -1,7 +1,6 @@
 package io.github.c20c01.block.portalPoint;
 
 import io.github.c20c01.CCMain;
-import io.github.c20c01.savedData.Permission;
 import io.github.c20c01.savedData.PermissionManager;
 import io.github.c20c01.savedData.PortalPoint;
 import io.github.c20c01.savedData.PortalPointManager;
@@ -40,7 +39,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashSet;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -167,7 +165,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
         String describe = player.getDisplayName().getString() + "'s portal point at: " + pointPos.toShortString();
         MinecraftServer server = player.getServer();
         PortalPointManager.get(server).add(new PortalPoint(name, describe, pointPos, dimension, player.getUUID(), false, false));
-        PermissionManager.get(server).add(new Permission(player.getUUID(), player.getDisplayName().getString(), new HashSet<>()));
+        PermissionManager.get(server).addNew(player);
     }
 
     protected static void disable(Level level, BlockPos blockPos) {
