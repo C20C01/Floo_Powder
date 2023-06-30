@@ -1,9 +1,9 @@
-fc2bd30e4b4a12864e9fb10adc55a058dee6e092 assets/cc_fp/lang/en_us.json
-77cc6053e336eeef4fbfdc639ce98c9daa38415a assets/cc_fp/lang/zh_cn.json
+393cd23c049f49e4f788637a5b77dec08377b7ea assets/cc_fp/lang/en_us.json
+bce3c7fc45917478a81c901ce516ad7c9db11f7e assets/cc_fp/lang/zh_cn.json
 a3b39db6afac2b1956d736844079a88abd08a2ed data/cc_fp/advancements/get_floo.json
 41c98c2a68cd689813c478cf71a40abfcaa30424 data/cc_fp/advancements/get_portal_point_block.json
 cc4e07d913d278927e5df0bbc2e335f732929952 data/cc_fp/advancements/into_fire.json
-43ce09346f216c4ca5a80b7e96a791469548e76a data/cc_fp/advancements/recipes/cc_fp/floo_powder.json
+33baeabcac5ee9ea8ab54e46b167387ef4ea0852 data/cc_fp/advancements/recipes/cc_fp/floo_powder.json
 43281fca17f51996ac8753536c7bf295fcde589b data/cc_fp/advancements/recipes/cc_fp/floo_reel.json
 929c1cff8f0c981b8ea472a7119de5afb1dedf9d data/cc_fp/advancements/recipes/cc_fp/portal_flint_and_steel.json
 82088ac0bf243990fb7f2b2c0bda1ecdcbd8611b data/cc_fp/advancements/recipes/cc_fp/portal_point_block.json

@@ -1,0 +1,183 @@
+package io.github.c20c01.cc_fp.item;
+
+import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
+import io.github.c20c01.cc_fp.tool.MessageSender;
+import io.github.c20c01.cc_fp.tp.TpTool;
+import io.github.c20c01.cc_fp.CCMain;
+import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
+import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlockEntity;
+import io.github.c20c01.cc_fp.client.gui.screen.NameStoneScreen;
+import io.github.c20c01.cc_fp.network.UpdateItemStack;
+import io.github.c20c01.cc_fp.savedData.PortalPointManager;
+import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
+import java.util.Objects;
+
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
+public class NameStone extends Item {
+    public NameStone(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stone, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
+        String name = getStoneName(stone);
+        if (!name.isEmpty()) {
+            components.add(new TextComponent(name).withStyle(ChatFormatting.DARK_GREEN));
+        }
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext useOnContext) {
+        Player player = useOnContext.getPlayer();
+        if (player == null) {
+            return InteractionResult.PASS;
+        }
+        ItemStack itemStack = useOnContext.getItemInHand();
+        String name = getStoneName(itemStack);
+        if (name.equals("")) {
+            return InteractionResult.PASS;
+        }
+
+        Level level = useOnContext.getLevel();
+        BlockPos blockPos = useOnContext.getClickedPos();
+        if (level.getBlockEntity(blockPos) instanceof PortalPointBlockEntity blockEntity) {
+            if (level instanceof ServerLevel serverLevel) {
+                player.getCooldowns().addCooldown(this, 40);
+                if (!blockEntity.canUse(serverLevel.getServer(), player)) {
+                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_NOT_OWNER));
+                    return InteractionResult.FAIL;
+                }
+
+                PortalPointManager portalPointManager = PortalPointManager.get(serverLevel.getServer());
+                var point = portalPointManager.get(blockEntity.getPointName(), Boolean.FALSE);
+                if (point == null) {
+                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_UNACTIVATED));
+                    return InteractionResult.FAIL;
+                }
+
+                if (player.isShiftKeyDown()) {
+                    if (point.publicGroup().equals(name)) {
+                        portalPointManager.changePointInfo(point.setPublicGroupName(""));
+                        MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_NO_PUBLIC));
+                    } else {
+                        portalPointManager.changePointInfo(point.setPublicGroupName(name));
+                        MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_PUBLIC));
+                    }
+                } else {
+                    portalPointManager.changePointInfo(point.setDesc(name));
+                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_DESC));
+                }
+                itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
+                level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
+                return InteractionResult.CONSUME;
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        if (player.getAbilities().instabuild && level.getBlockEntity(blockPos) instanceof PowderGiverBlockEntity blockEntity) {
+            if (level instanceof ServerLevel) {
+                MessageSender.gameInfo((ServerPlayer) player, new TextComponent("Public group: " + name));
+                blockEntity.setPublicGroup(name);
+                level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        if (level.getBlockEntity(blockPos) instanceof PowderPotBlockEntity blockEntity) {
+            if (level instanceof ServerLevel) {
+                if (blockEntity.setName(name)) {
+                    itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
+                    level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
+                }
+                MessageSender.gameInfo((ServerPlayer) player, new TextComponent("Pot name: " + name));
+                return InteractionResult.CONSUME;
+            } else {
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return super.useOn(useOnContext);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (level.isClientSide) {
+            Minecraft.getInstance().setScreen(new NameStoneScreen(itemStack, player, hand));
+        } else {
+            UpdateItemStack.setPlayerList(Objects.requireNonNull(level.getServer()).getPlayerList());
+        }
+        player.awardStat(Stats.ITEM_USED.get(this));
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+    }
+
+    @Override
+    public boolean overrideStackedOnOther(ItemStack itemStack, Slot slot, ClickAction clickAction, Player player) {
+        if (clickAction != ClickAction.SECONDARY) {
+            return false;
+        }
+
+        ItemStack other = slot.getItem();
+        if (other.isEmpty()) {
+            return false;
+        }
+
+        String name = getStoneName(itemStack);
+        if (name.isEmpty()) {
+            return false;
+        }
+
+        if (other.is(CCMain.FLOO_HANDBAG_ITEM.get())) {
+            if (FlooHandbag.addPowderName(other, name)) {
+                itemStack.hurtAndBreak(4, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
+                player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+            }
+            return true;
+        }
+
+        if (!TpTool.getItemName(other).equals(name)) {
+            slot.set(other.copy().setHoverName(new TextComponent(name)));
+            itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
+            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+            return true;
+        }
+
+        return true;
+    }
+
+    public static String getStoneName(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getString("Name");
+    }
+
+    public static ItemStack setStoneName(ItemStack itemStack, String name) {
+        itemStack.getOrCreateTag().putString("Name", name);
+        return itemStack;
+    }
+}

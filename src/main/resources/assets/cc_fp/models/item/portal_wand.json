@@ -1,6 +1,62 @@
 {
-  "parent": "item/handheld",
-  "textures": {
-    "layer0": "cc_fp:item/portal_wand"
-  }
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "cc_fp:item/portal_wand",
+		"particle": "cc_fp:item/portal_wand"
+	},
+	"elements": [
+		{
+			"from": [8, 0, 7],
+			"to": [9, 4, 8],
+			"faces": {
+				"north": {"uv": [2, 12, 4, 16], "texture": "#0"},
+				"east": {"uv": [0, 12, 2, 16], "texture": "#0"},
+				"south": {"uv": [6, 12, 8, 16], "texture": "#0"},
+				"west": {"uv": [4, 12, 6, 16], "texture": "#0"},
+				"up": {"uv": [8, 14, 9, 15], "texture": "#0"},
+				"down": {"uv": [8, 15, 9, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [8.1, 4, 7.1],
+			"to": [8.9, 13, 7.9],
+			"faces": {
+				"north": {"uv": [4, 0, 8, 12], "texture": "#0"},
+				"east": {"uv": [0, 0, 4, 12], "texture": "#0"},
+				"south": {"uv": [12, 0, 16, 12], "texture": "#0"},
+				"west": {"uv": [8, 0, 12, 12], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [12, 12, 16, 16], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 4.75, 0]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 4.75, 0]
+		},
+		"firstperson_righthand": {
+			"translation": [4, 4.5, 0]
+		},
+		"firstperson_lefthand": {
+			"translation": [4, 4.5, 0]
+		},
+		"ground": {
+			"translation": [0, 2, 0],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"gui": {
+			"rotation": [0, 0, -45],
+			"translation": [1.25, 2.25, 0],
+			"scale": [1.5, 1.5, 1.5]
+		},
+		"head": {
+			"rotation": [-52, 0, 0],
+			"translation": [-0.5, 7.75, -11.25]
+		},
+		"fixed": {
+			"rotation": [0, 0, 45]
+		}
+	}
 }

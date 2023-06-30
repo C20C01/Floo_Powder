@@ -6,10 +6,16 @@
     ]
   },
   "criteria": {
-    "in_air": {
-      "trigger": "minecraft:enter_block",
+    "has_gunpowder": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "block": "minecraft:air"
+        "items": [
+          {
+            "items": [
+              "minecraft:gunpowder"
+            ]
+          }
+        ]
       }
     },
     "has_the_recipe": {
@@ -21,7 +27,7 @@
   },
   "requirements": [
     [
-      "in_air",
+      "has_gunpowder",
       "has_the_recipe"
     ]
   ]

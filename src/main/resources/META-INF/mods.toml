@@ -3,11 +3,7 @@ loaderVersion = "[36,)"
 license = "BSD-3-Clause"
 [[mods]]
 modId = "cc_fp"
-version = "1.5.0"
+version = "1.5.1"
 displayName = "Floo Powder"
 authors = "CC2001"
-description = '''
-Floo Powder - The Easier Way to Teleport
-
-Found more: https://github.com/C20C01/Floo_Powder
-'''
+description = "Floo Powder - The Easier Way to Teleport\n\nFound more: https://github.com/C20C01/Floo_Powder"

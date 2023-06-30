@@ -154,7 +154,7 @@
  - 39.0.89 Fix regressions for onAddedTo/RemovedFromWorld and related events (#8434)
  - 39.0.88 [1.18] Integrate the gametest framework with Forge (#8225)
  - 39.0.87 Re-add missing Shulker patch for EntityTeleportEvent (#8481)
- - 39.0.86 Fix entity type in conversion event to Drowned (#8479)
+ - 39.0.86 Fix entity checkType in conversion event to Drowned (#8479)
  - 39.0.85 Add VanillaGameEvent to allow for globally listening to vanilla's GameEvents (#8472)
  - 39.0.84 Provide damage source context to Item#onDestroyed(ItemEntity) (#8473)
  - 39.0.83 Add missing shear and elytra game events (#8471)

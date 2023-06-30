@@ -6,7 +6,7 @@ This Mod adds Floo Powder and other interesting things to enable you to set up y
 not
 only yourself but also other kinds of entity which you specify to these points from anywhere.
 
-## Jump around
+##  Jump around
 
 * [Attention](#attention)
 * [Learn More](#learn-more)

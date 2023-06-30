@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "empty=true": {
+      "model": "cc_fp:block/powder_pot_block_empty_model"
+    },
+    "empty=false": {
+      "model": "cc_fp:block/powder_pot_block_model"
+    }
+  }
+}
