@@ -3,10 +3,13 @@ package io.github.c20c01.cc_fp.block.powderPot;
 import io.github.c20c01.cc_fp.CCMain;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -69,12 +73,10 @@ public class PowderPotBlock extends Block implements EntityBlock {
         }
 
         if (item.equals(CCMain.FLOO_POWDER_ITEM.get())) {
-            if (blockEntity.addPowder(itemStack)) {
+            if (blockEntity.addPowder(itemStack) && blockState.getValue(EMPTY)) {
                 level.setBlock(blockPos, blockState.setValue(EMPTY, false), Block.UPDATE_ALL);
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            } else {
-                return InteractionResult.FAIL;
             }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         if (!blockState.getValue(EMPTY)) {
@@ -85,6 +87,15 @@ public class PowderPotBlock extends Block implements EntityBlock {
         }
 
         return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
+        CompoundTag compoundTag = BlockItem.getBlockEntityData(itemStack);
+        if (compoundTag != null && compoundTag.contains("Num") && compoundTag.getInt("Num") > 0) {
+            level.setBlock(blockPos, blockState.setValue(EMPTY, Boolean.FALSE), Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override
