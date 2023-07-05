@@ -10,7 +10,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -61,18 +60,17 @@ public class PowderPotBlock extends Block implements EntityBlock {
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
-        Item item = itemStack.getItem();
         PowderPotBlockEntity blockEntity = (PowderPotBlockEntity) level.getBlockEntity(blockPos);
 
         if (blockEntity == null) {
             return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
         }
 
-        if (item.equals(CCMain.NAME_STONE_ITEM.get())) {
+        if (itemStack.is(CCMain.NAME_STONE_ITEM.get())) {
             return InteractionResult.PASS;
         }
 
-        if (item.equals(CCMain.FLOO_POWDER_ITEM.get())) {
+        if (itemStack.is(CCMain.FLOO_POWDER_ITEM.get())) {
             if (blockEntity.addPowder(itemStack) && blockState.getValue(EMPTY)) {
                 level.setBlock(blockPos, blockState.setValue(EMPTY, false), Block.UPDATE_ALL);
             }

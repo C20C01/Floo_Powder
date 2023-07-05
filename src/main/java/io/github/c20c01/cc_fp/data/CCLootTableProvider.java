@@ -40,7 +40,7 @@ public class CCLootTableProvider extends LootTableProvider {
 
     @Override
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-        return List.of(Pair.of(PortalPointBlockLoot::new, LootContextParamSets.BLOCK));
+        return List.of(Pair.of(CCBlockLoot::new, LootContextParamSets.BLOCK));
     }
 
     @Override
@@ -48,16 +48,15 @@ public class CCLootTableProvider extends LootTableProvider {
         map.forEach((key, value) -> LootTables.validate(context, key, value));
     }
 
-    private static class PortalPointBlockLoot extends BlockLoot {
+    private static class CCBlockLoot extends BlockLoot {
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return List.of(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get());
+            return List.of(CCMain.PORTAL_POINT_BLOCK.get(), CCMain.FIRE_BASE_BLOCK.get(), CCMain.POWDER_POT_BLOCK.get());
         }
 
         @Override
         protected void addTables() {
-            this.dropSelf(CCMain.PORTAL_POINT_BLOCK.get());
-            this.dropSelf(CCMain.FIRE_BASE_BLOCK.get());
+            getKnownBlocks().forEach((this::dropSelf));
         }
     }
 }
