@@ -222,6 +222,110 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Point has not been activated yet";
             case ZH_CN -> "传送点尚未建立";
         });
+        this.add(CCMain.TEXT_POT_UNLIMITED, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Unlimited floo powder";
+            case ZH_CN -> "无限飞路粉";
+        });
+        this.add(CCMain.TEXT_POWDER_GIVER_GROUP, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Public group";
+            case ZH_CN -> "公开组";
+        });
+        this.add(CCMain.TEXT_POT_NAME, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Pot name";
+            case ZH_CN -> "陶盆名称";
+        });
+
+        this.add(CCMain.TEXT_CAN_NOT_ADD_YOURSELF, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Can not add yourself as friend";
+            case ZH_CN -> "无法添加自己为好友";
+        });
+        this.add(CCMain.TEXT_ALREADY_FRIEND, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Already friend";
+            case ZH_CN -> "已经是好友了";
+        });
+        this.add(CCMain.TEXT_OUT_OF_FRIEND_SIZE, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Out of friend size";
+            case ZH_CN -> "好友数量已达上限";
+        });
+        this.add(CCMain.TEXT_ALREADY_SEND, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Already sent request";
+            case ZH_CN -> "已经发送过请求了";
+        });
+        this.add(CCMain.TEXT_REQUEST_SEND, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Request has been sent";
+            case ZH_CN -> "请求已发送";
+        });
+        this.add(CCMain.TEXT_INVITE_DESC, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Invite you to be its friend";
+            case ZH_CN -> "邀请你成为其好友";
+        });
+        this.add(CCMain.TEXT_INVITE_HOVER, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "You will be able to see all points they have and teleport to their friends only points\n" +
+                    "(Attention: Only the inviter can remove this friend relationship, you can't remove it)";
+            case ZH_CN -> "你将能看到其拥有的所有传送点，并可传送至其对好友开放传送点\n" +
+                    "（注意: 只有邀请者才能解除你们的好友关系，您无法解除）";
+        });
+        this.add(CCMain.TEXT_REQUEST_DESC, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Request to be your friend";
+            case ZH_CN -> "请求成为你的好友";
+        });
+        this.add(CCMain.TEXT_REQUEST_HOVER, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US ->
+                    "All teleportation points you have will be visible to them (including coordinate!)\nAnd they can teleport to your friends only points";
+            case ZH_CN -> "你拥有的的所有传送点都将对其可见（包含具体坐标！）\n同时其能传送至你对好友开放的传送点";
+        });
+        this.add(CCMain.TEXT_UNKNOWN_REQUEST, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Unknown request";
+            case ZH_CN -> "未知请求";
+        });
+        this.add(CCMain.TEXT_UNKNOWN_PLAYER, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Unknown player";
+            case ZH_CN -> "未知玩家";
+        });
+        this.add(CCMain.TEXT_ADDED_SUCCESSFULLY, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Added successfully";
+            case ZH_CN -> "添加成功";
+        });
+        this.add(CCMain.TEXT_CAN_NOT_REMOVE_YOURSELF, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Can not remove yourself";
+            case ZH_CN -> "无法移除自己";
+        });
+        this.add(CCMain.TEXT_REMOVED_SUCCESSFULLY, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Removed successfully";
+            case ZH_CN -> "移除成功";
+        });
+        this.add(CCMain.TEXT_NOT_FRIEND, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Not friend";
+            case ZH_CN -> "不是好友";
+        });
+        this.add(CCMain.TEXT_NOTHING, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Nothing";
+            case ZH_CN -> "空";
+        });
+        this.add(CCMain.TEXT_REMOVE_FRIEND, switch (this.locale) {
+            default -> throw new IllegalStateException();
+            case EN_US -> "Remove friend";
+            case ZH_CN -> "移除好友";
+        });
 
         this.add(CCMain.TEXT_GET, switch (this.locale) {
             default -> throw new IllegalStateException();
@@ -259,7 +363,6 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Floo ball";
             case ZH_CN -> "飞路弹";
         });
-
 
 
         this.add(CCMain.TEXT_GET_FLOO_DESC, switch (this.locale) {

@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 @Mod(CCMain.ID)
 public class CCMain {
     public static final String ID = "cc_fp";
+    public static final String VERSION = "1.5.1";
 
     // 进度文本
     public static final String TEXT_GET_FLOO_TITLE = "advancement." + ID + ".get_floo.title";
@@ -63,6 +64,28 @@ public class CCMain {
     public static final String TEXT_POINT_SET_NO_PUBLIC = "chat." + ID + ".point_set_no_public";
     public static final String TEXT_POINT_SET_DESC = "chat." + ID + ".point_set_desc";
     public static final String TEXT_POINT_UNACTIVATED = "chat." + ID + ".point_unactivated";
+    public static final String TEXT_POT_UNLIMITED = "chat." + ID + ".pot_unlimited";
+    public static final String TEXT_POWDER_GIVER_GROUP = "chat." + ID + ".powder_giver_group";
+    public static final String TEXT_POT_NAME = "chat." + ID + ".pot_name";
+
+    // 命令文本
+    public static final String TEXT_CAN_NOT_ADD_YOURSELF = "commands." + ID + ".can_not_add_yourself";
+    public static final String TEXT_ALREADY_FRIEND = "commands." + ID + ".already_friend";
+    public static final String TEXT_OUT_OF_FRIEND_SIZE = "commands." + ID + ".out_of_friend_size";
+    public static final String TEXT_ALREADY_SEND = "commands." + ID + ".already_send";
+    public static final String TEXT_REQUEST_SEND = "commands." + ID + ".request_send";
+    public static final String TEXT_INVITE_DESC = "commands." + ID + ".invite_desc";
+    public static final String TEXT_INVITE_HOVER = "commands." + ID + ".invite_hover";
+    public static final String TEXT_REQUEST_DESC = "commands." + ID + ".request_desc";
+    public static final String TEXT_REQUEST_HOVER = "commands." + ID + ".request_hover";
+    public static final String TEXT_UNKNOWN_REQUEST = "commands." + ID + ".unknown_request";
+    public static final String TEXT_UNKNOWN_PLAYER = "commands." + ID + ".unknown_player";
+    public static final String TEXT_ADDED_SUCCESSFULLY = "commands." + ID + ".added_successfully";
+    public static final String TEXT_CAN_NOT_REMOVE_YOURSELF = "commands." + ID + ".can_not_remove_yourself";
+    public static final String TEXT_REMOVED_SUCCESSFULLY = "commands." + ID + ".removed_successfully";
+    public static final String TEXT_NOT_FRIEND = "commands." + ID + ".not_friend";
+    public static final String TEXT_NOTHING = "commands." + ID + ".nothing";
+    public static final String TEXT_REMOVE_FRIEND = "commands." + ID + ".remove_friend";
 
     // GUI文本
     public static final String TEXT_GET = "gui." + ID + ".get";
@@ -195,7 +218,7 @@ public class CCMain {
         PORTAL_WAND_ITEM = ITEMS.register(PORTAL_WAND_ID, () -> new PortalWand(getBaseProperties().stacksTo(1).rarity(Rarity.EPIC)));
         FLOO_REEL_ITEM = ITEMS.register(FLOO_REEL_ID, () -> new FlooReel(getBaseProperties()));
         FLOO_HANDBAG_ITEM = ITEMS.register(FLOO_HANDBAG_ID, () -> new FlooHandbag(getBaseProperties().stacksTo(1)));
-        NAME_STONE_ITEM = ITEMS.register(NAME_STONE_ID, () -> new NameStone(getBaseProperties().stacksTo(1).durability(64)));
+        NAME_STONE_ITEM = ITEMS.register(NAME_STONE_ID, () -> new NameStone(getBaseProperties().durability(64)));
         FLOO_BALL_ITEM = ITEMS.register(FLOO_BALL_ID, () -> new FlooBallItem(getBaseProperties()));
 
         EXP_REEL_EVERYONE_ITEM = registerExpansionReel("everyone", ExpansionReel.Type.everyone);

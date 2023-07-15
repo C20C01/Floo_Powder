@@ -37,7 +37,7 @@ public abstract class Check<T> {
         var src = context.getSource();
         int size = data.size();
         if (size == 0) {
-            src.sendSuccess(new TextComponent("没东西"), Boolean.FALSE);
+            src.sendSuccess(new TranslatableComponent(CCMain.TEXT_NOTHING), Boolean.FALSE);
             return;
         }
         int maxPage = size / numPerPage + (size % numPerPage == 0 ? 0 : 1);
@@ -52,9 +52,9 @@ public abstract class Check<T> {
         src.sendSuccess(getComponent(page, maxPage, dataInPage), Boolean.FALSE);
     }
 
-    public static TextComponent getPlayerNameByUuid(UUID uuid) {
+    public static MutableComponent getPlayerNameByUuid(UUID uuid) {
         String ownerName = UsernameCache.getLastKnownUsername(uuid);
-        return ownerName == null ? new TextComponent("不存在的玩家") : new TextComponent(ownerName);
+        return ownerName == null ? new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER) : new TextComponent(ownerName);
     }
 
     abstract MutableComponent getComponent(int page, int maxPage, List<T> data);
@@ -89,7 +89,7 @@ public abstract class Check<T> {
             component.append(new TextComponent("\n• ").withStyle(ChatFormatting.GOLD));
             String name = UsernameCache.getLastKnownUsername(uuid);
             if (name == null) {
-                component.append(new TextComponent("不存在的玩家").setStyle(
+                component.append(new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER).setStyle(
                                 Style.EMPTY
                                         .withColor(ChatFormatting.DARK_GRAY)
                                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityTooltipInfo(EntityType.PLAYER, uuid, new TextComponent("? ? ?"))))
@@ -107,7 +107,7 @@ public abstract class Check<T> {
             component.append(new TextComponent("×").setStyle(
                             Style.EMPTY
                                     .withColor(ChatFormatting.DARK_RED)
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent("删除好友")))
+                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent(CCMain.TEXT_REMOVE_FRIEND)))
                                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + CCMain.ID + " friends remove " + uuid))
                     )
             );

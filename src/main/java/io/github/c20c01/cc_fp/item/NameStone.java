@@ -1,14 +1,14 @@
 package io.github.c20c01.cc_fp.item;
 
-import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
-import io.github.c20c01.cc_fp.tool.MessageSender;
-import io.github.c20c01.cc_fp.tp.TpTool;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
 import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlockEntity;
+import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
 import io.github.c20c01.cc_fp.client.gui.screen.NameStoneScreen;
 import io.github.c20c01.cc_fp.network.UpdateItemStack;
 import io.github.c20c01.cc_fp.savedData.PortalPointManager;
+import io.github.c20c01.cc_fp.tool.MessageSender;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -32,6 +32,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -103,7 +105,7 @@ public class NameStone extends Item {
 
         if (player.getAbilities().instabuild && level.getBlockEntity(blockPos) instanceof PowderGiverBlockEntity blockEntity) {
             if (level instanceof ServerLevel) {
-                MessageSender.gameInfo((ServerPlayer) player, new TextComponent("Public group: " + name));
+                MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POWDER_GIVER_GROUP).append(": " + name));
                 blockEntity.setPublicGroup(name);
                 level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
             }
@@ -116,7 +118,7 @@ public class NameStone extends Item {
                     itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
                     level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
                 }
-                MessageSender.gameInfo((ServerPlayer) player, new TextComponent("Pot name: " + name));
+                MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POT_NAME).append(": " + name));
                 return InteractionResult.CONSUME;
             } else {
                 return InteractionResult.SUCCESS;
@@ -130,12 +132,17 @@ public class NameStone extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(new NameStoneScreen(itemStack, player, hand));
+            openGui(itemStack, player, hand);
         } else {
             UpdateItemStack.setPlayerList(Objects.requireNonNull(level.getServer()).getPlayerList());
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void openGui(ItemStack itemStack, Player player, InteractionHand hand) {
+        Minecraft.getInstance().setScreen(new NameStoneScreen(itemStack, player, hand));
     }
 
     @Override

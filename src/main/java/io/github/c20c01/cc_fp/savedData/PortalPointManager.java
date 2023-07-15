@@ -183,13 +183,12 @@ public class PortalPointManager extends SavedData {
         Set<UUID> friends = permissionManager.get(someone).friends();
 
         for (PortalPoint point : portalPointManager.getAll()) {
-            if (point.isPublic()) {
-                points.add(point);
+            UUID owner = point.ownerUid();
+            if (!containsSelf && owner.equals(someone)) {
                 continue;
             }
 
-            UUID owner = point.ownerUid();
-            if (friends.contains(owner) || (containsSelf && owner.equals(someone))) {
+            if (point.isPublic() || friends.contains(owner)) {
                 points.add(point);
             }
         }

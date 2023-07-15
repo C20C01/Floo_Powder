@@ -10,11 +10,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.c20c01.cc_fp.CCMain;
+import io.github.c20c01.cc_fp.config.CCConfig;
 import io.github.c20c01.cc_fp.item.PortalWand;
 import io.github.c20c01.cc_fp.savedData.PermissionManager;
 import io.github.c20c01.cc_fp.savedData.PortalPoint;
 import io.github.c20c01.cc_fp.savedData.PortalPointManager;
-import io.github.c20c01.cc_fp.config.CCConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -142,10 +142,9 @@ public class CCCommand {
 
     private static int about(CommandContext<CommandSourceStack> context) {
         String URL = "https://github.com/C20C01/Floo_Powder";
-        String Version = "1.5.0_Beta";
         MutableComponent component = new TextComponent("• Floo Powder ").setStyle(Style.EMPTY
                 .withColor(ChatFormatting.DARK_GREEN)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(Version))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(CCMain.VERSION))
                 )
         );
         component.append(new TextComponent("Github↗\n").setStyle(Style.EMPTY
@@ -169,29 +168,28 @@ public class CCCommand {
         Player inserted = invite ? self : other;
 
         switch (PermissionManager.get(src.getServer()).askToAddFriend(friend.getUUID(), inserted.getUUID())) {
-            case SELF -> src.sendFailure(new TextComponent("不能添加自己！"));
-            case CONTAINED -> src.sendFailure(new TextComponent("已经是好友了！"));
-            case OUT_OF_SIZE -> src.sendFailure(new TextComponent("好友数已超过上限！"));
-            case ALREADY_SEND -> src.sendFailure(new TextComponent("存在相同的请求！"));
+            case SELF -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
+            case CONTAINED -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_FRIEND));
+            case OUT_OF_SIZE -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
+            case ALREADY_SEND -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_SEND));
             case SUCCESS -> {
                 friendAskingSend(self, other, invite);
-                src.sendSuccess(new TextComponent("请求已发送！"), Boolean.FALSE);
+                src.sendSuccess(new TranslatableComponent(CCMain.TEXT_REQUEST_SEND), Boolean.FALSE);
             }
         }
     }
 
     private static void friendAskingSend(Player sender, Player respondent, boolean invite) {
-        String senderName = sender.getDisplayName().getString();
         MutableComponent[] components = invite ?
-                new TextComponent[]{
+                new MutableComponent[]{
                         new TextComponent("-- Invite --\n"),
-                        new TextComponent("想邀请你成为其好友"),
-                        new TextComponent("你将能传送至" + senderName + "对好友开放的传送点")
+                        new TranslatableComponent(CCMain.TEXT_INVITE_DESC),
+                        new TranslatableComponent(CCMain.TEXT_INVITE_HOVER)
                 } :
-                new TextComponent[]{
+                new MutableComponent[]{
                         new TextComponent("-- Request --\n"),
-                        new TextComponent("想成为你的好友"),
-                        new TextComponent(senderName + "将能传送至你对好友开放的传送点")
+                        new TranslatableComponent(CCMain.TEXT_REQUEST_DESC),
+                        new TranslatableComponent(CCMain.TEXT_REQUEST_HOVER)
                 };
         MutableComponent component = components[0].withStyle(ChatFormatting.GOLD);
         component.append(sender.getDisplayName());
@@ -229,12 +227,12 @@ public class CCCommand {
         UUID inserted = invite ? other : self;
 
         switch (PermissionManager.get(src.getServer()).acceptAddingFriend(friend, inserted, src.getServer())) {
-            case SELF -> src.sendFailure(new TextComponent("不能添加自己！"));
-            case CONTAINED -> src.sendFailure(new TextComponent("好友已经包含此人！"));
-            case OUT_OF_SIZE -> src.sendFailure(new TextComponent("好友数已超过上限！"));
-            case NO_REQUEST -> src.sendFailure(new TextComponent("未知请求！"));
-            case PLAYER_NOT_FOUND -> src.sendFailure(new TextComponent("查无此人"));
-            case SUCCESS -> src.sendSuccess(new TextComponent("添加成功！"), Boolean.FALSE);
+            case SELF -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
+            case CONTAINED -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_FRIEND));
+            case OUT_OF_SIZE -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
+            case NO_REQUEST -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_UNKNOWN_REQUEST));
+            case PLAYER_NOT_FOUND -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER));
+            case SUCCESS -> src.sendSuccess(new TranslatableComponent(CCMain.TEXT_ADDED_SUCCESSFULLY), Boolean.FALSE);
         }
     }
 
@@ -253,13 +251,13 @@ public class CCCommand {
         UUID friend = UuidArgument.getUuid(context, "uuid");
         UUID self = src.getPlayerOrException().getUUID();
         if (self.equals(friend)) {
-            src.sendFailure(new TextComponent("无法删除自己！"));
+            src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_REMOVE_YOURSELF));
         } else {
             PermissionManager manager = PermissionManager.get(src.getServer());
             if (manager.removeFriend(self, friend)) {
-                src.sendSuccess(new TextComponent("删除成功!"), Boolean.FALSE);
+                src.sendSuccess(new TranslatableComponent(CCMain.TEXT_REMOVED_SUCCESSFULLY), Boolean.FALSE);
             } else {
-                src.sendFailure(new TextComponent("好友不存在！"));
+                src.sendFailure(new TranslatableComponent(CCMain.TEXT_NOT_FRIEND));
             }
         }
         return Command.SINGLE_SUCCESS;

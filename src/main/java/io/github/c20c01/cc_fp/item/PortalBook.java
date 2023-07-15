@@ -1,12 +1,12 @@
 package io.github.c20c01.cc_fp.item;
 
-import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlockEntity;
-import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlock;
-import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlock;
+import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlockEntity;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
+import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlock;
+import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
 import io.github.c20c01.cc_fp.savedData.Permission;
 import io.github.c20c01.cc_fp.savedData.PermissionManager;
 import io.github.c20c01.cc_fp.savedData.PortalPoint;
@@ -66,7 +66,7 @@ public class PortalBook extends Item {
             }
 
             if (blockEntity instanceof PowderPotBlockEntity e) {
-                MessageSender.gameInfo(serverPlayer, new TextComponent("Unlimited: " + e.setUnlimited()));
+                MessageSender.gameInfo(serverPlayer, new TranslatableComponent(CCMain.TEXT_POT_UNLIMITED).append(": " + e.setUnlimited()));
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
