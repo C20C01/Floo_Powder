@@ -1,7 +1,7 @@
 {
   "advancement.cc_fp.get_floo.description": "Throw it in the fire to get a portal to the Teleportation core of the same name",
   "advancement.cc_fp.get_floo.title": "Floo powder",
-  "advancement.cc_fp.get_portal_point_block.description": "Use a named Teleport Flint and Steel to activate and name the teleportation core",
+  "advancement.cc_fp.get_portal_point_block.description": "Use a Teleport Flint and Steel to activate the teleportation core",
   "advancement.cc_fp.get_portal_point_block.title": "Teleportation core!",
   "advancement.cc_fp.into_fire.description": "Enter the teleport flame and try to teleport",
   "advancement.cc_fp.into_fire.title": "Going in~",
@@ -35,7 +35,6 @@
   "commands.cc_fp.invite_desc": "Invite you to be its friend",
   "commands.cc_fp.invite_hover": "You will be able to see all points they have and teleport to their friends only points\n(Attention: Only the inviter can remove this friend relationship, you can't remove it)",
   "commands.cc_fp.not_friend": "Not friend",
-  "commands.cc_fp.nothing": "Nothing",
   "commands.cc_fp.out_of_friend_size": "Out of friend size",
   "commands.cc_fp.remove_friend": "Remove friend",
   "commands.cc_fp.removed_successfully": "Removed successfully",

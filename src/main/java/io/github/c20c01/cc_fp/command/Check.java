@@ -37,7 +37,7 @@ public abstract class Check<T> {
         var src = context.getSource();
         int size = data.size();
         if (size == 0) {
-            src.sendSuccess(new TranslatableComponent(CCMain.TEXT_NOTHING), Boolean.FALSE);
+            src.sendSuccess(getComponent(0, 0, new ArrayList<>()), Boolean.FALSE);
             return;
         }
         int maxPage = size / numPerPage + (size % numPerPage == 0 ? 0 : 1);

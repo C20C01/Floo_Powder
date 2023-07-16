@@ -316,11 +316,6 @@ public class CCLanguageProvider extends LanguageProvider {
             case EN_US -> "Not friend";
             case ZH_CN -> "不是好友";
         });
-        this.add(CCMain.TEXT_NOTHING, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "Nothing";
-            case ZH_CN -> "空";
-        });
         this.add(CCMain.TEXT_REMOVE_FRIEND, switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Remove friend";
@@ -389,8 +384,8 @@ public class CCLanguageProvider extends LanguageProvider {
 
         this.add(CCMain.TEXT_GET_POINT_BLOCK_DESC, switch (this.locale) {
             default -> throw new IllegalStateException();
-            case EN_US -> "Use a named Teleport Flint and Steel to activate and name the teleportation core";
-            case ZH_CN -> "使用命名的传送火石即可激活并命名";
+            case EN_US -> "Use a Teleport Flint and Steel to activate the teleportation core";
+            case ZH_CN -> "使用传送火石来激活传送核心";
         });
         this.add(CCMain.TEXT_GET_POINT_BLOCK_TITLE, switch (this.locale) {
             default -> throw new IllegalStateException();

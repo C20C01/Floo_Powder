@@ -182,6 +182,10 @@ public class PortalPointManager extends SavedData {
         List<PortalPoint> points = new ArrayList<>();
         Set<UUID> friends = permissionManager.get(someone).friends();
 
+        if (containsSelf) {
+            friends.add(someone);
+        }
+
         for (PortalPoint point : portalPointManager.getAll()) {
             UUID owner = point.ownerUid();
             if (!containsSelf && owner.equals(someone)) {

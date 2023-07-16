@@ -1,7 +1,7 @@
 {
   "advancement.cc_fp.get_floo.description": "\u5C06\u5176\u4E22\u5165\u706B\u4E2D\u5C31\u80FD\u83B7\u5F97\u901A\u5F80\u76F8\u540C\u547D\u540D\u7684\u4F20\u9001\u6838\u5FC3\u7684\u901A\u9053",
   "advancement.cc_fp.get_floo.title": "\u98DE\u8DEF\u7C89",
-  "advancement.cc_fp.get_portal_point_block.description": "\u4F7F\u7528\u547D\u540D\u7684\u4F20\u9001\u706B\u77F3\u5373\u53EF\u6FC0\u6D3B\u5E76\u547D\u540D",
+  "advancement.cc_fp.get_portal_point_block.description": "\u4F7F\u7528\u4F20\u9001\u706B\u77F3\u6765\u6FC0\u6D3B\u4F20\u9001\u6838\u5FC3",
   "advancement.cc_fp.get_portal_point_block.title": "\u4F20\u9001\u6838\u5FC3\uFF01",
   "advancement.cc_fp.into_fire.description": "\u8FDB\u5165\u4F20\u9001\u706B\u7130\u5E76\u5C1D\u8BD5\u4F20\u9001",
   "advancement.cc_fp.into_fire.title": "\u8FDB\u53BB\u4E86~",
@@ -35,7 +35,6 @@
   "commands.cc_fp.invite_desc": "\u9080\u8BF7\u4F60\u6210\u4E3A\u5176\u597D\u53CB",
   "commands.cc_fp.invite_hover": "\u4F60\u5C06\u80FD\u770B\u5230\u5176\u62E5\u6709\u7684\u6240\u6709\u4F20\u9001\u70B9\uFF0C\u5E76\u53EF\u4F20\u9001\u81F3\u5176\u5BF9\u597D\u53CB\u5F00\u653E\u4F20\u9001\u70B9\n\uFF08\u6CE8\u610F: \u53EA\u6709\u9080\u8BF7\u8005\u624D\u80FD\u89E3\u9664\u4F60\u4EEC\u7684\u597D\u53CB\u5173\u7CFB\uFF0C\u60A8\u65E0\u6CD5\u89E3\u9664\uFF09",
   "commands.cc_fp.not_friend": "\u4E0D\u662F\u597D\u53CB",
-  "commands.cc_fp.nothing": "\u7A7A",
   "commands.cc_fp.out_of_friend_size": "\u597D\u53CB\u6570\u91CF\u5DF2\u8FBE\u4E0A\u9650",
   "commands.cc_fp.remove_friend": "\u79FB\u9664\u597D\u53CB",
   "commands.cc_fp.removed_successfully": "\u79FB\u9664\u6210\u529F",

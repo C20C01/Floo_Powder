@@ -84,7 +84,6 @@ public class CCMain {
     public static final String TEXT_CAN_NOT_REMOVE_YOURSELF = "commands." + ID + ".can_not_remove_yourself";
     public static final String TEXT_REMOVED_SUCCESSFULLY = "commands." + ID + ".removed_successfully";
     public static final String TEXT_NOT_FRIEND = "commands." + ID + ".not_friend";
-    public static final String TEXT_NOTHING = "commands." + ID + ".nothing";
     public static final String TEXT_REMOVE_FRIEND = "commands." + ID + ".remove_friend";
 
     // GUI文本
