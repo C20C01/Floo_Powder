@@ -2,5 +2,6 @@
   "parent": "minecraft:block/template_fire_floor",
   "textures": {
     "fire": "cc_fp:block/portal_fire_1"
-  }
+  },
+  "render_type": "cutout"
 }

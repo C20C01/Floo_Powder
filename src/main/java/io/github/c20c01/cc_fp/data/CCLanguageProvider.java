@@ -3,9 +3,9 @@ package io.github.c20c01.cc_fp.data;
 import io.github.c20c01.cc_fp.CCMain;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(modid = CCMain.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CCLanguageProvider extends LanguageProvider {
@@ -17,22 +17,17 @@ public class CCLanguageProvider extends LanguageProvider {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
         var generator = event.getGenerator();
-        generator.addProvider(new CCLanguageProvider(generator, EN_US));
-        generator.addProvider(new CCLanguageProvider(generator, ZH_CN));
+        generator.addProvider(Boolean.TRUE, new CCLanguageProvider(generator, EN_US));
+        generator.addProvider(Boolean.TRUE, new CCLanguageProvider(generator, ZH_CN));
     }
 
     private CCLanguageProvider(DataGenerator gen, String locale) {
-        super(gen, CCMain.ID, locale);
+        super(gen.getPackOutput(), CCMain.ID, locale);
         this.locale = locale;
     }
 
     @Override
     protected void addTranslations() {
-        this.add(CCMain.TAB_ID, switch (this.locale) {
-            default -> throw new IllegalStateException();
-            case EN_US -> "Floo powder";
-            case ZH_CN -> "飞路粉";
-        });
         this.add(CCMain.PORTAL_POINT_BLOCK.get(), switch (this.locale) {
             default -> throw new IllegalStateException();
             case EN_US -> "Teleportation core";

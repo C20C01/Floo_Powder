@@ -1,20 +1,22 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    }
+  },
   "pattern": [
     "GGG",
     "GEG",
     "GGG"
   ],
-  "key": {
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
-    "E": {
-      "item": "minecraft:emerald"
-    }
-  },
   "result": {
-    "item": "cc_fp:floo_powder",
-    "count": 8
-  }
+    "count": 8,
+    "item": "cc_fp:floo_powder"
+  },
+  "show_notification": true
 }

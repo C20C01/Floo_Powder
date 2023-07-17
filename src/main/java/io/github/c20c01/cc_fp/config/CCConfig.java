@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 @SuppressWarnings("SameReturnValue")
@@ -46,13 +46,13 @@ public class CCConfig {
     }
 
     private static <T> int getConfigValue(CommandContext<CommandSourceStack> context, String configName, ForgeConfigSpec.ConfigValue<T> configValue) {
-        context.getSource().sendSuccess(new TextComponent(configName + ": " + configValue.get().toString()), Boolean.FALSE);
+        context.getSource().sendSuccess(() -> Component.literal(configName + ": " + configValue.get().toString()), Boolean.FALSE);
         return Command.SINGLE_SUCCESS;
     }
 
     private static <T> int setConfigValue(CommandContext<CommandSourceStack> context, String configName, ForgeConfigSpec.ConfigValue<T> configValue, Class<T> valeClass) {
         configValue.set(context.getArgument(configName, valeClass));
-        context.getSource().sendSuccess(new TextComponent(configName + ": " + configValue.get().toString()), Boolean.FALSE);
+        context.getSource().sendSuccess(() -> Component.literal(configName + ": " + configValue.get().toString()), Boolean.FALSE);
         return Command.SINGLE_SUCCESS;
     }
 }

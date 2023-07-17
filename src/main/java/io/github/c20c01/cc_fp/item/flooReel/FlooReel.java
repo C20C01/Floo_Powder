@@ -1,14 +1,14 @@
 package io.github.c20c01.cc_fp.item.flooReel;
 
-import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
-import io.github.c20c01.cc_fp.tp.TpTool;
 import io.github.c20c01.cc_fp.CCMain;
+import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.cc_fp.item.IDestroyByFireToUse;
 import io.github.c20c01.cc_fp.particle.PlayParticle;
 import io.github.c20c01.cc_fp.particle.SendParticle;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -36,9 +36,9 @@ public class FlooReel extends Item implements IDestroyByFireToUse {
 
     @Override
     public void destroyByFire(ItemEntity itemEntity) {
-        Level level = itemEntity.level;
-        BlockPos blockPos = new BlockPos(itemEntity.position());
-
+        Level level = itemEntity.level();
+        BlockPos blockPos = itemEntity.getOnPos();
+        //TODO:查错
         if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
             IDestroyByFireToUse.changeFireBlock(blockPos, level, TpTool.getItemName(itemEntity.getItem()));
         }
@@ -62,7 +62,6 @@ public class FlooReel extends Item implements IDestroyByFireToUse {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int tick) {
         if (tick % 8 != 0) return;
         if (livingEntity instanceof Player player) {
@@ -90,7 +89,7 @@ public class FlooReel extends Item implements IDestroyByFireToUse {
 
     public static ItemStack getNamedReel(String name) {
         ItemStack itemStack = CCMain.FLOO_REEL_ITEM.get().getDefaultInstance();
-        itemStack.setHoverName(new TextComponent(name));
+        itemStack.setHoverName(Component.literal(name));
         return itemStack;
     }
 }

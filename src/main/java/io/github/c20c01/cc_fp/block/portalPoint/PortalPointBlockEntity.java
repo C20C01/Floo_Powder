@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -64,7 +63,7 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent(CCMain.PORTAL_POINT_BLOCK.get().getDescriptionId());
+        return Component.translatable(CCMain.PORTAL_POINT_BLOCK.get().getDescriptionId());
     }
 
     @Override
@@ -117,7 +116,7 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
         }
 
         if (slot == 0) {
-            boolean changed = !newItemStack.sameItem(oldItemstack) || !ItemStack.tagMatches(newItemStack, oldItemstack);
+            boolean changed = !ItemStack.isSameItemSameTags(newItemStack, oldItemstack);
             if (changed) {
                 PortalPointBlock.disable(Objects.requireNonNull(getLevel()), getBlockPos());
             }
@@ -146,7 +145,7 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
     // 避免被漏斗吸东西
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
             return LazyOptional.of(() -> EmptyHandler.INSTANCE).cast();
         }
         return super.getCapability(capability, facing);

@@ -37,7 +37,7 @@ public abstract class Check<T> {
         var src = context.getSource();
         int size = data.size();
         if (size == 0) {
-            src.sendSuccess(getComponent(0, 0, new ArrayList<>()), Boolean.FALSE);
+            src.sendSuccess(() -> getComponent(0, 0, new ArrayList<>()), Boolean.FALSE);
             return;
         }
         int maxPage = size / numPerPage + (size % numPerPage == 0 ? 0 : 1);
@@ -49,77 +49,78 @@ public abstract class Check<T> {
             dataInPage.add(data.get(index));
         }
         data.clear();
-        src.sendSuccess(getComponent(page, maxPage, dataInPage), Boolean.FALSE);
+        int finalPage = page;
+        src.sendSuccess(() -> getComponent(finalPage, maxPage, dataInPage), Boolean.FALSE);
     }
 
     public static MutableComponent getPlayerNameByUuid(UUID uuid) {
         String ownerName = UsernameCache.getLastKnownUsername(uuid);
-        return ownerName == null ? new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER) : new TextComponent(ownerName);
+        return ownerName == null ? Component.translatable(CCMain.TEXT_UNKNOWN_PLAYER) : Component.literal(ownerName);
     }
 
     abstract MutableComponent getComponent(int page, int maxPage, List<T> data);
 
     protected static MutableComponent getPageInfo(int page, int maxPage, String command) {
-        MutableComponent component = TextComponent.EMPTY.copy();
-        component.append(new TextComponent("<<< ").setStyle(
+        MutableComponent component = Component.empty();
+        component.append(Component.literal("<<< ").setStyle(
                 page > 1 ?
                         Style.EMPTY
                                 .withColor(ChatFormatting.DARK_GREEN)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CCMain.ID + command + (page - 1))) :
                         Style.EMPTY
                                 .withColor(ChatFormatting.DARK_GRAY)));
-        component.append(new TextComponent(page + " / " + maxPage).withStyle(ChatFormatting.GOLD));
-        component.append(new TextComponent(" >>>").setStyle(
+        component.append(Component.literal(page + " / " + maxPage).withStyle(ChatFormatting.GOLD));
+        component.append(Component.literal(" >>>").setStyle(
                 page < maxPage ?
                         Style.EMPTY
                                 .withColor(ChatFormatting.DARK_GREEN)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CCMain.ID + command + (page + 1))) :
                         Style.EMPTY
                                 .withColor(ChatFormatting.DARK_GRAY)));
-        return new TextComponent("\n").append(CCCommand.toAlign(component));
+        return Component.literal("\n").append(CCCommand.toAlign(component));
 
     }
 
     protected static MutableComponent getFriendsComponent(int page, int maxPage, List<UUID> friends) {
-        MutableComponent component = TextComponent.EMPTY.copy();
-        MutableComponent tableName = new TextComponent("Friends").withStyle(ChatFormatting.GOLD);
+        MutableComponent component = Component.empty();
+        MutableComponent tableName = Component.literal("Friends").withStyle(ChatFormatting.GOLD);
         component.append(CCCommand.toAlign(tableName));
         for (UUID uuid : friends) {
             if (uuid == null) break;
-            component.append(new TextComponent("\n• ").withStyle(ChatFormatting.GOLD));
+            component.append(Component.literal("\n• ").withStyle(ChatFormatting.GOLD));
             String name = UsernameCache.getLastKnownUsername(uuid);
             if (name == null) {
-                component.append(new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER).setStyle(
+                component.append(Component.literal(CCMain.TEXT_UNKNOWN_PLAYER).setStyle(
                                 Style.EMPTY
                                         .withColor(ChatFormatting.DARK_GRAY)
-                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityTooltipInfo(EntityType.PLAYER, uuid, new TextComponent("? ? ?"))))
+                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityTooltipInfo(EntityType.PLAYER, uuid, Component.literal("? ? ?"))))
                         )
                 );
             } else {
-                component.append(new TextComponent(name).setStyle(
+                component.append(Component.literal(name).setStyle(
                                 Style.EMPTY
                                         .withColor(ChatFormatting.WHITE)
-                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityTooltipInfo(EntityType.PLAYER, uuid, new TextComponent(name))))
+                                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityTooltipInfo(EntityType.PLAYER, uuid, Component.literal(name))))
                         )
                 );
             }
-            component.append(new TextComponent(" [").withStyle(ChatFormatting.YELLOW));
-            component.append(new TextComponent("×").setStyle(
+            component.append(Component.literal(" [").withStyle(ChatFormatting.YELLOW));
+            component.append(Component.literal("×").setStyle(
                             Style.EMPTY
                                     .withColor(ChatFormatting.DARK_RED)
-                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent(CCMain.TEXT_REMOVE_FRIEND)))
+                                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(CCMain.TEXT_REMOVE_FRIEND)))
                                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + CCMain.ID + " friends remove " + uuid))
                     )
             );
-            component.append(new TextComponent("]").withStyle(ChatFormatting.YELLOW));
+            component.append(Component.literal("]").withStyle(ChatFormatting.YELLOW));
         }
 
         return component.append(getPageInfo(page, maxPage, " friends check "));
     }
 
     protected static MutableComponent getPointsComponent(int page, int maxPage, List<PortalPoint> points, String type) {
-        MutableComponent component = TextComponent.EMPTY.copy();
-        MutableComponent tableName = new TextComponent("Points(" + type + ")").withStyle(ChatFormatting.GOLD);
+        MutableComponent component = Component.empty();
+        MutableComponent tableName = Component.literal("Points(" + type + ")").withStyle(ChatFormatting.GOLD);
         component.append(CCCommand.toAlign(tableName));
         for (PortalPoint point : points) {
             if (point == null) break;

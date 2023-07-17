@@ -8,17 +8,17 @@ import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,13 +34,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Random;
 
 
 @MethodsReturnNonnullByDefault
@@ -52,7 +50,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     public static final BooleanProperty POINT = BooleanProperty.create("point"); // 作为传送点
 
     public PortalPointBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(30.0F, 1200.0F).lightLevel(state -> state.getValue(POINT) || state.getValue(FIRE) ? 15 : 0));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().strength(30.0F, 1200.0F).lightLevel(state -> state.getValue(POINT) || state.getValue(FIRE) ? 15 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FIRE, Boolean.FALSE).setValue(POINT, Boolean.FALSE));
     }
 
@@ -73,7 +71,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
 
     @Override
     public void fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, float f) {
-        entity.causeFallDamage(f, 0.0F, DamageSource.FALL);
+        entity.causeFallDamage(f, 0.0F, level.damageSources().fall());
     }
 
     @Override
@@ -97,7 +95,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
+    public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, RandomSource random) {
         setSignal(level, blockPos, Boolean.FALSE);
     }
 
@@ -148,10 +146,10 @@ public class PortalPointBlock extends Block implements EntityBlock {
         }
 
         if (blockEntity.canUse(((ServerLevel) level).getServer(), player)) {
-            NetworkHooks.openGui((ServerPlayer) player, blockEntity, blockPos);
+            NetworkHooks.openScreen((ServerPlayer) player, blockEntity, blockPos);
             return InteractionResult.SUCCESS;
         } else {
-            MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_NOT_OWNER));
+            MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_NOT_OWNER));
             return InteractionResult.FAIL;
         }
     }
@@ -192,7 +190,7 @@ public class PortalPointBlock extends Block implements EntityBlock {
     }
 
     private static void refuseToLit(Level level, BlockPos blockPos, ServerPlayer player, String reasonID) {
-        MessageSender.gameInfo(player,new TranslatableComponent(reasonID));
+        MessageSender.gameInfo(player, Component.translatable(reasonID));
         level.playSound(null, blockPos, SoundEvents.VILLAGER_NO, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 

@@ -18,9 +18,8 @@ public class LastingPowder extends Item implements IDestroyByFireToUse {
 
     @Override
     public void destroyByFire(ItemEntity itemEntity) {
-        Level level = itemEntity.level;
-        BlockPos blockPos = new BlockPos(itemEntity.position());
-
+        Level level = itemEntity.level();
+        BlockPos blockPos = IDestroyByFireToUse.getBlockPos(itemEntity);
         if (BasePortalFireBlock.canChangeToLastingFire(blockPos, level)) {
             IDestroyByFireToUse.changeFireLasting(blockPos, level);
             return;

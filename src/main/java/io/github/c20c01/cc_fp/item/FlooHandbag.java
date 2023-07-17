@@ -10,7 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
@@ -85,7 +85,7 @@ public class FlooHandbag extends Item {
         if (player.isShiftKeyDown()) {
             String nextPlace = setNextPlace(itemStack);
             if (!nextPlace.isEmpty() && player instanceof ServerPlayer serverPlayer) {
-                MessageSender.gameInfo(serverPlayer, new TextComponent(nextPlace));
+                MessageSender.gameInfo(serverPlayer, Component.literal(nextPlace));
                 return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
             }
             return InteractionResultHolder.fail(itemStack);
@@ -105,7 +105,7 @@ public class FlooHandbag extends Item {
         if (clickAction == ClickAction.SECONDARY && slot.allowModification(player)) {
             if (other.is(CCMain.FLOO_POWDER_ITEM.get())) {
                 if (hasPlaces(bag) && tryToPutPowder(bag, other) > 0) {
-                    player.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+                    player.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
                 }
             }
             return true;
@@ -159,16 +159,16 @@ public class FlooHandbag extends Item {
         List<Component> components = new ArrayList<>();
         var tag = bag.getTag();
         if (tag != null) {
-            components.add(new TextComponent(getPowderSize(bag) + "/64").withStyle(ChatFormatting.GRAY));
-            TextComponent textComponent = new TextComponent("[");
+            components.add(Component.literal(getPowderSize(bag) + "/64").withStyle(ChatFormatting.GRAY));
+            MutableComponent component = Component.literal("[");
             List<String> places = getPlaces(bag);
             for (int i = 0; i < places.size(); i++) {
                 String place = places.get(i);
-                textComponent.append(place.equals(tag.getString("Place")) ? new TextComponent(place).withStyle(ChatFormatting.DARK_GREEN) : new TextComponent(place));
-                textComponent.append(i < places.size() - 1 ? "," : "");
+                component.append(place.equals(tag.getString("Place")) ? Component.literal(place).withStyle(ChatFormatting.DARK_GREEN) : Component.literal(place));
+                component.append(i < places.size() - 1 ? "," : "");
             }
-            textComponent.append("]");
-            components.add(textComponent.withStyle(ChatFormatting.GRAY));
+            component.append("]");
+            components.add(component.withStyle(ChatFormatting.GRAY));
         }
         return components;
     }
@@ -215,7 +215,7 @@ public class FlooHandbag extends Item {
             int n = getPowderSize(bag);
             ItemStack powder = getPowderStack(bag);
             if (n > 0 && powder != null) {
-                player.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+                player.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
                 player.drop(powder, Boolean.TRUE);
                 tag.putInt("Powders", n - 1);
                 return true;

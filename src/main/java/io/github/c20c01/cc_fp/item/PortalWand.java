@@ -1,9 +1,9 @@
 package io.github.c20c01.cc_fp.item;
 
-import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlockEntity;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlock;
+import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlockEntity;
 import io.github.c20c01.cc_fp.config.CCConfig;
 import io.github.c20c01.cc_fp.particle.PlayParticle;
 import io.github.c20c01.cc_fp.particle.SendParticle;
@@ -14,8 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +65,7 @@ public class PortalWand extends Item {
         var itemStack = player.getItemInHand(hand);
         if (!checkUUID(player, itemStack)) {
             if (player instanceof ServerPlayer serverPlayer) {
-                MessageSender.gameInfo(serverPlayer, new TranslatableComponent(CCMain.TEXT_NOT_OWNER));
+                MessageSender.gameInfo(serverPlayer, Component.translatable(CCMain.TEXT_NOT_OWNER));
             }
             return InteractionResultHolder.fail(itemStack);
         }
@@ -89,15 +88,15 @@ public class PortalWand extends Item {
         if (wand.getTag() != null && wand.getTag().contains("Owner")) {
             String name = UsernameCache.getLastKnownUsername(wand.getTag().getUUID("Owner"));
             if (name != null) {
-                components.add(new TextComponent(name).withStyle(ChatFormatting.DARK_PURPLE));
+                components.add(Component.literal(name).withStyle(ChatFormatting.DARK_PURPLE));
             }
         }
     }
 
     @Override
-    public void onDestroyed(ItemEntity itemEntity) {
+    public void onDestroyed(ItemEntity itemEntity, DamageSource damageSource) {
         var uuid = getUUID(itemEntity.getItem());
-        var server = itemEntity.level.getServer();
+        var server = itemEntity.getServer();
         if (server != null) {
             TEMPORARY_FIRES.get(uuid).removeAllFireBlock(server);
         }
@@ -250,7 +249,7 @@ public class PortalWand extends Item {
     public static class RemovePoints {
         @SubscribeEvent
         public static void playerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-            removeOnesFire(event.getPlayer());
+            removeOnesFire(event.getEntity());
         }
 
         @SubscribeEvent

@@ -1,11 +1,11 @@
 package io.github.c20c01.cc_fp.item;
 
-import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
-import io.github.c20c01.cc_fp.tp.TpTool;
 import io.github.c20c01.cc_fp.CCMain;
+import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.cc_fp.config.CCConfig;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -23,9 +23,8 @@ public class FlooPowder extends Item implements IDestroyByFireToUse {
 
     @Override
     public void destroyByFire(ItemEntity itemEntity) {
-        Level level = itemEntity.level;
-        BlockPos blockPos = new BlockPos(itemEntity.position());
-
+        Level level = itemEntity.level();
+        BlockPos blockPos = IDestroyByFireToUse.getBlockPos(itemEntity);
         if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
             IDestroyByFireToUse.changeFireBlock(blockPos, level, TpTool.getItemName(itemEntity.getItem()));
         }
@@ -45,7 +44,7 @@ public class FlooPowder extends Item implements IDestroyByFireToUse {
     public static ItemStack getNamedPowder(String name) {
         ItemStack itemStack = CCMain.FLOO_POWDER_ITEM.get().getDefaultInstance();
         if (!name.isEmpty()) {
-            itemStack.setHoverName(new TextComponent(name));
+            itemStack.setHoverName(Component.literal(name));
         }
         return itemStack;
     }

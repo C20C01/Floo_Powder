@@ -93,7 +93,7 @@ public class PermissionManager extends SavedData {
     }
 
     public boolean removeFriend(UUID self, UUID other) {
-        if (permissions.get(self).removeFriend(other)){
+        if (permissions.get(self).removeFriend(other)) {
             this.setDirty();
             return true;
         }
@@ -113,7 +113,7 @@ public class PermissionManager extends SavedData {
     public static class PlayerLoggedIn {
         @SubscribeEvent
         public static void playerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
+            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 PermissionManager manager = PermissionManager.get(serverPlayer.getServer());
                 manager.addPermission(serverPlayer.getUUID());
             }

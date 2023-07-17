@@ -2,8 +2,11 @@ package io.github.c20c01.cc_fp.item;
 
 import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -16,9 +19,14 @@ public interface IDestroyByFireToUse extends IForgeItem {
     @Override
     default void onDestroyed(ItemEntity itemEntity, DamageSource damageSource) {
         IForgeItem.super.onDestroyed(itemEntity, damageSource);
-        if (damageSource.isFire()) {
+        if (damageSource.is(DamageTypeTags.IS_FIRE)) {
             destroyByFire(itemEntity);
         }
+    }
+
+    static BlockPos getBlockPos(ItemEntity itemEntity) {
+        Position position = itemEntity.position();
+        return new BlockPos(Mth.floor(position.x()), Mth.floor(position.y()), Mth.floor(position.z()));
     }
 
     static void changeFireBlock(BlockPos blockPos, Level level, String targetName) {

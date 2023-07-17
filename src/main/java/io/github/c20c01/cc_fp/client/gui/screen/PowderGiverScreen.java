@@ -1,18 +1,16 @@
 package io.github.c20c01.cc_fp.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.savedData.shareData.PortalPointInfo;
 import io.github.c20c01.cc_fp.savedData.shareData.SharePointInfos;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -34,7 +32,7 @@ public class PowderGiverScreen extends Screen {
     private final int inventoryKeyID;
 
     public PowderGiverScreen(int inventoryKeyID) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.inventoryKeyID = inventoryKeyID;
     }
 
@@ -48,21 +46,19 @@ public class PowderGiverScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        float w = (float) (this.width / 2.0 - 140);
-        this.renderBackground(poseStack);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI_BACKGROUND);
-        blit(poseStack, this.width / 2 - 150, 5, 0, 0, 300, 216, 300, 216);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        int w = this.width / 2 - 140;
+        this.renderBackground(guiGraphics);
+        guiGraphics.blit(GUI_BACKGROUND, this.width / 2 - 150, 5, 0, 0, 300, 216, 300, 216);
         PortalPointInfo[] infoList = getPage(page);
         for (int i = 0; i < 6; i++) {
             PortalPointInfo info = infoList[i];
             if (info != null) {
-                this.font.draw(poseStack, FormattedCharSequence.forward(formatText(info.name()), Style.EMPTY.withColor(ChatFormatting.BLACK)), w, 17 + i * 30, 0);
-                this.font.draw(poseStack, FormattedCharSequence.forward(formatText(info.describe()), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)), w, 29 + i * 30, 0);
+                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.name()), Style.EMPTY.withColor(ChatFormatting.BLACK)), w, 17 + i * 30, 0, Boolean.FALSE);
+                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.describe()), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)), w, 29 + i * 30, 0, Boolean.FALSE);
             }
         }
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -81,7 +77,7 @@ public class PowderGiverScreen extends Screen {
 
     private void makeCancelButton() {
         // “取消”按钮
-        Button cancelButton = new Button(this.width / 2 + 63, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_CANCEL), (b) -> close());
+        Button cancelButton = new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> close()).pos(this.width / 2 + 63, 197).size(58, 20).build();
         this.addRenderableWidget(cancelButton);
     }
 
@@ -101,29 +97,31 @@ public class PowderGiverScreen extends Screen {
 
     private void makeOkButton() {
         // “领取”按钮
-        okButton = new Button(this.width / 2, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_GET), (b) -> {
+        okButton = new Button.Builder(Component.translatable(CCMain.TEXT_GET), (b) -> {
             assert Minecraft.getInstance().player != null;
             SharePointInfos.sendPointInfoToS(Minecraft.getInstance().player.getUUID(), infos.get(page * 6 + select));
             close();
-        });
+        }).pos(this.width / 2, 197).size(58, 20).build();
         this.addRenderableWidget(okButton);
         updateOkButton();
     }
 
     private static void updateOkButton() {
-        okButton.active = (select != -1) && (nextButton.active || ((infos != null && infos.size() > 0) && select < (infos.size() % 6 == 0 ? 6 : infos.size() % 6)));
+        okButton.active = (select != -1) &&
+                (nextButton.active || ((infos != null && infos.size() > 0) && select <
+                        (infos.size() % 6 == 0 ? 6 : infos.size() % 6)));
     }
 
     private void makeNextButton() {
         // “下一页”按钮
-        nextButton = new Button(this.width / 2 - 81, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_NEXT_PAGE), (b) -> {
+        nextButton = new Button.Builder(Component.translatable(CCMain.TEXT_NEXT_PAGE), (b) -> {
             page++;
             if (select != -1) selectButtons[select].active = true;
             select = -1;
             updateNextButton();
             updateBackButton();
             updateOkButton();
-        });
+        }).pos(this.width / 2 - 81, 197).size(58, 20).build();
         this.addRenderableWidget(nextButton);
         updateNextButton();
     }
@@ -134,14 +132,14 @@ public class PowderGiverScreen extends Screen {
 
     private void makeBackButton() {
         // “上一页”按钮
-        backButton = new Button(this.width / 2 - 144, 197, 58, 20, new TranslatableComponent(CCMain.TEXT_PREVIOUS_PAGE), (b) -> {
+        backButton = new Button.Builder(Component.translatable(CCMain.TEXT_PREVIOUS_PAGE), (b) -> {
             page--;
             if (select != -1) selectButtons[select].active = true;
             select = -1;
             updateNextButton();
             updateBackButton();
             updateOkButton();
-        });
+        }).pos(this.width / 2 - 144, 197).size(58, 20).build();
         this.addRenderableWidget(backButton);
         updateBackButton();
     }
@@ -151,14 +149,12 @@ public class PowderGiverScreen extends Screen {
     }
 
     private void newSelectButtons() {
-        int w = this.width / 2 + 126;
-        var t = TextComponent.EMPTY;
-        selectButtons[0] = new Button(w, 15, 20, 20, t, (button) -> selectButton(0));
-        selectButtons[1] = new Button(w, 45, 20, 20, t, (button) -> selectButton(1));
-        selectButtons[2] = new Button(w, 75, 20, 20, t, (button) -> selectButton(2));
-        selectButtons[3] = new Button(w, 105, 20, 20, t, (button) -> selectButton(3));
-        selectButtons[4] = new Button(w, 135, 20, 20, t, (button) -> selectButton(4));
-        selectButtons[5] = new Button(w, 165, 20, 20, t, (button) -> selectButton(5));
+        int x = this.width / 2 + 126;
+        for (int i = 0; i < 6; i++) {
+            int finalI = i;
+            selectButtons[finalI] = new Button.Builder(Component.empty(), (button) -> selectButton(finalI))
+                    .pos(x, 15 + 30 * i).size(20, 20).build();
+        }
     }
 
     private void makeSelectButtons() {

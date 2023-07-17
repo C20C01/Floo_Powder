@@ -1,23 +1,6 @@
 {
-  "display": {
-    "icon": {
-      "item": "cc_fp:floo_powder"
-    },
-    "title": {
-      "translate": "advancement.cc_fp.get_floo.title"
-    },
-    "description": {
-      "translate": "advancement.cc_fp.get_floo.description"
-    },
-    "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false,
-    "background": "cc_fp:textures/gui/advancements/backgrounds/floo_powder.png"
-  },
   "criteria": {
     "get_floo": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -26,12 +9,30 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "cc_fp:textures/gui/advancements/backgrounds/floo_powder.png",
+    "description": {
+      "translate": "advancement.cc_fp.get_floo.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "cc_fp:floo_powder"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.cc_fp.get_floo.title"
     }
   },
   "requirements": [
     [
       "get_floo"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

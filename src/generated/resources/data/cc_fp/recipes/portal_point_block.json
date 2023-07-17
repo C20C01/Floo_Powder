@@ -1,13 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#G#",
-    "OSO",
-    "COC"
-  ],
+  "category": "misc",
   "key": {
     "#": {
       "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
     },
     "G": {
       "item": "cc_fp:floo_powder"
@@ -17,12 +16,15 @@
     },
     "S": {
       "item": "cc_fp:portal_flint_and_steel"
-    },
-    "C": {
-      "item": "minecraft:copper_ingot"
     }
   },
+  "pattern": [
+    "#G#",
+    "OSO",
+    "COC"
+  ],
   "result": {
     "item": "cc_fp:portal_point_block"
-  }
+  },
+  "show_notification": true
 }

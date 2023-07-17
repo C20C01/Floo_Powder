@@ -45,7 +45,7 @@ public class FlooBall extends ThrowableItemProjectile {
     @Override
     protected void onHitEntity(EntityHitResult hitResult) {
         super.onHitEntity(hitResult);
-        if (level.isClientSide) {
+        if (level().isClientSide) {
             return;
         }
         String name = TpTool.getItemName(getItem());
@@ -58,6 +58,7 @@ public class FlooBall extends ThrowableItemProjectile {
     protected void onHitBlock(BlockHitResult hitResult) {
         super.onHitBlock(hitResult);
         BlockPos blockPos = hitResult.getBlockPos().relative(hitResult.getDirection());
+        Level level = level();
         Delayer.add(2, () -> {
             if (level.getBlockState(blockPos).isAir() && BasePortalFireBlock.canSurviveOnBlock(level, blockPos.below())) {
                 level.setBlockAndUpdate(blockPos, CCMain.PORTAL_FIRE_BLOCK.get().defaultBlockState());

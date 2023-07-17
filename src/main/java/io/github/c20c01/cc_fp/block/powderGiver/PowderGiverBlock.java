@@ -25,8 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +45,7 @@ public class PowderGiverBlock extends Block implements EntityBlock {
     public static final List<PortalPointManager.CheckType> TYPES = new ArrayList<>();
 
     public PowderGiverBlock() {
-        super(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE).strength(10.0F, 1200.0F).noDrops().lightLevel((x) -> 15));
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(10.0F, 1200.0F).noLootTable().lightLevel((x) -> 15));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
         this.registerDefaultState(this.stateDefinition.any().setValue(TYPE, PortalPointManager.CheckType.PUBLIC));
         TYPES.add(PortalPointManager.CheckType.ALL_AVAILABLE);
@@ -72,7 +71,6 @@ public class PowderGiverBlock extends Block implements EntityBlock {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
     }
@@ -85,7 +83,7 @@ public class PowderGiverBlock extends Block implements EntityBlock {
         }
         if (level.isClientSide) {
             openGui();
-            player.playSound(SoundEvents.NOTE_BLOCK_BIT, 1F, 10F);
+            player.playSound(SoundEvents.NOTE_BLOCK_BIT.value(), 1F, 10F);
         } else {
             GiveFlooPowder.setPlayerList(Objects.requireNonNull(player.getServer()).getPlayerList());
             String groupName = ((PowderGiverBlockEntity) Objects.requireNonNull(level.getBlockEntity(blockPos))).getPublicGroup();

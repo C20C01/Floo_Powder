@@ -1,32 +1,33 @@
 {
   "parent": "cc_fp:get_floo",
+  "criteria": {
+    "into_fire": {
+      "conditions": {
+        "block": "cc_fp:portal_fire_block"
+      },
+      "trigger": "minecraft:enter_block"
+    }
+  },
   "display": {
-    "icon": {
-      "item": "cc_fp:portal_flint_and_steel",
-      "nbt": "{Damage:0}"
-    },
-    "title": {
-      "translate": "advancement.cc_fp.into_fire.title"
-    },
+    "announce_to_chat": true,
     "description": {
       "translate": "advancement.cc_fp.into_fire.description"
     },
     "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "cc_fp:portal_flint_and_steel",
+      "nbt": "{Damage:0}"
+    },
     "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
-  },
-  "criteria": {
-    "into_fire": {
-      "trigger": "minecraft:enter_block",
-      "conditions": {
-        "block": "cc_fp:portal_fire_block"
-      }
+    "title": {
+      "translate": "advancement.cc_fp.into_fire.title"
     }
   },
   "requirements": [
     [
       "into_fire"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

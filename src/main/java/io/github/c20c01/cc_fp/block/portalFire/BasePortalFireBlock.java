@@ -1,8 +1,8 @@
 package io.github.c20c01.cc_fp.block.portalFire;
 
-import io.github.c20c01.cc_fp.item.PortalWand;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.config.CCConfig;
+import io.github.c20c01.cc_fp.item.PortalWand;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,6 +10,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,13 +25,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.function.Predicate;
 
 @MethodsReturnNonnullByDefault
@@ -39,7 +42,7 @@ public abstract class BasePortalFireBlock extends BaseFireBlock {
     public static final BooleanProperty TEMPORARY = BooleanProperty.create("temporary"); //为传送法杖生成的临时火焰
 
     public BasePortalFireBlock() {
-        super(Properties.of(Material.FIRE, MaterialColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F);
+        super(Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F);
     }
 
     public static boolean isTemporaryFire(Level level, BlockPos blockPos) {
@@ -79,13 +82,13 @@ public abstract class BasePortalFireBlock extends BaseFireBlock {
     }
 
     @Override
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource random) {
         if (random.nextInt(24) == 0) {
             level.playLocalSound((double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.5D, (double) blockPos.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
         }
     }
 
-    protected void playParticle(ParticleOptions particleOptions, Level level, Vec3 pos, Random random) {
+    protected void playParticle(ParticleOptions particleOptions, Level level, Vec3 pos, RandomSource random) {
         for (int i = 0; i < 3; ++i) {
             int j = random.nextInt(2) * 2 - 1;
             int k = random.nextInt(2) * 2 - 1;
@@ -93,9 +96,9 @@ public abstract class BasePortalFireBlock extends BaseFireBlock {
             double x = pos.x + 0.25 * j;
             double y = pos.y + random.nextFloat();
             double z = pos.z + 0.25 * k;
-            double mx = random.nextFloat(0.5F) * j;
-            double my = random.nextFloat(0.25F);
-            double mz = random.nextFloat(0.5F) * k;
+            double mx = random.nextFloat() * 0.5F * j;
+            double my = random.nextFloat() * 0.25F;
+            double mz = random.nextFloat() * 0.5F * k;
 
             level.addParticle(particleOptions, x, y, z, mx, my, mz);
         }

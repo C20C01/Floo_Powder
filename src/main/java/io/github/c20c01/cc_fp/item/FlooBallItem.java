@@ -1,8 +1,8 @@
 package io.github.c20c01.cc_fp.item;
 
 import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
-import io.github.c20c01.cc_fp.tp.TpTool;
 import io.github.c20c01.cc_fp.entity.FlooBall;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -28,9 +28,8 @@ public class FlooBallItem extends Item implements IDestroyByFireToUse {
 
     @Override
     public void destroyByFire(ItemEntity itemEntity) {
-        Level level = itemEntity.level;
-        BlockPos blockPos = new BlockPos(itemEntity.position());
-
+        Level level = itemEntity.level();
+        BlockPos blockPos = IDestroyByFireToUse.getBlockPos(itemEntity);
         if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
             IDestroyByFireToUse.changeFireBlock(blockPos, level, TpTool.getItemName(itemEntity.getItem()));
         }

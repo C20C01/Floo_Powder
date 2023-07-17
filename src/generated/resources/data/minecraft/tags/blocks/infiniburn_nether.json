@@ -1,8 +1,6 @@
 {
-  "replace": false,
   "values": [
     "cc_fp:portal_point_block",
-    "cc_fp:fire_base_block",
-    "#minecraft:infiniburn_overworld"
+    "cc_fp:fire_base_block"
   ]
 }

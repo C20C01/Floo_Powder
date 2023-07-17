@@ -4,7 +4,6 @@ import io.github.c20c01.cc_fp.CCMain;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,7 +28,7 @@ public class UpdateItemStack {
                     itemStack.hurtAndBreak(8, player, (x) -> x.broadcastBreakEvent(slot == 40 ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND));
                     player.giveExperienceLevels(-1);
                 }
-                player.level.playSound(null, player.blockPosition(), SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                player.playSound(SoundEvents.ANVIL_USE);
             }
         }
     }

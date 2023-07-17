@@ -22,11 +22,17 @@ import io.github.c20c01.cc_fp.item.*;
 import io.github.c20c01.cc_fp.item.flooReel.ExpansionReel;
 import io.github.c20c01.cc_fp.item.flooReel.FlooReel;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,7 +42,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 
 @Mod(CCMain.ID)
 public class CCMain {
@@ -111,10 +116,11 @@ public class CCMain {
     // 注册器
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ID);
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ID);
-    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, ID);
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, ID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ID);
 
     // 物品
     public static final String FLOO_POWDER_ID = "floo_powder";
@@ -201,14 +207,6 @@ public class CCMain {
     public static final RegistryObject<FlooBallItem> FLOO_BALL_ITEM;
     public static final RegistryObject<EntityType<FlooBall>> FLOO_BALL_ENTITY;
 
-    // 创造物品栏
-    public static final String TAB_ID = "itemGroup." + ID;
-    public static final CreativeModeTab TAB = new CreativeModeTab(ID) {
-        public @NotNull ItemStack makeIcon() {
-            return FLOO_POWDER_ITEM.get().getDefaultInstance();
-        }
-    };
-
     static {
         FLOO_POWDER_ITEM = ITEMS.register(FLOO_POWDER_ID, () -> new FlooPowder(getBaseProperties()));
         LASTING_POWDER_ITEM = ITEMS.register(LASTING_POWDER_ID, () -> new LastingPowder(getBaseProperties()));
@@ -252,9 +250,22 @@ public class CCMain {
         RAY_PARTICLE = PARTICLE_TYPES.register(RAY_PARTICLE_ID, RayParticle.Option::new);
         PORTAL_FIRE_PARTICLE = PARTICLE_TYPES.register(PORTAL_FIRE_PARTICLE_ID, PortalFireParticle.Option::new);
 
-        PORTAL_POINT_MENU = MENU_TYPES.register(PORTAL_POINT_MENU_ID, () -> new MenuType<>(PortalPointMenu::new));
+        PORTAL_POINT_MENU = MENU_TYPES.register(PORTAL_POINT_MENU_ID, () -> new MenuType<>(PortalPointMenu::new, FeatureFlags.VANILLA_SET));
 
         FLOO_BALL_ENTITY = ENTITY_TYPES.register(FLOO_BALL_ID, () -> EntityType.Builder.<FlooBall>of(FlooBall::new, MobCategory.MISC).sized(0.25F, 0.25F).build(FLOO_BALL_ID));
+
+
+        CREATIVE_MODE_TABS.register(ID + "_tab", () -> CreativeModeTab.builder()
+                .icon(() -> FLOO_POWDER_ITEM.get().getDefaultInstance())
+                .displayItems((parameters, output) -> {
+                    for (var entry : ITEMS.getEntries()) {
+                        var item = entry.get();
+                        output.accept(item.getDefaultInstance());
+                    }
+                })
+                .title(Component.translatable(FLOO_POWDER_ITEM.get().getDescriptionId()))
+                .build()
+        );
     }
 
     private static RegistryObject<ExpansionReel> registerExpansionReel(String typeID, ExpansionReel.Type type) {
@@ -262,7 +273,7 @@ public class CCMain {
     }
 
     private static Item.Properties getBaseProperties() {
-        return new Item.Properties().tab(TAB);
+        return new Item.Properties();
     }
 
     public CCMain() {
@@ -273,6 +284,7 @@ public class CCMain {
         PARTICLE_TYPES.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
+        CREATIVE_MODE_TABS.register(modEventBus);
 
         // 注册模组设置
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CCConfig.COMMON_CONFIG);

@@ -14,8 +14,7 @@ import io.github.c20c01.cc_fp.savedData.PortalPointManager;
 import io.github.c20c01.cc_fp.tool.MessageSender;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -60,13 +59,13 @@ public class PortalBook extends Item {
             if (level.getBlockState(blockPos).is(CCMain.POWDER_GIVER_BLOCK.get())) {
                 BlockState blockState = level.getBlockState(blockPos);
                 var newType = PowderGiverBlock.getNextType(blockState.getValue(PowderGiverBlock.TYPE));
-                MessageSender.gameInfo(serverPlayer, new TextComponent(newType.name()));
+                MessageSender.gameInfo(serverPlayer, Component.literal(newType.name()));
                 level.setBlock(blockPos, blockState.setValue(PowderGiverBlock.TYPE, newType), Block.UPDATE_ALL_IMMEDIATE);
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
             if (blockEntity instanceof PowderPotBlockEntity e) {
-                MessageSender.gameInfo(serverPlayer, new TranslatableComponent(CCMain.TEXT_POT_UNLIMITED).append(": " + e.setUnlimited()));
+                MessageSender.gameInfo(serverPlayer, Component.translatable(CCMain.TEXT_POT_UNLIMITED).append(": " + e.setUnlimited()));
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
@@ -80,12 +79,12 @@ public class PortalBook extends Item {
     }
 
     private static void getCloneItem(ServerPlayer player, PortalFireBlockEntity blockEntity) {
-        ItemStack itemStack = CCMain.FLOO_POWDER_ITEM.get().getDefaultInstance().setHoverName(new TextComponent(blockEntity.getTargetName()));
+        ItemStack itemStack = CCMain.FLOO_POWDER_ITEM.get().getDefaultInstance().setHoverName(Component.literal(blockEntity.getTargetName()));
         player.getInventory().add(itemStack);
     }
 
     private static void setLasting(ServerPlayer player, Level level, BlockPos blockPos) {
-        MessageSender.gameInfo(player, new TranslatableComponent(CCMain.TEXT_SET_PORTAL_FIRE_BOOK).append(": " + PortalFireBlock.changeLasting(level, blockPos)));
+        MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_SET_PORTAL_FIRE_BOOK).append(": " + PortalFireBlock.changeLasting(level, blockPos)));
     }
 
     private static void setPortalPointFire(ServerPlayer player, PortalPointBlockEntity blockEntity, BlockPos pos, Level level) {
@@ -98,23 +97,23 @@ public class PortalBook extends Item {
         } else {
             if (blockStateAbove.is(Blocks.FIRE)) level.removeBlock(pos.above(), Boolean.FALSE);
         }
-        MessageSender.gameInfo(player, new TranslatableComponent(CCMain.TEXT_SET_PORTAL_POINT_FIRE_BOOK).append(": " + flag));
+        MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_SET_PORTAL_POINT_FIRE_BOOK).append(": " + flag));
     }
 
     private static void showPosInfo(ServerPlayer serverPlayer) {
         var list = PortalPointManager.get(serverPlayer.getServer()).getAll();
         if (list.size() == 0) {
-            MessageSender.chat(serverPlayer, new TranslatableComponent(CCMain.TEXT_NOT_FOUND_BOOK));
+            MessageSender.chat(serverPlayer, Component.translatable(CCMain.TEXT_NOT_FOUND_BOOK));
         } else {
             for (PortalPoint p : list) {
-                MessageSender.chat(serverPlayer, new TextComponent(p.toString()));
+                MessageSender.chat(serverPlayer, Component.literal(p.toString()));
             }
         }
     }
 
     private static void showPerInfo(ServerPlayer serverPlayer) {
         for (Permission p : PermissionManager.get(serverPlayer.getServer()).getAll()) {
-            MessageSender.chat(serverPlayer, new TextComponent(p.toString()));
+            MessageSender.chat(serverPlayer, Component.literal(p.toString()));
         }
     }
 }

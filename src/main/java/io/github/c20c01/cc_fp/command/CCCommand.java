@@ -15,6 +15,7 @@ import io.github.c20c01.cc_fp.item.PortalWand;
 import io.github.c20c01.cc_fp.savedData.PermissionManager;
 import io.github.c20c01.cc_fp.savedData.PortalPoint;
 import io.github.c20c01.cc_fp.savedData.PortalPointManager;
+import io.github.c20c01.cc_fp.tool.MessageSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -142,20 +143,20 @@ public class CCCommand {
 
     private static int about(CommandContext<CommandSourceStack> context) {
         String URL = "https://github.com/C20C01/Floo_Powder";
-        MutableComponent component = new TextComponent("• Floo Powder ").setStyle(Style.EMPTY
+        MutableComponent component = Component.literal("• Floo Powder ").setStyle(Style.EMPTY
                 .withColor(ChatFormatting.DARK_GREEN)
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(CCMain.VERSION))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(CCMain.VERSION))
                 )
         );
-        component.append(new TextComponent("Github↗\n").setStyle(Style.EMPTY
+        component.append(Component.literal("Github↗\n").setStyle(Style.EMPTY
                         .withColor(ChatFormatting.BLUE)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(URL)))
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(URL)))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, URL))
                 )
         );
-        component.append(new TextComponent("• Made with ❤ by CC2001").withStyle(ChatFormatting.DARK_PURPLE));
+        component.append(Component.literal("• Made with ❤ by CC2001").withStyle(ChatFormatting.DARK_PURPLE));
 
-        context.getSource().sendSuccess(component, Boolean.FALSE);
+        context.getSource().sendSuccess(() -> component, Boolean.FALSE);
         return Command.SINGLE_SUCCESS;
     }
 
@@ -168,13 +169,13 @@ public class CCCommand {
         Player inserted = invite ? self : other;
 
         switch (PermissionManager.get(src.getServer()).askToAddFriend(friend.getUUID(), inserted.getUUID())) {
-            case SELF -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
-            case CONTAINED -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_FRIEND));
-            case OUT_OF_SIZE -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
-            case ALREADY_SEND -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_SEND));
+            case SELF -> src.sendFailure(Component.translatable(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
+            case CONTAINED -> src.sendFailure(Component.translatable(CCMain.TEXT_ALREADY_FRIEND));
+            case OUT_OF_SIZE -> src.sendFailure(Component.translatable(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
+            case ALREADY_SEND -> src.sendFailure(Component.translatable(CCMain.TEXT_ALREADY_SEND));
             case SUCCESS -> {
                 friendAskingSend(self, other, invite);
-                src.sendSuccess(new TranslatableComponent(CCMain.TEXT_REQUEST_SEND), Boolean.FALSE);
+                src.sendSuccess(()->Component.translatable(CCMain.TEXT_REQUEST_SEND), Boolean.FALSE);
             }
         }
     }
@@ -182,20 +183,20 @@ public class CCCommand {
     private static void friendAskingSend(Player sender, Player respondent, boolean invite) {
         MutableComponent[] components = invite ?
                 new MutableComponent[]{
-                        new TextComponent("-- Invite --\n"),
-                        new TranslatableComponent(CCMain.TEXT_INVITE_DESC),
-                        new TranslatableComponent(CCMain.TEXT_INVITE_HOVER)
+                        Component.literal("-- Invite --\n"),
+                        Component.translatable(CCMain.TEXT_INVITE_DESC),
+                        Component.translatable(CCMain.TEXT_INVITE_HOVER)
                 } :
                 new MutableComponent[]{
-                        new TextComponent("-- Request --\n"),
-                        new TranslatableComponent(CCMain.TEXT_REQUEST_DESC),
-                        new TranslatableComponent(CCMain.TEXT_REQUEST_HOVER)
+                        Component.literal("-- Request --\n"),
+                        Component.translatable(CCMain.TEXT_REQUEST_DESC),
+                        Component.translatable(CCMain.TEXT_REQUEST_HOVER)
                 };
         MutableComponent component = components[0].withStyle(ChatFormatting.GOLD);
         component.append(sender.getDisplayName());
         component.append(components[1]);
-        component.append(new TextComponent(" [").withStyle(ChatFormatting.YELLOW));
-        component.append(new TextComponent("✔").setStyle(Style.EMPTY
+        component.append(Component.literal(" [").withStyle(ChatFormatting.YELLOW));
+        component.append(Component.literal("✔").setStyle(Style.EMPTY
                 .withColor(ChatFormatting.DARK_GREEN)
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, components[2]))
                 .withClickEvent(new ClickEvent(
@@ -204,8 +205,8 @@ public class CCCommand {
                         )
                 )
         ));
-        component.append(new TextComponent("]").withStyle(ChatFormatting.YELLOW));
-        respondent.sendMessage(component, sender.getUUID());
+        component.append(Component.literal("]").withStyle(ChatFormatting.YELLOW));
+        MessageSender.chat(respondent, component);
     }
 
     private static int friendInvite(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -227,12 +228,13 @@ public class CCCommand {
         UUID inserted = invite ? other : self;
 
         switch (PermissionManager.get(src.getServer()).acceptAddingFriend(friend, inserted, src.getServer())) {
-            case SELF -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
-            case CONTAINED -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_ALREADY_FRIEND));
-            case OUT_OF_SIZE -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
-            case NO_REQUEST -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_UNKNOWN_REQUEST));
-            case PLAYER_NOT_FOUND -> src.sendFailure(new TranslatableComponent(CCMain.TEXT_UNKNOWN_PLAYER));
-            case SUCCESS -> src.sendSuccess(new TranslatableComponent(CCMain.TEXT_ADDED_SUCCESSFULLY), Boolean.FALSE);
+            case SELF -> src.sendFailure(Component.translatable(CCMain.TEXT_CAN_NOT_ADD_YOURSELF));
+            case CONTAINED -> src.sendFailure(Component.translatable(CCMain.TEXT_ALREADY_FRIEND));
+            case OUT_OF_SIZE -> src.sendFailure(Component.translatable(CCMain.TEXT_OUT_OF_FRIEND_SIZE));
+            case NO_REQUEST -> src.sendFailure(Component.translatable(CCMain.TEXT_UNKNOWN_REQUEST));
+            case PLAYER_NOT_FOUND -> src.sendFailure(Component.translatable(CCMain.TEXT_UNKNOWN_PLAYER));
+            case SUCCESS ->
+                    src.sendSuccess(() -> Component.translatable(CCMain.TEXT_ADDED_SUCCESSFULLY), Boolean.FALSE);
         }
     }
 
@@ -251,13 +253,13 @@ public class CCCommand {
         UUID friend = UuidArgument.getUuid(context, "uuid");
         UUID self = src.getPlayerOrException().getUUID();
         if (self.equals(friend)) {
-            src.sendFailure(new TranslatableComponent(CCMain.TEXT_CAN_NOT_REMOVE_YOURSELF));
+            src.sendFailure(Component.translatable(CCMain.TEXT_CAN_NOT_REMOVE_YOURSELF));
         } else {
             PermissionManager manager = PermissionManager.get(src.getServer());
             if (manager.removeFriend(self, friend)) {
-                src.sendSuccess(new TranslatableComponent(CCMain.TEXT_REMOVED_SUCCESSFULLY), Boolean.FALSE);
+                src.sendSuccess(() -> Component.translatable(CCMain.TEXT_REMOVED_SUCCESSFULLY), Boolean.FALSE);
             } else {
-                src.sendFailure(new TranslatableComponent(CCMain.TEXT_NOT_FRIEND));
+                src.sendFailure(Component.translatable(CCMain.TEXT_NOT_FRIEND));
             }
         }
         return Command.SINGLE_SUCCESS;
@@ -279,9 +281,9 @@ public class CCCommand {
         int total = len - componentLen;
         int left = total / 2;
         int right = total - left;
-        return TextComponent.EMPTY.copy()
-                .append(new TextComponent("-".repeat(left) + " ").withStyle(ChatFormatting.YELLOW))
+        return Component.empty()
+                .append(Component.literal("-".repeat(left) + " ").withStyle(ChatFormatting.YELLOW))
                 .append(component)
-                .append(new TextComponent(" " + "-".repeat(right)).withStyle(ChatFormatting.YELLOW));
+                .append(Component.literal(" " + "-".repeat(right)).withStyle(ChatFormatting.YELLOW));
     }
 }

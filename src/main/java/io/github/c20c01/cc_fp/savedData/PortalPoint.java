@@ -3,7 +3,7 @@ package io.github.c20c01.cc_fp.savedData;
 import io.github.c20c01.cc_fp.command.Check;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.*;
@@ -55,31 +55,31 @@ public record PortalPoint(String name, String describe, BlockPos pos,
     }
 
     public MutableComponent getComponent() {
-        MutableComponent pointInfo = new TextComponent("Owner: ")
+        MutableComponent pointInfo = Component.literal("Owner: ")
                 .append(Check.getPlayerNameByUuid(ownerUid))
-                .append(new TextComponent("\nDescribe: " + describe));
+                .append(Component.literal("\nDescribe: " + describe));
         if (isPublic()) {
-            pointInfo.append(new TextComponent("\nPublicGroup: " + publicGroup));
+            pointInfo.append(Component.literal("\nPublicGroup: " + publicGroup));
         }
 
-        MutableComponent component = new TextComponent("• ").withStyle(ChatFormatting.GOLD);
-        component.append(new TextComponent(name).setStyle(Style.EMPTY
+        MutableComponent component = Component.literal("• ").withStyle(ChatFormatting.GOLD);
+        component.append(Component.literal(name).setStyle(Style.EMPTY
                         .withColor(ChatFormatting.WHITE)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, pointInfo))
                 )
         );
-        component.append(new TextComponent(" [").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
+        component.append(Component.literal(" [").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
 
-        MutableComponent posInfo = new TextComponent("Level: " + dimension.location())
+        MutableComponent posInfo = Component.literal("Level: " + dimension.location())
                 .append("\nLocation: " + pos.toShortString());
 
-        component.append(new TextComponent("→").setStyle(Style.EMPTY
+        component.append(Component.literal("→").setStyle(Style.EMPTY
                         .withColor(ChatFormatting.DARK_GREEN)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, posInfo))
                         .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension.location() + " run tp @s " + pos.getX() + " " + pos.getY() + " " + pos.getZ()))
                 )
         );
-        component.append(new TextComponent("]").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
+        component.append(Component.literal("]").setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
         return component;
     }
 
@@ -87,7 +87,7 @@ public record PortalPoint(String name, String describe, BlockPos pos,
         String name = compoundTag.getString("Name");
         String describe = compoundTag.getString("Describe");
         BlockPos pos = NbtUtils.readBlockPos(compoundTag.getCompound("BlockPos"));
-        ResourceKey<Level> dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(compoundTag.getString("Dimension")));
+        ResourceKey<Level> dimension = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(compoundTag.getString("Dimension")));
         UUID ownerUid = NbtUtils.loadUUID(Objects.requireNonNull(compoundTag.get("OwnerUid")));
         String publicGroupName = compoundTag.getString("PublicGroupName");
         return new PortalPoint(name, describe, pos, dimension, ownerUid, publicGroupName);

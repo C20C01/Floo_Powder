@@ -192,7 +192,7 @@ public class TpTool {
         Vec3 movement = context.movement();
         Direction direction = context.direction() == null ? entity.getDirection() : context.direction();
 
-        ServerLevel sourceLevel = (ServerLevel) entity.level;
+        ServerLevel sourceLevel = (ServerLevel) entity.level();
         BlockPos sourceBlockPos = null;
         Vec3 sourcePos = null;
 
@@ -243,7 +243,7 @@ public class TpTool {
         double y = targetPos3d.y;
         double z = targetPos3d.z;
 
-        ChunkPos chunkPos = new ChunkPos(new BlockPos(x, y, z));
+        ChunkPos chunkPos = new ChunkPos(Mth.floor(x), Mth.floor(z));
         targetWorld.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkPos, 1, entity.getId());
 
         if (entity instanceof ServerPlayer serverPlayer) {
@@ -252,7 +252,7 @@ public class TpTool {
                 serverPlayer.stopSleepInBed(true, true);
             }
 
-            if (targetWorld == entity.level) {
+            if (targetWorld == entity.level()) {
                 serverPlayer.connection.teleport(x, y, z, yaw, entity.getXRot());
             } else {
                 serverPlayer.teleportTo(targetWorld, x, y, z, yaw, entity.getXRot());
@@ -263,7 +263,7 @@ public class TpTool {
             entity.setYHeadRot(yaw);
         } else {
             float pitch = Mth.clamp(entity.getXRot(), -90.0F, 90.0F);
-            if (targetWorld == entity.level) {
+            if (targetWorld == entity.level()) {
                 entity.moveTo(x, y, z, yaw, pitch);
                 entity.setYHeadRot(yaw);
                 entity.setDeltaMovement(movement);

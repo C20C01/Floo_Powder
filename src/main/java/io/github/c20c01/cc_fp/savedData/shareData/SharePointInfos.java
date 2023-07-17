@@ -51,7 +51,7 @@ public class SharePointInfos {
     public static class PlayerLoggedOut {
         @SubscribeEvent
         public static void loggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
+            if (event.getEntity() instanceof ServerPlayer serverPlayer) {
                 lastInfo.remove(serverPlayer.getUUID());
             }
         }

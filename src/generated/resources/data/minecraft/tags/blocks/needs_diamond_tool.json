@@ -1,11 +1,5 @@
 {
-  "replace": false,
   "values": [
-    "cc_fp:portal_point_block",
-    "minecraft:obsidian",
-    "minecraft:crying_obsidian",
-    "minecraft:netherite_block",
-    "minecraft:respawn_anchor",
-    "minecraft:ancient_debris"
+    "cc_fp:portal_point_block"
   ]
 }

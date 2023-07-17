@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffects;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,7 +32,6 @@ import net.minecraftforge.fml.common.Mod;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 @MethodsReturnNonnullByDefault
@@ -41,7 +41,7 @@ public class PortalChestBlock extends ChestBlock {
     private static final Set<Player> CHEST_COOLING = new HashSet<>();
 
     public PortalChestBlock() {
-        super(BlockBehaviour.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD), CCMain.PORTAL_CHEST_BLOCK_ENTITY::get);
+        super(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.5F).sound(SoundType.WOOD), CCMain.PORTAL_CHEST_BLOCK_ENTITY::get);
     }
 
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
@@ -55,7 +55,7 @@ public class PortalChestBlock extends ChestBlock {
     }
 
     @Override
-    public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
+    public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, RandomSource random) {
     }
 
     @Override

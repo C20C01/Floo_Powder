@@ -1,7 +1,5 @@
 package io.github.c20c01.cc_fp.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.item.NameStone;
 import io.github.c20c01.cc_fp.network.CCNetwork;
@@ -9,14 +7,16 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
@@ -38,7 +38,7 @@ public class NameStoneScreen extends Screen {
     private String name;
 
     public NameStoneScreen(ItemStack itemStack, Player player, InteractionHand hand) {
-        super(TextComponent.EMPTY);
+        super(Component.empty());
         this.itemStack = itemStack;
         this.player = player;
         this.hand = hand;
@@ -50,39 +50,35 @@ public class NameStoneScreen extends Screen {
 
     @Override
     protected void init() {
-        MINECRAFT.keyboardHandler.setSendRepeatsToGui(true);
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 2 + 64, 80, 20, new TranslatableComponent(CCMain.TEXT_RENAME), (b) -> tryToChangeName()));
-        this.addRenderableWidget(new Button(this.width / 2 + 20, this.height / 2 + 64, 80, 20, new TranslatableComponent(CCMain.TEXT_CANCEL), (b) -> this.onClose()));
+        super.init();
+        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_RENAME), (b) -> tryToChangeName()).pos(this.width / 2 - 100, this.height / 2 + 64).size(80, 20).build());
+        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> tryToChangeName()).pos(this.width / 2 + 20, this.height / 2 + 64).size(80, 20).build());
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(poseStack);
-        this.setFocused(null);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, GUI_BACKGROUND);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(guiGraphics);
         int w = this.width / 2;
         int h = this.height / 2;
-        this.blit(poseStack, (w - 96), (h - 32), 0, 0, 192, 64);
-        float x = w - this.font.width(name) / 2.0F;
-        float y = h - this.font.lineHeight / 2.0F;
-        this.font.draw(poseStack, new TextComponent(name).withStyle(ChatFormatting.WHITE), x, y, 0);
-        drawLine(poseStack, x, y);
-        drawInfo(poseStack, w, h + 16);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        guiGraphics.blit(GUI_BACKGROUND, (w - 96), (h - 32), 0, 0, 192, 64);
+        int x = w - this.font.width(name) / 2;
+        int y = h - this.font.lineHeight / 2;
+        guiGraphics.drawString(this.font, FormattedCharSequence.forward(name, Style.EMPTY.withColor(ChatFormatting.WHITE)), x, y, 0);
+        drawLine(guiGraphics, x, y);
+        drawInfo(guiGraphics, w, h + 16);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    private void drawLine(PoseStack poseStack, float x, float y) {
+    private void drawLine(GuiGraphics guiGraphics, int x, int y) {
         int i = editor.getCursorPos();
-        this.font.draw(poseStack, new TextComponent("|").withStyle(ChatFormatting.GREEN), x + this.font.width(name.substring(0, i)) - 1, y, 0);
+        guiGraphics.drawString(this.font, FormattedCharSequence.forward("|", Style.EMPTY.withColor(ChatFormatting.GREEN)), x + this.font.width(name.substring(0, i)) - 1, y, 0);
     }
 
-    private void drawInfo(PoseStack poseStack, float x, float y) {
+    private void drawInfo(GuiGraphics guiGraphics, int x, int y) {
         if (nameChanged()) {
-            TranslatableComponent component = name.isEmpty() ? new TranslatableComponent(CCMain.TEXT_RENAME_NEED_NO_EMPTY) : new TranslatableComponent(CCMain.TEXT_RENAME_COST);
-            float halfLen = this.font.width(component) / 2.0F;
-            this.font.drawShadow(poseStack, component.withStyle(ChatFormatting.YELLOW), x - halfLen, y, 0);
+            MutableComponent component = name.isEmpty() ? Component.translatable(CCMain.TEXT_RENAME_NEED_NO_EMPTY) : Component.translatable(CCMain.TEXT_RENAME_COST);
+            int halfLen = this.font.width(component) / 2;
+            guiGraphics.drawString(this.font, component.withStyle(ChatFormatting.YELLOW), x - halfLen, y, 0);
         }
     }
 
@@ -101,11 +97,6 @@ public class NameStoneScreen extends Screen {
             }
         }
         this.onClose();
-    }
-
-    @Override
-    public void removed() {
-        MINECRAFT.keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override

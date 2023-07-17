@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -36,7 +35,7 @@ public class PowderPotBlock extends Block implements EntityBlock {
     private static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
 
     public PowderPotBlock() {
-        super(BlockBehaviour.Properties.of(Material.DECORATION).instabreak());
+        super(BlockBehaviour.Properties.of().instabreak().noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(EMPTY, Boolean.TRUE));
     }
 

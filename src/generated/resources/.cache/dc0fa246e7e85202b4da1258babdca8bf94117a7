@@ -1,0 +1,7 @@
+// 1.20.1	2023-07-17T00:15:45.5378463	Tags for minecraft:block mod id cc_fp
+bd02bd46816089fc43e7dcbb7425e2820b1b7e75 data/minecraft/tags/blocks/dragon_immune.json
+d6d1600431c4136cc2a200df9cc09e4555514f32 data/minecraft/tags/blocks/infiniburn_end.json
+d6d1600431c4136cc2a200df9cc09e4555514f32 data/minecraft/tags/blocks/infiniburn_nether.json
+d6d1600431c4136cc2a200df9cc09e4555514f32 data/minecraft/tags/blocks/infiniburn_overworld.json
+d6d1600431c4136cc2a200df9cc09e4555514f32 data/minecraft/tags/blocks/mineable/pickaxe.json
+1c77ca19be564f6fcfd45f505486de7c0aa006e1 data/minecraft/tags/blocks/needs_diamond_tool.json

@@ -1,10 +1,10 @@
 package io.github.c20c01.cc_fp.block.portalFire;
 
-import io.github.c20c01.cc_fp.item.IDestroyByFireToUse;
 import io.github.c20c01.cc_fp.client.particles.PortalFireParticle;
+import io.github.c20c01.cc_fp.item.IDestroyByFireToUse;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Random;
 
 
 @MethodsReturnNonnullByDefault
@@ -43,7 +42,7 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (entity instanceof ItemEntity itemEntity && itemEntity.getItem().getItem() instanceof IDestroyByFireToUse) {
-            entity.hurt(DamageSource.IN_FIRE, 1.0F);
+            entity.hurt(level.damageSources().inFire(), 1.0F);
             return;
         }
         if (!level.isClientSide && entity.getPassengers().isEmpty()) {
@@ -65,7 +64,7 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
     }
 
     @Override
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource random) {
         super.animateTick(blockState, level, blockPos, random);
         var type = blockState.getValue(LASTING) ? PortalFireParticle.Option.TYPE.IN_LASTING : PortalFireParticle.Option.TYPE.IN;
         playParticle(new PortalFireParticle.Option(type), level, Vec3.atCenterOf(blockPos), random);

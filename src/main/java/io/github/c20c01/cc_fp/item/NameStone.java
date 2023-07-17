@@ -14,10 +14,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -51,7 +48,7 @@ public class NameStone extends Item {
     public void appendHoverText(ItemStack stone, @Nullable Level level, List<Component> components, TooltipFlag tooltipFlag) {
         String name = getStoneName(stone);
         if (!name.isEmpty()) {
-            components.add(new TextComponent(name).withStyle(ChatFormatting.DARK_GREEN));
+            components.add(Component.literal(name).withStyle(ChatFormatting.DARK_GREEN));
         }
     }
 
@@ -73,28 +70,28 @@ public class NameStone extends Item {
             if (level instanceof ServerLevel serverLevel) {
                 player.getCooldowns().addCooldown(this, 40);
                 if (!blockEntity.canUse(serverLevel.getServer(), player)) {
-                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_NOT_OWNER));
+                    MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_NOT_OWNER));
                     return InteractionResult.FAIL;
                 }
 
                 PortalPointManager portalPointManager = PortalPointManager.get(serverLevel.getServer());
                 var point = portalPointManager.get(blockEntity.getPointName(), Boolean.FALSE);
                 if (point == null) {
-                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_UNACTIVATED));
+                    MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POINT_UNACTIVATED));
                     return InteractionResult.FAIL;
                 }
 
                 if (player.isShiftKeyDown()) {
                     if (point.publicGroup().equals(name)) {
                         portalPointManager.changePointInfo(point.setPublicGroupName(""));
-                        MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_NO_PUBLIC));
+                        MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POINT_SET_NO_PUBLIC));
                     } else {
                         portalPointManager.changePointInfo(point.setPublicGroupName(name));
-                        MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_PUBLIC));
+                        MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POINT_SET_PUBLIC));
                     }
                 } else {
                     portalPointManager.changePointInfo(point.setDesc(name));
-                    MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POINT_SET_DESC));
+                    MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POINT_SET_DESC));
                 }
                 itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
                 level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
@@ -105,7 +102,7 @@ public class NameStone extends Item {
 
         if (player.getAbilities().instabuild && level.getBlockEntity(blockPos) instanceof PowderGiverBlockEntity blockEntity) {
             if (level instanceof ServerLevel) {
-                MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POWDER_GIVER_GROUP).append(": " + name));
+                MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POWDER_GIVER_GROUP).append(": " + name));
                 blockEntity.setPublicGroup(name);
                 level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
             }
@@ -118,7 +115,7 @@ public class NameStone extends Item {
                     itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(useOnContext.getHand()));
                     level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);
                 }
-                MessageSender.gameInfo((ServerPlayer) player, new TranslatableComponent(CCMain.TEXT_POT_NAME).append(": " + name));
+                MessageSender.gameInfo(player, Component.translatable(CCMain.TEXT_POT_NAME).append(": " + name));
                 return InteractionResult.CONSUME;
             } else {
                 return InteractionResult.SUCCESS;
@@ -164,15 +161,15 @@ public class NameStone extends Item {
         if (other.is(CCMain.FLOO_HANDBAG_ITEM.get())) {
             if (FlooHandbag.addPowderName(other, name)) {
                 itemStack.hurtAndBreak(4, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
-                player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+                player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
             }
             return true;
         }
 
         if (!TpTool.getItemName(other).equals(name)) {
-            slot.set(other.copy().setHoverName(new TextComponent(name)));
+            slot.set(other.copy().setHoverName(Component.literal(name)));
             itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
-            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
             return true;
         }
 
