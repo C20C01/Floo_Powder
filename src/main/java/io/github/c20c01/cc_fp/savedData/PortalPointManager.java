@@ -11,7 +11,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
@@ -26,18 +25,12 @@ public class PortalPointManager extends SavedData {
 
     private final HashMap<String, PortalPoint> portalPoints = new HashMap<>();
 
-    public enum CheckType implements StringRepresentable {
-        MINE("mine"), PUBLIC("public"), OTHERS("others"), ALL_AVAILABLE("all_available"), ALL("all");
+    public enum CheckType {
+        MINE, PUBLIC, OTHERS, ALL, OP_ALL;
 
-        private final String name;
-
-        CheckType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public @NotNull String getSerializedName() {
-            return this.name;
+        public CheckType nextType() {
+            // 不能返回OP_ALL(OP专用)
+            return values()[(ordinal() + 1) % 4];
         }
     }
 
@@ -150,7 +143,7 @@ public class PortalPointManager extends SavedData {
             case MINE -> points = PortalPointManager.getOwnPoints(server, uuid);
             case PUBLIC -> points = PortalPointManager.getPublicPoints(server);
             case OTHERS -> points = PortalPointManager.getViablePointsForSomeone(server, uuid, Boolean.FALSE);
-            case ALL -> points = PortalPointManager.get(server).getAll();
+            case OP_ALL -> points = PortalPointManager.get(server).getAll();
             default -> points = PortalPointManager.getViablePointsForSomeone(server, uuid, Boolean.TRUE);
         }
         return points;

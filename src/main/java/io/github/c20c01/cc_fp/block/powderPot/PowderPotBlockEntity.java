@@ -28,7 +28,7 @@ public class PowderPotBlockEntity extends BlockEntity {
 
     @Override
     public void saveAdditional(CompoundTag tag) {
-        if (!name.isEmpty()) tag.putString("Name", name);
+        if (!name.isEmpty()) tag.putString("PotName", name);
         if (num > 0) tag.putInt("Num", num);
         if (unlimited) tag.putBoolean("Unlimited", Boolean.TRUE);
         super.saveAdditional(tag);
@@ -36,7 +36,7 @@ public class PowderPotBlockEntity extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        if (tag.contains("Name")) name = tag.getString("Name");
+        if (tag.contains("PotName")) name = tag.getString("PotName");
         if (tag.contains("Num")) num = tag.getInt("Num");
         if (tag.contains("Unlimited")) unlimited = true;
         super.load(tag);

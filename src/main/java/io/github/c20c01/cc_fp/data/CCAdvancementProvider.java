@@ -32,11 +32,11 @@ public class CCAdvancementProvider extends ForgeAdvancementProvider {
     public static void onGatherData(GatherDataEvent event) {
         var generator = event.getGenerator();
         registerAdvancements();
-        generator.addProvider(Boolean.TRUE, new CCAdvancementProvider(generator.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper(), ADVANCEMENTS));
+        generator.addProvider(Boolean.TRUE, new CCAdvancementProvider(generator.getPackOutput(), event.getLookupProvider(), event.getExistingFileHelper()));
     }
 
-    private CCAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper, List<AdvancementGenerator> subProviders) {
-        super(output, registries, existingFileHelper, subProviders);
+    private CCAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
+        super(output, registries, existingFileHelper, CCAdvancementProvider.ADVANCEMENTS);
     }
 
     protected static void registerAdvancements() {

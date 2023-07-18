@@ -42,7 +42,7 @@ public class SharePointInfos {
         UUID uuid = player.getUUID();
         if (!infos.equals(lastInfo.get(uuid))) {
             lastInfo.put(uuid, infos);
-            var packet = new CCNetwork.PointInfosPacket(uuid, infos);
+            var packet = new CCNetwork.PointInfosPacket(infos);
             CCNetwork.CHANNEL_POINT_TO_C.send(PacketDistributor.PLAYER.with(() -> player), packet);
         }
     }
@@ -57,12 +57,12 @@ public class SharePointInfos {
         }
     }
 
-    public static void getPointInfosFromC(UUID uuid, PortalPointInfo info) {
-        GiveFlooPowder.give(uuid, info);
+    public static void getPointInfosFromC(ServerPlayer serverPlayer, PortalPointInfo info) {
+        GiveFlooPowder.give(serverPlayer, info);
     }
 
-    public static void sendPointInfoToS(UUID uuid, PortalPointInfo info) {
-        var packet = new CCNetwork.PointInfosPacket(uuid, List.of(new PortalPointInfo[]{info}));
+    public static void sendPointInfoToS(PortalPointInfo info) {
+        var packet = new CCNetwork.PointInfosPacket(List.of(new PortalPointInfo[]{info}));
         CCNetwork.CHANNEL_POINT_TO_S.sendToServer(packet);
     }
 }

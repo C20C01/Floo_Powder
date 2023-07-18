@@ -5,7 +5,7 @@ import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlock;
 import io.github.c20c01.cc_fp.block.portalFire.PortalFireBlockEntity;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
-import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlock;
+import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlockEntity;
 import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
 import io.github.c20c01.cc_fp.savedData.Permission;
 import io.github.c20c01.cc_fp.savedData.PermissionManager;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -56,11 +55,9 @@ public class PortalBook extends Item {
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 
-            if (level.getBlockState(blockPos).is(CCMain.POWDER_GIVER_BLOCK.get())) {
-                BlockState blockState = level.getBlockState(blockPos);
-                var newType = PowderGiverBlock.getNextType(blockState.getValue(PowderGiverBlock.TYPE));
-                MessageSender.gameInfo(serverPlayer, Component.literal(newType.name()));
-                level.setBlock(blockPos, blockState.setValue(PowderGiverBlock.TYPE, newType), Block.UPDATE_ALL_IMMEDIATE);
+            if (blockEntity instanceof PowderGiverBlockEntity e) {
+                e.changeToNextCheckType();
+                MessageSender.gameInfo(serverPlayer, Component.literal(e.getCheckType().name()));
                 return InteractionResultHolder.success(player.getItemInHand(hand));
             }
 

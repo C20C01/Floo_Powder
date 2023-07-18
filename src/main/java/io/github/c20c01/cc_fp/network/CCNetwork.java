@@ -22,7 +22,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 @MethodsReturnNonnullByDefault
@@ -46,19 +45,17 @@ public class CCNetwork {
         CHANNEL_ITEM_STACK_TO_S.registerMessage(0, ItemStackPacket.class, ItemStackPacket::encode, ItemStackPacket::decode, ItemStackPacket::handleOnServer, Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 
-    public record PointInfosPacket(UUID uuid, List<PortalPointInfo> infos) {
+    public record PointInfosPacket(List<PortalPointInfo> infos) {
         public static PointInfosPacket decode(FriendlyByteBuf buf) {
-            UUID uuid = buf.readUUID();
             int size = buf.readInt();
             List<PortalPointInfo> infos = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 infos.add(new PortalPointInfo(buf.readUtf(), buf.readUtf()));
             }
-            return new PointInfosPacket(uuid, infos);
+            return new PointInfosPacket(infos);
         }
 
         public void encode(FriendlyByteBuf buf) {
-            buf.writeUUID(uuid);
             buf.writeInt(infos.size());
             infos.forEach((info) -> {
                 buf.writeUtf(info.name());
@@ -67,13 +64,15 @@ public class CCNetwork {
         }
 
         public void handleOnServer(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> SharePointInfos.getPointInfosFromC(uuid, infos.get(0)));
-            supplier.get().setPacketHandled(true);
+            NetworkEvent.Context context = supplier.get();
+            context.enqueueWork(() -> SharePointInfos.getPointInfosFromC(context.getSender(), infos.get(0)));
+            context.setPacketHandled(true);
         }
 
         public void handleOnClient(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> SharePointInfos.getPointInfosFromS(infos));
-            supplier.get().setPacketHandled(true);
+            NetworkEvent.Context context = supplier.get();
+            context.enqueueWork(() -> SharePointInfos.getPointInfosFromS(infos));
+            context.setPacketHandled(true);
         }
     }
 
@@ -111,8 +110,9 @@ public class CCNetwork {
         }
 
         public void handleOnClient(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> PlayParticle.play(p, m, pos, args));
-            supplier.get().setPacketHandled(true);
+            NetworkEvent.Context context = supplier.get();
+            context.enqueueWork(() -> PlayParticle.play(p, m, pos, args));
+            context.setPacketHandled(true);
         }
     }
 
@@ -128,25 +128,26 @@ public class CCNetwork {
         }
 
         public void handleOnClient(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> TpTool.changePlayerMovement(mx, my, mz));
-            supplier.get().setPacketHandled(true);
+            NetworkEvent.Context context = supplier.get();
+            context.enqueueWork(() -> TpTool.changePlayerMovement(mx, my, mz));
+            context.setPacketHandled(true);
         }
     }
 
-    public record ItemStackPacket(UUID uuid, int slot, ItemStack itemStack) {
+    public record ItemStackPacket(int slot, ItemStack itemStack) {
         public static ItemStackPacket decode(FriendlyByteBuf buf) {
-            return new ItemStackPacket(buf.readUUID(), buf.readInt(), buf.readItem());
+            return new ItemStackPacket(buf.readInt(), buf.readItem());
         }
 
         public void encode(FriendlyByteBuf buf) {
-            buf.writeUUID(uuid);
             buf.writeInt(slot);
             buf.writeItem(itemStack);
         }
 
         public void handleOnServer(Supplier<NetworkEvent.Context> supplier) {
-            supplier.get().enqueueWork(() -> UpdateItemStack.update(uuid, slot, itemStack));
-            supplier.get().setPacketHandled(true);
+            NetworkEvent.Context context = supplier.get();
+            context.enqueueWork(() -> UpdateItemStack.update(context.getSender(), slot, itemStack));
+            context.setPacketHandled(true);
         }
     }
 }

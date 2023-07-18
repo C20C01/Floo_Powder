@@ -18,7 +18,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
@@ -79,7 +78,7 @@ public class PortalWand extends Item {
             var viewVector = player.getViewVector(1.0F);
             PlayParticle.play(SendParticle.Particles.RAY, SendParticle.Modes.LINE, player.getEyePosition(), new float[]{(float) viewVector.x, (float) viewVector.y, (float) viewVector.z});
         }
-        level.playSound(null, player, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 1, 1);
+        player.playSound(SoundEvents.TRIDENT_THROW);
         return InteractionResultHolder.success(itemStack);
     }
 
@@ -88,7 +87,7 @@ public class PortalWand extends Item {
         if (wand.getTag() != null && wand.getTag().contains("Owner")) {
             String name = UsernameCache.getLastKnownUsername(wand.getTag().getUUID("Owner"));
             if (name != null) {
-                components.add(Component.literal(name).withStyle(ChatFormatting.DARK_PURPLE));
+                components.add(Component.literal(name).withStyle(ChatFormatting.DARK_GREEN));
             }
         }
     }

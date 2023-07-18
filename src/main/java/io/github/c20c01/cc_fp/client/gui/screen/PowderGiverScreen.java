@@ -99,7 +99,7 @@ public class PowderGiverScreen extends Screen {
         // “领取”按钮
         okButton = new Button.Builder(Component.translatable(CCMain.TEXT_GET), (b) -> {
             assert Minecraft.getInstance().player != null;
-            SharePointInfos.sendPointInfoToS(Minecraft.getInstance().player.getUUID(), infos.get(page * 6 + select));
+            SharePointInfos.sendPointInfoToS(infos.get(page * 6 + select));
             close();
         }).pos(this.width / 2, 197).size(58, 20).build();
         this.addRenderableWidget(okButton);

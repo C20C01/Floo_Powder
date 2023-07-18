@@ -64,12 +64,12 @@ public class CCCommand {
                         )
                 )
                 .then(Commands.literal("points")
-                        .then(Commands.literal("check").executes(new CheckPoints(PortalPointManager.CheckType.ALL_AVAILABLE)::check) //查询传送点
-                                .then(checkPoints(PortalPointManager.CheckType.ALL_AVAILABLE))
+                        .then(Commands.literal("check").executes(new CheckPoints(PortalPointManager.CheckType.ALL)::check) //查询传送点
+                                .then(checkPoints(PortalPointManager.CheckType.ALL))
                                 .then(checkPoints(PortalPointManager.CheckType.MINE))
                                 .then(checkPoints(PortalPointManager.CheckType.OTHERS))
                                 .then(checkPoints(PortalPointManager.CheckType.PUBLIC))
-                                .then(checkPoints(PortalPointManager.CheckType.ALL).requires(cs -> cs.hasPermission(3)))
+                                .then(checkPoints(PortalPointManager.CheckType.OP_ALL).requires(cs -> cs.hasPermission(3)))
                                 .then(Commands.literal("public_by_group")
                                         .then(Commands.argument("group", StringArgumentType.word())
                                                 .executes(new CheckPointsByGroup()::check)
@@ -117,7 +117,7 @@ public class CCCommand {
 
         @Override
         MutableComponent getComponent(int page, int maxPage, List<PortalPoint> data) {
-            return getPointsComponent(page, maxPage, data, checkType.getSerializedName());
+            return getPointsComponent(page, maxPage, data, checkType.name());
         }
     }
 
@@ -135,7 +135,7 @@ public class CCCommand {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> checkPoints(PortalPointManager.CheckType checkType) {
-        return Commands.literal(checkType.getSerializedName())
+        return Commands.literal(checkType.name())
                 .executes(new CheckPoints(checkType)::check)
                 .then(Commands.argument("page", IntegerArgumentType.integer(1))
                         .executes(new CheckPoints(checkType)::checkWithPage));

@@ -190,7 +190,7 @@ public class TpTool {
         ServerLevel targetLevel = context.targetLevel();
         BlockPos targetBlockPos = context.targetBlockPos();
         Vec3 movement = context.movement();
-        Direction direction = context.direction() == null ? entity.getDirection() : context.direction();
+        float yaw = context.direction() == null ? entity.getYRot() : context.direction().toYRot();
 
         ServerLevel sourceLevel = (ServerLevel) entity.level();
         BlockPos sourceBlockPos = null;
@@ -207,12 +207,12 @@ public class TpTool {
         boolean rideMinecart = mount != null && mount.getType().equals(EntityType.MINECART);
 
         if (rideMinecart && sourceLevel == targetLevel) {
-            teleportEntity(mount, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), direction, movement);
+            teleportEntity(mount, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), yaw, movement);
         } else {
             entity.stopRiding();
-            entity = teleportEntity(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), direction, movement);
+            entity = teleportEntity(entity, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), yaw, movement);
             if (rideMinecart) {
-                mount = teleportEntity(mount, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), direction, movement);
+                mount = teleportEntity(mount, targetLevel, Vec3.atBottomCenterOf(targetBlockPos), yaw, movement);
                 entity.startRiding(mount);
             }
         }
@@ -237,8 +237,7 @@ public class TpTool {
         entity.addEffect(new MobEffectInstance(effect, duration, amplifier, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE));
     }
 
-    private static Entity teleportEntity(Entity entity, ServerLevel targetWorld, Vec3 targetPos3d, Direction direction, Vec3 movement) {
-        float yaw = direction.toYRot();
+    private static Entity teleportEntity(Entity entity, ServerLevel targetWorld, Vec3 targetPos3d, float yaw, Vec3 movement) {
         double x = targetPos3d.x;
         double y = targetPos3d.y;
         double z = targetPos3d.z;

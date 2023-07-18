@@ -5,7 +5,6 @@ import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
 import io.github.c20c01.cc_fp.block.powderGiver.PowderGiverBlockEntity;
 import io.github.c20c01.cc_fp.block.powderPot.PowderPotBlockEntity;
 import io.github.c20c01.cc_fp.client.gui.screen.NameStoneScreen;
-import io.github.c20c01.cc_fp.network.UpdateItemStack;
 import io.github.c20c01.cc_fp.savedData.PortalPointManager;
 import io.github.c20c01.cc_fp.tool.MessageSender;
 import io.github.c20c01.cc_fp.tp.TpTool;
@@ -35,7 +34,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -130,8 +128,6 @@ public class NameStone extends Item {
         ItemStack itemStack = player.getItemInHand(hand);
         if (level.isClientSide) {
             openGui(itemStack, player, hand);
-        } else {
-            UpdateItemStack.setPlayerList(Objects.requireNonNull(level.getServer()).getPlayerList());
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
@@ -177,11 +173,11 @@ public class NameStone extends Item {
     }
 
     public static String getStoneName(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getString("Name");
+        return itemStack.getOrCreateTag().getString("StoneName");
     }
 
     public static ItemStack setStoneName(ItemStack itemStack, String name) {
-        itemStack.getOrCreateTag().putString("Name", name);
+        itemStack.getOrCreateTag().putString("StoneName", name);
         return itemStack;
     }
 }

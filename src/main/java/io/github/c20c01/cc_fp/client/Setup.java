@@ -21,12 +21,6 @@ public class Setup {
     public static void setupEvent(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             // 设置方块渲染类型
-//            ItemBlockRenderTypes.setRenderLayer(CCMain.FAKE_PORTAL_FIRE_BLOCK.get(), RenderType.cutout());
-//            ItemBlockRenderTypes.setRenderLayer(CCMain.PORTAL_FIRE_BLOCK.get(), RenderType.cutout());
-//            ItemBlockRenderTypes.setRenderLayer(CCMain.PORTAL_POINT_BLOCK.get(), RenderType.solid());
-//            ItemBlockRenderTypes.setRenderLayer(CCMain.POWDER_GIVER_BLOCK.get(), RenderType.solid());
-//            ItemBlockRenderTypes.setRenderLayer(CCMain.FIRE_BASE_BLOCK.get(), RenderType.solid());
-
             BlockEntityRenderers.register(CCMain.PORTAL_CHEST_BLOCK_ENTITY.get(), ChestRenderer::new);
 
             // 注册菜单页面

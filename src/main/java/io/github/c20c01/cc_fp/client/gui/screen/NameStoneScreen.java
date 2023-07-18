@@ -90,7 +90,7 @@ public class NameStoneScreen extends Screen {
         if (nameChanged()) {
             if (!name.isEmpty() && (player.experienceLevel > 0 || player.getAbilities().instabuild)) {
                 int slot = this.hand == InteractionHand.MAIN_HAND ? this.player.getInventory().selected : 40;
-                var packet = new CCNetwork.ItemStackPacket(player.getUUID(), slot, NameStone.setStoneName(itemStack, name));
+                var packet = new CCNetwork.ItemStackPacket(slot, NameStone.setStoneName(itemStack, name));
                 CCNetwork.CHANNEL_ITEM_STACK_TO_S.sendToServer(packet);
             } else {
                 player.playSound(SoundEvents.VILLAGER_NO, 1, 1);
