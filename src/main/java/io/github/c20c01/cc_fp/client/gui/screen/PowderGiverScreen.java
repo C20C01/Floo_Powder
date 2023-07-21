@@ -54,8 +54,8 @@ public class PowderGiverScreen extends Screen {
         for (int i = 0; i < 6; i++) {
             PortalPointInfo info = infoList[i];
             if (info != null) {
-                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.name()), Style.EMPTY.withColor(ChatFormatting.BLACK)), w, 17 + i * 30, 0, Boolean.FALSE);
-                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.describe()), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)), w, 29 + i * 30, 0, Boolean.FALSE);
+                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.name()), Style.EMPTY.withColor(ChatFormatting.BLACK)), w, 17 + i * 30, -1, Boolean.FALSE);
+                guiGraphics.drawString(this.font, FormattedCharSequence.forward(formatText(info.describe()), Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)), w, 29 + i * 30, -1, Boolean.FALSE);
             }
         }
         super.render(guiGraphics, mouseX, mouseY, partialTicks);

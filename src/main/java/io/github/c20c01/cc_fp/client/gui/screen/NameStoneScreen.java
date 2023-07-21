@@ -52,7 +52,7 @@ public class NameStoneScreen extends Screen {
     protected void init() {
         super.init();
         this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_RENAME), (b) -> tryToChangeName()).pos(this.width / 2 - 100, this.height / 2 + 64).size(80, 20).build());
-        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> tryToChangeName()).pos(this.width / 2 + 20, this.height / 2 + 64).size(80, 20).build());
+        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> onClose()).pos(this.width / 2 + 20, this.height / 2 + 64).size(80, 20).build());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class NameStoneScreen extends Screen {
         guiGraphics.blit(GUI_BACKGROUND, (w - 96), (h - 32), 0, 0, 192, 64);
         int x = w - this.font.width(name) / 2;
         int y = h - this.font.lineHeight / 2;
-        guiGraphics.drawString(this.font, FormattedCharSequence.forward(name, Style.EMPTY.withColor(ChatFormatting.WHITE)), x, y, 0);
+        guiGraphics.drawString(this.font, FormattedCharSequence.forward(name, Style.EMPTY.withColor(ChatFormatting.WHITE)), x, y, -1);
         drawLine(guiGraphics, x, y);
         drawInfo(guiGraphics, w, h + 16);
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
@@ -71,14 +71,14 @@ public class NameStoneScreen extends Screen {
 
     private void drawLine(GuiGraphics guiGraphics, int x, int y) {
         int i = editor.getCursorPos();
-        guiGraphics.drawString(this.font, FormattedCharSequence.forward("|", Style.EMPTY.withColor(ChatFormatting.GREEN)), x + this.font.width(name.substring(0, i)) - 1, y, 0);
+        guiGraphics.drawString(this.font, FormattedCharSequence.forward("|", Style.EMPTY.withColor(ChatFormatting.GREEN)), x + this.font.width(name.substring(0, i)) - 1, y, -1);
     }
 
     private void drawInfo(GuiGraphics guiGraphics, int x, int y) {
         if (nameChanged()) {
             MutableComponent component = name.isEmpty() ? Component.translatable(CCMain.TEXT_RENAME_NEED_NO_EMPTY) : Component.translatable(CCMain.TEXT_RENAME_COST);
             int halfLen = this.font.width(component) / 2;
-            guiGraphics.drawString(this.font, component.withStyle(ChatFormatting.YELLOW), x - halfLen, y, 0);
+            guiGraphics.drawString(this.font, component.withStyle(ChatFormatting.YELLOW), x - halfLen, y, -1);
         }
     }
 
