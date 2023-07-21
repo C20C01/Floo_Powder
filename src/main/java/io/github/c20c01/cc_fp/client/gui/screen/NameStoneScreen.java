@@ -52,7 +52,7 @@ public class NameStoneScreen extends Screen {
     protected void init() {
         super.init();
         this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_RENAME), (b) -> tryToChangeName()).pos(this.width / 2 - 100, this.height / 2 + 64).size(80, 20).build());
-        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> tryToChangeName()).pos(this.width / 2 + 20, this.height / 2 + 64).size(80, 20).build());
+        this.addRenderableWidget(new Button.Builder(Component.translatable(CCMain.TEXT_CANCEL), (b) -> onClose()).pos(this.width / 2 + 20, this.height / 2 + 64).size(80, 20).build());
     }
 
     @Override
