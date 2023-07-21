@@ -15,7 +15,7 @@ public class UpdateItemStack {
                     itemStack.hurtAndBreak(8, serverPlayer, (x) -> x.broadcastBreakEvent(slot == 40 ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND));
                     serverPlayer.giveExperienceLevels(-1);
                 }
-                serverPlayer.playSound(SoundEvents.ANVIL_USE);
+                serverPlayer.level().playSound(null, serverPlayer.blockPosition(), SoundEvents.ANVIL_USE, serverPlayer.getSoundSource(), 1F, 1F);
             }
         }
     }

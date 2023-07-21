@@ -78,7 +78,7 @@ public class PortalWand extends Item {
             var viewVector = player.getViewVector(1.0F);
             PlayParticle.play(SendParticle.Particles.RAY, SendParticle.Modes.LINE, player.getEyePosition(), new float[]{(float) viewVector.x, (float) viewVector.y, (float) viewVector.z});
         }
-        player.playSound(SoundEvents.TRIDENT_THROW);
+        level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_THROW, player.getSoundSource(), 1F, 1F);
         return InteractionResultHolder.success(itemStack);
     }
 

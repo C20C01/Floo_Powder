@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 
+@OnlyIn(Dist.CLIENT)
 public class PowderGiverScreen extends Screen {
     private static final ResourceLocation GUI_BACKGROUND = new ResourceLocation(CCMain.ID, "textures/gui/floo_powder_giver_gui_background.png");
     private static int page = 0;
@@ -108,8 +111,8 @@ public class PowderGiverScreen extends Screen {
 
     private static void updateOkButton() {
         okButton.active = (select != -1) &&
-                (nextButton.active || ((infos != null && infos.size() > 0) && select <
-                        (infos.size() % 6 == 0 ? 6 : infos.size() % 6)));
+                (nextButton.active || ((infos != null && !infos.isEmpty()) &&
+                        select < (infos.size() % 6 == 0 ? 6 : infos.size() % 6)));
     }
 
     private void makeNextButton() {

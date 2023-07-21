@@ -121,6 +121,8 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
                 PortalPointBlock.disable(Objects.requireNonNull(getLevel()), getBlockPos());
             }
         }
+
+        setChanged();
     }
 
     @Override
@@ -157,10 +159,11 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
 
     public void setPointName(String name) {
         this.pointName = name;
+        setChanged();
     }
 
     public boolean isPointNamed() {
-        return !pointName.equals("");
+        return !pointName.isEmpty();
     }
 
     public boolean checkNoneReel(Predicate<ExpansionReel> predicate) {

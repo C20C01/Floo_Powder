@@ -9,7 +9,7 @@ public class GiveFlooPowder {
     public static void give(ServerPlayer serverPlayer, PortalPointInfo info) {
         if (serverPlayer != null) {
             serverPlayer.getInventory().add(FlooPowder.getNamedPowder(info.name()));
-            serverPlayer.playSound(SoundEvents.ITEM_PICKUP, 0.2F, ((serverPlayer.getRandom().nextFloat() - serverPlayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            serverPlayer.level().playSound(null, serverPlayer.blockPosition(), SoundEvents.ITEM_PICKUP, serverPlayer.getSoundSource(), 0.2F, ((serverPlayer.getRandom().nextFloat() - serverPlayer.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
         }
     }
 }

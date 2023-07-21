@@ -21,12 +21,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 
+@OnlyIn(Dist.CLIENT)
 public class NameStoneScreen extends Screen {
     private static final ResourceLocation GUI_BACKGROUND = new ResourceLocation(CCMain.ID, "textures/gui/name_stone_gui_background.png");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
@@ -93,7 +96,7 @@ public class NameStoneScreen extends Screen {
                 var packet = new CCNetwork.ItemStackPacket(slot, NameStone.setStoneName(itemStack, name));
                 CCNetwork.CHANNEL_ITEM_STACK_TO_S.sendToServer(packet);
             } else {
-                player.playSound(SoundEvents.VILLAGER_NO, 1, 1);
+                player.playSound(SoundEvents.VILLAGER_NO);
             }
         }
         this.onClose();
@@ -101,7 +104,8 @@ public class NameStoneScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+        if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            this.onClose();
             return true;
         }
         if (Screen.isSelectAll(keyCode)) {

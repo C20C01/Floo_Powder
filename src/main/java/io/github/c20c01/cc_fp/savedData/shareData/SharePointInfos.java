@@ -7,6 +7,8 @@ import io.github.c20c01.cc_fp.network.GiveFlooPowder;
 import io.github.c20c01.cc_fp.savedData.PortalPoint;
 import io.github.c20c01.cc_fp.savedData.PortalPointManager;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,6 +28,7 @@ public class SharePointInfos {
     // 储存玩家上一次获取的传送点信息，若请求的传送点信息未发生变化则不会发送信息
     private static final HashMap<UUID, List<PortalPointInfo>> lastInfo = new HashMap<>();
 
+    @OnlyIn(Dist.CLIENT)
     public static void getPointInfosFromS(List<PortalPointInfo> infos) {
         PowderGiverScreen.setUp(infos);
     }

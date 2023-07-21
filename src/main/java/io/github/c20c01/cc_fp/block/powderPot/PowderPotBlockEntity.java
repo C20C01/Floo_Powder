@@ -61,7 +61,7 @@ public class PowderPotBlockEntity extends BlockEntity {
         ItemStack itemStack = FlooPowder.getNamedPowder(name);
         itemStack.setCount(count);
         player.getInventory().add(itemStack);
-        player.playSound(SoundEvents.ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+        player.level().playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, player.getSoundSource(), 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
         num -= unlimited ? 0 : count;
         return isEmpty();
     }

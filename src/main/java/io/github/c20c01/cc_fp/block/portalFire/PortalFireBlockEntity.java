@@ -37,6 +37,7 @@ public class PortalFireBlockEntity extends BlockEntity {
 
     public void setTargetName(String targetName) {
         this.targetName = targetName;
+        setChanged();
     }
 
     public String getTargetName() {

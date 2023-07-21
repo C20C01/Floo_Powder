@@ -105,7 +105,7 @@ public class FlooHandbag extends Item {
         if (clickAction == ClickAction.SECONDARY && slot.allowModification(player)) {
             if (other.is(CCMain.FLOO_POWDER_ITEM.get())) {
                 if (hasPlaces(bag) && tryToPutPowder(bag, other) > 0) {
-                    player.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
+                    player.level().playSound(null, player.blockPosition(), SoundEvents.BUNDLE_INSERT, player.getSoundSource(), 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
                 }
             }
             return true;
@@ -215,7 +215,7 @@ public class FlooHandbag extends Item {
             int n = getPowderSize(bag);
             ItemStack powder = getPowderStack(bag);
             if (n > 0 && powder != null) {
-                player.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
+                player.level().playSound(null, player.blockPosition(), SoundEvents.BUNDLE_DROP_CONTENTS, player.getSoundSource(), 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
                 player.drop(powder, Boolean.TRUE);
                 tag.putInt("Powders", n - 1);
                 return true;

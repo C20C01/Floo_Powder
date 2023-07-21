@@ -37,7 +37,10 @@ public class PowderGiverBlockEntity extends BlockEntity {
     }
 
     public void setPublicGroup(String groupName) {
-        this.publicGroup = groupName;
+        if (!this.publicGroup.equals(groupName)) {
+            this.publicGroup = groupName;
+            setChanged();
+        }
     }
 
     public String getPublicGroup() {
@@ -46,6 +49,7 @@ public class PowderGiverBlockEntity extends BlockEntity {
 
     public void changeToNextCheckType() {
         checkType = checkType.nextType();
+        setChanged();
     }
 
     public PortalPointManager.CheckType getCheckType() {
