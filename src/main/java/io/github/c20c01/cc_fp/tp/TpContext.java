@@ -18,6 +18,6 @@ import javax.annotation.Nullable;
  * @see TpTool
  */
 
-record TpContext(Entity entity, ServerLevel targetLevel, BlockPos targetBlockPos, Vec3 movement,
-                 @Nullable Direction direction, boolean showDecoration) {
+public record TpContext(Entity entity, ServerLevel targetLevel, BlockPos targetBlockPos, Vec3 movement,
+                        @Nullable Direction direction, boolean showDecoration) {
 }

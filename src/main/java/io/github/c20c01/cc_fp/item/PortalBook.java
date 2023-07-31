@@ -99,7 +99,7 @@ public class PortalBook extends Item {
 
     private static void showPosInfo(ServerPlayer serverPlayer) {
         var list = PortalPointManager.get(serverPlayer.getServer()).getAll();
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             MessageSender.chat(serverPlayer, Component.translatable(CCMain.TEXT_NOT_FOUND_BOOK));
         } else {
             for (PortalPoint p : list) {
