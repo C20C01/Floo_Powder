@@ -157,7 +157,7 @@ public class NameStone extends Item {
         if (other.is(CCMain.FLOO_HANDBAG_ITEM.get())) {
             if (FlooHandbag.addPowderName(other, name)) {
                 itemStack.hurtAndBreak(4, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
-                player.level().playSound(null, player.blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
+                player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
             }
             return true;
         }
@@ -165,7 +165,7 @@ public class NameStone extends Item {
         if (!TpTool.getItemName(other).equals(name)) {
             slot.set(other.copy().setHoverName(Component.literal(name)));
             itemStack.hurtAndBreak(1, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
-            player.level().playSound(null, player.blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE, player.getSoundSource(), 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
+            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
             return true;
         }
 
