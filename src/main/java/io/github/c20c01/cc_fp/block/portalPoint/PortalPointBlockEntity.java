@@ -108,18 +108,13 @@ public class PortalPointBlockEntity extends BaseContainerBlockEntity {
 
     @Override
     public void setItem(int slot, ItemStack newItemStack) {
-        ItemStack oldItemstack = this.items.get(slot);
-
         this.items.set(slot, newItemStack);
         if (newItemStack.getCount() > this.getMaxStackSize()) {
             newItemStack.setCount(this.getMaxStackSize());
         }
 
         if (slot == 0) {
-            boolean changed = !ItemStack.isSameItemSameTags(newItemStack, oldItemstack);
-            if (changed) {
-                PortalPointBlock.disable(Objects.requireNonNull(getLevel()), getBlockPos());
-            }
+            PortalPointBlock.disable(Objects.requireNonNull(getLevel()), getBlockPos());
         }
 
         setChanged();
