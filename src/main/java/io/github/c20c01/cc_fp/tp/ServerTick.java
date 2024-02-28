@@ -25,11 +25,7 @@ class ServerTick {
         MinecraftForge.EVENT_BUS.unregister(serverTick);
     }
 
-    protected static void add(TpContext context) {
-        taskStack.add(() -> TpTool.teleportTo(context));
-    }
-
-    protected static void add(Runnable runnable) {
+    protected static void addTask(Runnable runnable) {
         taskStack.add(runnable);
     }
 

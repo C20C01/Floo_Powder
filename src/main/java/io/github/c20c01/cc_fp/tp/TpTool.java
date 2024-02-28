@@ -2,7 +2,6 @@ package io.github.c20c01.cc_fp.tp;
 
 import com.mojang.logging.LogUtils;
 import io.github.c20c01.cc_fp.CCMain;
-import io.github.c20c01.cc_fp.block.FireBaseBlock;
 import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
@@ -36,8 +35,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -57,21 +54,20 @@ public class TpTool {
     public enum Result {success, fail, pass}
 
     public static void forceTeleportEntity(Entity entity, String targetName) {
-        tryTeleportEntity(entity, targetName, Blocks.AIR, Vec3.ZERO, Boolean.FALSE, Boolean.TRUE);
+        tryTeleportEntity(entity, targetName, Vec3.ZERO, Boolean.FALSE, Boolean.TRUE);
     }
 
     /**
      * @param entity     尝试传送的实体
      * @param targetName 目标传送点的名称
-     * @param fireBase   传送火焰的底座
-     * @param movement   实体传送时的动量
+     * @param movement   实体传送时的动量，若为null则不保留动量
      * @param temporary  是由传送法杖生成的传送点
      * @param force      传送指令不会被忽略（不返回Result.pass）
      * @return Result.pass 这10tick内此实体已经尝试传送了，不再对其进行处理<br>
      * Result.fail 拒绝传送<br>
      * Result.success 尝试进行传送<br>
      */
-    public static Result tryTeleportEntity(Entity entity, String targetName, Block fireBase, Vec3 movement, boolean temporary, boolean force) {
+    public static Result tryTeleportEntity(Entity entity, String targetName, @Nullable Vec3 movement, boolean temporary, boolean force) {
         if (!force && !TP_COOLING.add(entity)) {
             return Result.pass;
         } else {
@@ -144,7 +140,7 @@ public class TpTool {
                 }
             }
 
-            ServerTick.add(() -> {
+            ServerTick.addTask(() -> {
                 changeTargetFire(targetLevel, targetPos);
                 PortalPointBlock.signalPulse(targetLevel, targetPos.below());
             });
@@ -154,13 +150,10 @@ public class TpTool {
             }
         }
 
-        boolean saveMovement = fireBase instanceof FireBaseBlock;
-        movement = saveMovement ? getNewMovement(movement, direction) : Vec3.ZERO;
-
         boolean showDecoration = entity instanceof LivingEntity;
 
-        TpContext context = new TpContext(entity, targetLevel, targetPos, movement, direction, showDecoration);
-        ServerTick.add(context);
+        TpContext context = new TpContext(entity, targetLevel, targetPos, getNewMovement(movement, direction), direction, showDecoration);
+        ServerTick.addTask(() -> teleportTo(context));
         ServerTick.register();
         return Result.success;
     }
@@ -174,7 +167,10 @@ public class TpTool {
     /**
      * 若保留动量则会将y方向的动量设置为向上的，<br>同时若不保留方向还会将水平方向上的动量的方向调至传送核心的朝向
      */
-    private static Vec3 getNewMovement(Vec3 movement, @Nullable Direction direction) {
+    private static Vec3 getNewMovement(@Nullable Vec3 movement, @Nullable Direction direction) {
+        if (movement == null) {
+            return Vec3.ZERO;
+        }
         double my = movement.y < 0 ? -movement.y : movement.y;
         if (direction == null) {
             return new Vec3(movement.x, my, movement.z);
@@ -218,8 +214,8 @@ public class TpTool {
         }
 
         if (context.showDecoration()) {
-            sourceLevel.playSound(null, sourceBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 0.1F, 1.0F);
-            targetLevel.playSound(null, targetBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 0.1F, 1.0F);
+            sourceLevel.playSound(null, sourceBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 0.5F, 1.0F);
+            targetLevel.playSound(null, targetBlockPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 0.5F, 1.0F);
 
             SendParticle.ball(sourceLevel, SendParticle.Particles.SMOKE, sourcePos);
             SendParticle.ball(targetLevel, SendParticle.Particles.SMOKE, Vec3.atCenterOf(targetBlockPos));

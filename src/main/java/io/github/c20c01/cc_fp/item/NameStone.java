@@ -155,7 +155,7 @@ public class NameStone extends Item {
         }
 
         if (other.is(CCMain.FLOO_HANDBAG_ITEM.get())) {
-            if (FlooHandbag.addPowderName(other, name)) {
+            if (FlooHandbag.addPlace(other, name)) {
                 itemStack.hurtAndBreak(4, player, (x) -> x.broadcastBreakEvent(player.getUsedItemHand()));
                 player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1, 0.8F + player.getRandom().nextFloat() * 0.4F);
             }

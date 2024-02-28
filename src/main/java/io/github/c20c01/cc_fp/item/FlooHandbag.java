@@ -76,7 +76,7 @@ public class FlooHandbag extends Item {
 
     @Override
     public int getBarWidth(ItemStack bag) {
-        return Math.min(Math.round(getPowderSize(bag) * 13.0F / MAX_SIZE), 13);
+        return Math.min(Math.round(getPowderNum(bag) * 13.0F / MAX_SIZE), 13);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FlooHandbag extends Item {
     public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack other, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
         if (clickAction == ClickAction.SECONDARY && slot.allowModification(player)) {
             if (other.is(CCMain.FLOO_POWDER_ITEM.get())) {
-                if (hasPlaces(bag) && tryToPutPowder(bag, other) > 0) {
+                if (hasPlaces(bag) && tryToPutPowderIn(bag, other) > 0) {
                     player.level().playSound(null, player.blockPosition(), SoundEvents.BUNDLE_INSERT, player.getSoundSource(), 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);
                 }
             }
@@ -159,7 +159,7 @@ public class FlooHandbag extends Item {
         List<Component> components = new ArrayList<>();
         var tag = bag.getTag();
         if (tag != null) {
-            components.add(Component.literal(getPowderSize(bag) + "/64").withStyle(ChatFormatting.GRAY));
+            components.add(Component.literal(getPowderNum(bag) + "/64").withStyle(ChatFormatting.GRAY));
             MutableComponent component = Component.literal("[");
             List<String> places = getPlaces(bag);
             for (int i = 0; i < places.size(); i++) {
@@ -173,7 +173,7 @@ public class FlooHandbag extends Item {
         return components;
     }
 
-    private static int getPowderSize(ItemStack bag) {
+    private static int getPowderNum(ItemStack bag) {
         CompoundTag compoundtag = bag.getTag();
         if (compoundtag == null) {
             return 0;
@@ -182,7 +182,7 @@ public class FlooHandbag extends Item {
         }
     }
 
-    public static boolean addPowderName(ItemStack bag, String place) {
+    public static boolean addPlace(ItemStack bag, String place) {
         CompoundTag compoundtag = bag.getOrCreateTag();
         boolean contains = compoundtag.contains("Places");
         ListTag listTag = contains ? compoundtag.getList("Places", Tag.TAG_STRING) : new ListTag();
@@ -196,9 +196,9 @@ public class FlooHandbag extends Item {
         return true;
     }
 
-    private static int tryToPutPowder(ItemStack bag, ItemStack other) {
+    private static int tryToPutPowderIn(ItemStack bag, ItemStack other) {
         CompoundTag compoundtag = bag.getOrCreateTag();
-        int n = getPowderSize(bag);
+        int n = getPowderNum(bag);
         int min = Math.min(MAX_SIZE - n, other.getCount());
         if (min <= 0) {
             return 0;
@@ -212,7 +212,7 @@ public class FlooHandbag extends Item {
     private static boolean tryToDropPowder(Player player, ItemStack bag) {
         var tag = bag.getTag();
         if (tag != null) {
-            int n = getPowderSize(bag);
+            int n = getPowderNum(bag);
             ItemStack powder = getPowderStack(bag);
             if (n > 0 && powder != null) {
                 player.level().playSound(null, player.blockPosition(), SoundEvents.BUNDLE_DROP_CONTENTS, player.getSoundSource(), 0.8F, 0.8F + player.getRandom().nextFloat() * 0.4F);

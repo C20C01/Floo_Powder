@@ -13,11 +13,13 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
@@ -45,14 +47,14 @@ import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
-// TODO：添加能量值&恢复能量值的方法
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PortalWand extends Item {
     private static final HashMap<UUID, TemporaryFires> TEMPORARY_FIRES = new HashMap<>();
     private static final BlockState TEMPORARY_FIRE_IN = CCMain.PORTAL_FIRE_BLOCK.get().defaultBlockState().setValue(BasePortalFireBlock.TEMPORARY, Boolean.TRUE);
     private static final BlockState TEMPORARY_FIRE_OUT = CCMain.FAKE_PORTAL_FIRE_BLOCK.get().defaultBlockState().setValue(BasePortalFireBlock.TEMPORARY, Boolean.TRUE);
+    private static final int MAX_POWER = 96;
+    private static final int BAR_COLOR = Mth.color(0.4F, 1F, 0.4F);
 
     public PortalWand(Properties properties) {
         super(properties);
@@ -66,6 +68,10 @@ public class PortalWand extends Item {
             if (player instanceof ServerPlayer serverPlayer) {
                 MessageSender.gameInfo(serverPlayer, Component.translatable(CCMain.TEXT_NOT_OWNER));
             }
+            return InteractionResultHolder.fail(itemStack);
+        }
+
+        if (!usePower(player, itemStack)) {
             return InteractionResultHolder.fail(itemStack);
         }
 
@@ -99,6 +105,54 @@ public class PortalWand extends Item {
         if (server != null) {
             TEMPORARY_FIRES.get(uuid).removeAllFireBlock(server);
         }
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack wand) {
+        return wand.hasTag() && getPower(wand) != MAX_POWER;
+    }
+
+    @Override
+    public int getBarColor(ItemStack itemStack) {
+        return BAR_COLOR;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack wand) {
+        return Math.min(Math.round(getPower(wand) * 13.0F / MAX_POWER), 13);
+    }
+
+    public static int getPower(ItemStack wand) {
+        if (wand.getTag() != null && wand.getTag().contains("Power")) {
+            return wand.getTag().getInt("Power");
+        } else {
+            setPower(wand, MAX_POWER);
+            return MAX_POWER;
+        }
+    }
+
+    private static void setPower(ItemStack wand, int energy) {
+        CompoundTag tag = wand.getOrCreateTag();
+        tag.putInt("Power", energy);
+    }
+
+    private static boolean usePower(Player player, ItemStack wand) {
+        int energy = getPower(wand);
+        if (energy > 0) {
+            if (!player.getAbilities().instabuild) {
+                setPower(wand, energy - 1);
+                if (energy == 1) {
+                    player.playSound(SoundEvents.ITEM_BREAK, 0.8F, 0.8F + player.level().random.nextFloat() * 0.4F);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static void addPower(ItemStack wand, int energy) {
+        int power = getPower(wand);
+        setPower(wand, Math.min(power + energy, MAX_POWER));
     }
 
     @Nullable

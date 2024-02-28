@@ -70,7 +70,7 @@ public class CCCommand {
                                 .then(checkPoints(PortalPointManager.CheckType.OTHERS))
                                 .then(checkPoints(PortalPointManager.CheckType.PUBLIC))
                                 .then(checkPoints(PortalPointManager.CheckType.OP_ALL).requires(cs -> cs.hasPermission(3)))
-                                .then(Commands.literal("public_by_group")
+                                .then(Commands.literal("PUBLIC_IN_GROUP")
                                         .then(Commands.argument("group", StringArgumentType.word())
                                                 .executes(new CheckPointsByGroup()::check)
                                                 .then(Commands.argument("page", IntegerArgumentType.integer(1))

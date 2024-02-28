@@ -35,7 +35,7 @@ public interface IDestroyByFireToUse extends IForgeItem {
     }
 
     static void changeFireLasting(BlockPos blockPos, Level level) {
-        level.playSound(null, blockPos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 5.0F, 0.9F + level.random.nextFloat() * 0.2F);
         BasePortalFireBlock.changeAllToLastingFire(blockPos, level);
+        level.playSound(null, blockPos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 5.0F, 0.9F + level.random.nextFloat() * 0.2F);
     }
 }

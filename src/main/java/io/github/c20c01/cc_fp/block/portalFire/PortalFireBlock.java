@@ -1,5 +1,6 @@
 package io.github.c20c01.cc_fp.block.portalFire;
 
+import io.github.c20c01.cc_fp.block.FireBaseBlock;
 import io.github.c20c01.cc_fp.client.particles.PortalFireParticle;
 import io.github.c20c01.cc_fp.item.IDestroyByFireToUse;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -7,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -46,8 +48,33 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
             return;
         }
         if (!level.isClientSide && entity.getPassengers().isEmpty()) {
-            if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
-                blockEntity.teleportEntity(level, blockPos, entity, entity.getDeltaMovement(), blockState.getValue(TEMPORARY), blockState.getValue(LASTING));
+            teleportEntityInside(blockState, level, blockPos, entity);
+        }
+    }
+
+    private static void teleportEntityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
+            boolean lasting = blockState.getValue(LASTING);
+            boolean temporary = blockState.getValue(TEMPORARY);
+            boolean saveMovement = level.getBlockState(blockPos.below()).getBlock() instanceof FireBaseBlock;
+            Vec3 movement = null;
+            if (saveMovement) {
+                movement = entity.getDeltaMovement();
+                // 玩家的竖直方向上的动量不准，需要靠下落距离来算
+                if (entity instanceof Player) {
+                    movement = new Vec3(movement.x, (float) (Math.sqrt(entity.fallDistance * 2 / 0.08) * 0.08), movement.z);
+                }
+            }
+
+            var result = blockEntity.teleportEntity(entity, movement, temporary);
+
+            switch (result) {
+                case fail -> BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
+                case success -> {
+                    if (!lasting){
+                        BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
+                    }
+                }
             }
         }
     }

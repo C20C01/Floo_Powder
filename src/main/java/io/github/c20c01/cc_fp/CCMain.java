@@ -46,7 +46,7 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod(CCMain.ID)
 public class CCMain {
     public static final String ID = "cc_fp";
-    public static final String VERSION = "1.6.0";
+    public static final String VERSION = "1.6.1";
 
     // 进度文本
     public static final String TEXT_GET_FLOO_TITLE = "advancement." + ID + ".get_floo.title";
@@ -212,7 +212,7 @@ public class CCMain {
         LASTING_POWDER_ITEM = ITEMS.register(LASTING_POWDER_ID, () -> new LastingPowder(getBaseProperties()));
         PORTAL_FLINT_AND_STEEL_ITEM = ITEMS.register(PORTAL_FLINT_AND_STEEL_ID, () -> new PortalFlintAndSteel(getBaseProperties().durability(1)));
         PORTAL_BOOK_ITEM = ITEMS.register(PORTAL_BOOK_ID, () -> new PortalBook(getBaseProperties().stacksTo(1).rarity(Rarity.EPIC)));
-        PORTAL_WAND_ITEM = ITEMS.register(PORTAL_WAND_ID, () -> new PortalWand(getBaseProperties().stacksTo(1).rarity(Rarity.EPIC)));
+        PORTAL_WAND_ITEM = ITEMS.register(PORTAL_WAND_ID, () -> new PortalWand(getBaseProperties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()));
         FLOO_REEL_ITEM = ITEMS.register(FLOO_REEL_ID, () -> new FlooReel(getBaseProperties()));
         FLOO_HANDBAG_ITEM = ITEMS.register(FLOO_HANDBAG_ID, () -> new FlooHandbag(getBaseProperties().stacksTo(1)));
         NAME_STONE_ITEM = ITEMS.register(NAME_STONE_ID, () -> new NameStone(getBaseProperties().durability(64)));

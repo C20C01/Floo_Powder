@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +41,7 @@ public abstract class BasePortalFireBlock extends BaseFireBlock {
     public static final BooleanProperty TEMPORARY = BooleanProperty.create("temporary"); //为传送法杖生成的临时火焰
 
     public BasePortalFireBlock() {
-        super(Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).noCollission().instabreak().lightLevel((x) -> 15), 0F);
+        super(Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().noCollission().instabreak().lightLevel((x) -> 15), 0F);
     }
 
     public static boolean isTemporaryFire(Level level, BlockPos blockPos) {
@@ -69,12 +68,6 @@ public abstract class BasePortalFireBlock extends BaseFireBlock {
 
     public static boolean canSurviveOnBlock(LevelReader levelReader, BlockPos blockPos) {
         return levelReader.getBlockState(blockPos).isFaceSturdy(levelReader, blockPos, Direction.UP);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean canBeReplaced(BlockState blockState, Fluid fluid) {
-        return false;
     }
 
     @Override

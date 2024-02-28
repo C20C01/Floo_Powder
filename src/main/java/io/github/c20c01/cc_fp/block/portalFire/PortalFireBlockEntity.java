@@ -1,16 +1,16 @@
 package io.github.c20c01.cc_fp.block.portalFire;
 
-import io.github.c20c01.cc_fp.tp.TpTool;
 import io.github.c20c01.cc_fp.CCMain;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
@@ -44,13 +44,7 @@ public class PortalFireBlockEntity extends BlockEntity {
         return targetName;
     }
 
-    public void teleportEntity(Level level, BlockPos blockPos, Entity entity, Vec3 movement, boolean temporary, boolean lasting) {
-        switch (TpTool.tryTeleportEntity(entity, targetName, level.getBlockState(blockPos.below()).getBlock(), movement, temporary, Boolean.FALSE)) {
-            case fail -> BasePortalFireBlock.removeAllPortalFire(blockPos, level, level.getBlockState(blockPos));
-            case success -> {
-                if (!lasting) BasePortalFireBlock.removeAllPortalFire(blockPos, level, level.getBlockState(blockPos));
-            }
-
-        }
+    public TpTool.Result teleportEntity(Entity entity, @Nullable Vec3 movement, boolean temporary) {
+        return TpTool.tryTeleportEntity(entity, targetName, movement, temporary, Boolean.FALSE);
     }
 }

@@ -38,9 +38,6 @@ public class CCLootTableProvider extends LootTableProvider {
 
     @Override
     protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
-
-        System.out.println(map);
-
         map.forEach((key, value) -> value.validate(validationcontext));
     }
 

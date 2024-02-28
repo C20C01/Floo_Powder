@@ -7,6 +7,7 @@ import io.github.c20c01.cc_fp.tool.Delayer;
 import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -31,9 +32,19 @@ public class FlooBall extends ThrowableItemProjectile {
         super(CCMain.FLOO_BALL_ENTITY.get(), livingEntity, level);
     }
 
+    public FlooBall(Level level, double x, double y, double z) {
+        super(CCMain.FLOO_BALL_ENTITY.get(), x, y, z, level);
+    }
+
     @Override
     protected Item getDefaultItem() {
         return CCMain.FLOO_BALL_ITEM.get();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
     }
 
     @Override
@@ -65,9 +76,15 @@ public class FlooBall extends ThrowableItemProjectile {
                 if (level.getBlockEntity(blockPos) instanceof PortalFireBlockEntity blockEntity) {
                     blockEntity.setTargetName(TpTool.getItemName(getItem()));
                 }
-            } else {
-                level.addFreshEntity(new ItemEntity(level, this.getX(), this.getY(), this.getZ(), getItem()));
+                return;
             }
+
+            if (BasePortalFireBlock.canChangeToPortalFire(blockPos, level)) {
+                BasePortalFireBlock.changeAllToPortalFire(blockPos, level, TpTool.getItemName(getItem()));
+                return;
+            }
+
+            level.addFreshEntity(new ItemEntity(level, this.getX(), this.getY(), this.getZ(), getItem()));
         });
     }
 }

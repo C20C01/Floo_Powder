@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class PowderGiverBlockEntity extends BlockEntity {
     private String publicGroup = "";
-    private PortalPointManager.CheckType checkType = PortalPointManager.CheckType.PUBLIC;
+    private PortalPointManager.CheckType checkType = PortalPointManager.CheckType.ALL;
 
     public PowderGiverBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CCMain.POWDER_GIVER_BLOCK_ENTITY.get(), blockPos, blockState);
