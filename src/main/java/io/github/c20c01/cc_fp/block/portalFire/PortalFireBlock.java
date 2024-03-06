@@ -3,6 +3,7 @@ package io.github.c20c01.cc_fp.block.portalFire;
 import io.github.c20c01.cc_fp.block.FireBaseBlock;
 import io.github.c20c01.cc_fp.client.particles.PortalFireParticle;
 import io.github.c20c01.cc_fp.item.IDestroyByFireToUse;
+import io.github.c20c01.cc_fp.tp.TpTool;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -69,12 +70,16 @@ public class PortalFireBlock extends BasePortalFireBlock implements EntityBlock 
             var result = blockEntity.teleportEntity(entity, movement, temporary);
 
             switch (result) {
-                case fail -> BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
                 case success -> {
-                    if (!lasting){
+                    if (!lasting) {
                         BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
                     }
                 }
+                case fail -> {
+                    BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
+                    TpTool.teleportFail(entity);
+                }
+                case wrong -> BasePortalFireBlock.removeAllPortalFire(blockPos, level, blockState);
             }
         }
     }

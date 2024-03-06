@@ -5,6 +5,7 @@ import io.github.c20c01.cc_fp.CCMain;
 import io.github.c20c01.cc_fp.block.portalFire.BasePortalFireBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlock;
 import io.github.c20c01.cc_fp.block.portalPoint.PortalPointBlockEntity;
+import io.github.c20c01.cc_fp.config.CCConfig;
 import io.github.c20c01.cc_fp.item.PortalWand;
 import io.github.c20c01.cc_fp.item.flooReel.ExpansionReel;
 import io.github.c20c01.cc_fp.network.CCNetwork;
@@ -18,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +36,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -51,10 +54,13 @@ public class TpTool {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<Entity> TP_COOLING = new HashSet<>(); // 保证同一实体一段时间内不会多次尝试传送
 
-    public enum Result {success, fail, pass}
+    public enum Result {success, fail, pass, wrong}
 
     public static void forceTeleportEntity(Entity entity, String targetName) {
-        tryTeleportEntity(entity, targetName, Vec3.ZERO, Boolean.FALSE, Boolean.TRUE);
+        Result result = tryTeleportEntity(entity, targetName, Vec3.ZERO, Boolean.FALSE, Boolean.TRUE);
+        if (result == Result.fail) {
+            teleportFail(entity);
+        }
     }
 
     /**
@@ -66,6 +72,7 @@ public class TpTool {
      * @return Result.pass 这10tick内此实体已经尝试传送了，不再对其进行处理<br>
      * Result.fail 拒绝传送<br>
      * Result.success 尝试进行传送<br>
+     * Result.wrong 出现错误
      */
     public static Result tryTeleportEntity(Entity entity, String targetName, @Nullable Vec3 movement, boolean temporary, boolean force) {
         if (!force && !TP_COOLING.add(entity)) {
@@ -76,8 +83,8 @@ public class TpTool {
 
         MinecraftServer server = entity.getServer();
         if (server == null) {
-            printRejectedTeleportLog(entity, "Missing server");
-            return Result.fail;
+            LOGGER.warn(getTeleportLog(entity, "Missing server"));
+            return Result.wrong;
         }
 
         ServerLevel targetLevel;
@@ -87,33 +94,33 @@ public class TpTool {
         if (temporary) {
             GlobalPos target = PortalWand.getWandPoint(targetName);
             if (target == null) {
-                printRejectedTeleportLog(entity, "Missing wand point");
+                LOGGER.info(getTeleportLog(entity, "Missing wand point"));
                 return Result.fail;
             }
 
             targetLevel = server.getLevel(target.dimension());
             if (targetLevel == null) {
-                printRejectedTeleportLog(entity, "Missing server level");
-                return Result.fail;
+                LOGGER.warn(getTeleportLog(entity, "Missing server level"));
+                return Result.wrong;
             }
 
             targetPos = target.pos();
             if (!targetLevel.getBlockState(targetPos).is(CCMain.FAKE_PORTAL_FIRE_BLOCK.get())) {
-                printRejectedTeleportLog(entity, "Missing fake portal fire");
+                LOGGER.info(getTeleportLog(entity, "Missing portal fire"));
                 return Result.fail;
             }
 
         } else {
             PortalPoint target = PortalPointManager.get(server).get(targetName, Boolean.TRUE);
             if (target == null) {
-                printRejectedTeleportLog(entity, "Missing portal point");
+                LOGGER.info(getTeleportLog(entity, "Missing portal point"));
                 return Result.fail;
             }
 
             targetLevel = target.getLevel(server);
             if (targetLevel == null) {
-                printRejectedTeleportLog(entity, "Missing server level");
-                return Result.fail;
+                LOGGER.warn(getTeleportLog(entity, "Missing target level"));
+                return Result.wrong;
             }
 
             targetPos = target.pos();
@@ -121,21 +128,21 @@ public class TpTool {
             PortalPointBlockEntity blockEntity = temp instanceof PortalPointBlockEntity ? (PortalPointBlockEntity) temp : null;
             if (blockEntity == null) {
                 PortalPointManager.get(server).remove(targetName);
-                printRejectedTeleportLog(entity, "Missing portal point blockEntity");
-                return Result.fail;
+                LOGGER.warn(getTeleportLog(entity, "Missing block entity"));
+                return Result.wrong;
             }
 
             boolean notOwner = !entity.getUUID().equals(target.ownerUid());
 
             if (notOwner && blockEntity.checkNoneReel((reel) -> reel.allow(entity))) {
-                printRejectedTeleportLog(entity, "Wrong entity type");
+                LOGGER.info(getTeleportLog(entity, "Mismatched entity type"));
                 return Result.fail;
             }
 
             if (entity instanceof ServerPlayer && notOwner && blockEntity.checkNoneReel(ExpansionReel::allowEveryone)) {
                 Permission permission = PermissionManager.get(server).get(target.ownerUid());
                 if (permission == null || !permission.contains(entity.getUUID())) {
-                    printRejectedTeleportLog(entity, "Lack of permission");
+                    LOGGER.info(getTeleportLog(entity, "No permission"));
                     return Result.fail;
                 }
             }
@@ -309,10 +316,78 @@ public class TpTool {
         return name.substring(1, name.length() - 1);
     }
 
-    private static void printRejectedTeleportLog(Entity entity, String reason) {
+    private static String getTeleportLog(Entity entity, String reason) {
         String name = entity.getName().getString();
         String type = entity.getType().getDescription().getString();
-        LOGGER.info("{} was rejected teleport due to: {}", name.equals(type) ? name : String.format("%s(%s)", name, type), reason);
+        return String.format("%s was rejected teleport due to: %s", name.equals(type) ? name : String.format("%s(%s)", name, type), reason);
+    }
+
+    public static void teleportFail(Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
+            addEffect(livingEntity, MobEffects.BLINDNESS, 140, 0);
+            addEffect(livingEntity, MobEffects.CONFUSION, 160, 0);
+        }
+
+        if (CCConfig.randomTeleport.get()) {
+            ServerLevel level = (ServerLevel) entity.level();
+
+            level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.5F, 1.0F);
+            SendParticle.ball(level, SendParticle.Particles.SMOKE, entity.getEyePosition());
+            if (randomTeleport(entity)) {
+                level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.5F, 1.0F);
+                SendParticle.ball(level, SendParticle.Particles.SMOKE, entity.getEyePosition());
+            }
+        }
+    }
+
+    private static boolean randomTeleport(Entity entity) {
+        Level level = entity.level();
+
+        if (entity.isPassenger()) {
+            entity.stopRiding();
+        }
+
+        double x0 = entity.getX();
+        double y0 = entity.getY();
+        double z0 = entity.getZ();
+        BlockPos blockPos = BlockPos.containing(entity.position());
+        BlockPos targetPos;
+        for (int i = 0; i < 16; ++i) {
+            int x = blockPos.getX() + level.random.nextInt(16) - 8;
+            int z = blockPos.getZ() + level.random.nextInt(16) - 8;
+            if (!level.hasChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))) {
+                continue;
+            }
+
+            int y = Mth.clamp(blockPos.getY() + level.random.nextInt(16) - 8, level.getMinBuildHeight(), level.getMinBuildHeight() + ((ServerLevel) level).getLogicalHeight() - 1);
+            boolean findPlace = false;
+            targetPos = new BlockPos(x, y, z);
+            boolean lastBlockIsAir = level.isEmptyBlock(targetPos);
+
+            while (targetPos.getY() > level.getMinBuildHeight()) {
+                BlockPos temp = targetPos.below();
+                if (level.getBlockState(temp).canOcclude()) {
+                    if (lastBlockIsAir) {
+                        entity.teleportTo(targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5);
+                        findPlace = level.noCollision(entity) && !level.containsAnyLiquid(entity.getBoundingBox());
+                        break;
+                    }
+                } else {
+                    lastBlockIsAir = true;
+                }
+                targetPos = temp;
+            }
+
+            if (findPlace) {
+                if (entity instanceof PathfinderMob pathfinderMob) {
+                    pathfinderMob.getNavigation().stop();
+                }
+                return true;
+            } else {
+                entity.teleportTo(x0, y0, z0);
+            }
+        }
+        return false;
     }
 
     @Mod.EventBusSubscriber(modid = CCMain.ID)

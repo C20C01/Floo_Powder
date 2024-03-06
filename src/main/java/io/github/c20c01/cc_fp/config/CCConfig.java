@@ -18,6 +18,7 @@ public class CCConfig {
     public static final ForgeConfigSpec.BooleanValue canUseInSurvival; // 生存下可以直接手持飞路粉进行使用
     public static final ForgeConfigSpec.BooleanValue lastingPowderCanSummonLava; // 将不灭粉丢入岩浆会将其变为岩浆源
     public static final ForgeConfigSpec.ConfigValue<String> defaultPoint; // 向不存在的传送点传送后会尝试传送到的默认传送点（""为不开启此功能）
+    public static final ForgeConfigSpec.BooleanValue randomTeleport; // 传送失败后进行随机传送（紫颂果那种）
 
     static {
         ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -29,6 +30,7 @@ public class CCConfig {
         canUseInSurvival = COMMON_BUILDER.comment("Player can TP by using floo powder in hand in survival mode (false)").define("canUseInSurvival", false);
         lastingPowderCanSummonLava = COMMON_BUILDER.comment("Lasting powder can turn lava into the source of lava (true)").define("lastingPowderCanSummonLava", true);
         defaultPoint = COMMON_BUILDER.comment("TP to where when inserted try to TP to a non-existent point. (empty to close this function)").define("defaultPoint", "");
+        randomTeleport = COMMON_BUILDER.comment("Random teleport (just like eating Chorus Fruit) after failed teleport (true)").define("randomTeleport", true);
 
         COMMON_BUILDER.pop();
         COMMON_CONFIG = COMMON_BUILDER.build();

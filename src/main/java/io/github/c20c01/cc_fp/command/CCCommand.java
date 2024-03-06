@@ -40,6 +40,7 @@ public class CCCommand {
                         .then(CCConfig.getCommand(CCConfig.canUseInSurvival, BoolArgumentType.bool(), Boolean.class))
                         .then(CCConfig.getCommand(CCConfig.lastingPowderCanSummonLava, BoolArgumentType.bool(), Boolean.class))
                         .then(CCConfig.getCommand(CCConfig.defaultPoint, StringArgumentType.word(), String.class))
+                        .then(CCConfig.getCommand(CCConfig.randomTeleport, BoolArgumentType.bool(), Boolean.class))
                 )
                 .then(Commands.literal("friends")
                         .then(Commands.literal("accept")

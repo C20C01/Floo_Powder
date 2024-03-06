@@ -42,6 +42,14 @@ public class CCRecipeProvider extends RecipeProvider {
         // 传送卷轴：飞路粉*1+纸*2
         ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, CCMain.FLOO_REEL_ITEM.get(), 1).requires(CCMain.FLOO_POWDER_ITEM.get()).requires(Items.PAPER, 2).unlockedBy("has_floo", has(CCMain.FLOO_POWDER_ITEM.get())).save(consumer);
 
-        //
+        // 传送法杖：
+
+        // 拓展卷轴：
+
+        // 飞路弹：
+
+        // 不灭粉：
+
+        // 命名石（命名卷轴是不是好一些）
     }
 }

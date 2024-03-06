@@ -6,7 +6,6 @@ import net.minecraft.core.Position;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -26,7 +25,7 @@ public interface IDestroyByFireToUse extends IForgeItem {
 
     static BlockPos getBlockPos(ItemEntity itemEntity) {
         Position position = itemEntity.position();
-        return new BlockPos(Mth.floor(position.x()), Mth.floor(position.y()), Mth.floor(position.z()));
+        return BlockPos.containing(position.x(), position.y(), position.z());
     }
 
     static void changeFireBlock(BlockPos blockPos, Level level, String targetName) {
